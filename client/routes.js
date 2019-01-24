@@ -6,6 +6,7 @@ import { withRouter, Route, Switch } from 'react-router-dom'
 import { compose } from 'recompose'
 
 import { withFirebase } from './Firebase'
+import MessageBox from './components/messageBox'
 
 /**
  * COMPONENT
@@ -15,18 +16,8 @@ class RoutesBase extends Component {
 
   render () {
     return (
-      <div className='box'>
-        <div className='title'>
-          <p className='title'>ALOL</p>
-          <button>X</button>
-        </div>
-        <div className='body'>
-          <p className='title'>Welcome!</p>
-          <div className='inner'>
-            <p>This is inner text</p>
-          </div>
-          <button>Submit</button>
-        </div>
+      <div>
+        <MessageBox />
       </div>
     )
   }

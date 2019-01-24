@@ -1,8 +1,8 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { withRouter, Route, Switch } from 'react-router-dom'
-import { firebaseDb } from '../firebase'
-
+import { withFirebase } from '../Firebase/index'
+import { compose } from 'recompose'
 class messageBox extends Component {
   constructor () {
     super()
@@ -12,27 +12,12 @@ class messageBox extends Component {
     }
   }
 
-  writeNewPost = () => {
-    // A post entry.
-    let postData = {
-      username: this.state.username,
-      body: this.state.body
-    }
-    console.log(postData)
-
-    let newPostKey = firebaseDb
-      .ref()
-      .child('posts')
-      .push().key
-    console.log(newPostKey)
-    // Write the new post's data simultaneously in the posts list and the user's post list.
-    var updates = {}
-    updates['/posts/' + newPostKey] = postData
-    console.log(updates)
-    return firebaseDb.ref().update(updates)
-  }
   handleChange = evt => {
     this.setState({ [evt.target.name]: evt.target.value })
+  }
+  handleSubmit = evt => {
+    console.log(this.props)
+    this.props.firebase.writeNewPost(this.state.username, this.state.body)
   }
 
   render () {
@@ -66,7 +51,7 @@ class messageBox extends Component {
             name='body'
             onChange={this.handleChange}
           />
-          <button onClick={this.writeNewPost}>Submit</button>
+          <button onClick={this.handleSubmit}>Submit</button>
         </div>
       </div>
     )
@@ -86,12 +71,16 @@ const mapDispatch = dispatch => {
 
 // The `withRouter` wrapper makes sure that updates are not blocked
 // when the url changes
-export default withRouter(
+const MessageBoxConnect = compose(
+  withRouter,
+  withFirebase,
   connect(
     mapState,
     mapDispatch
-  )(messageBox)
+  )
 )
+
+export default MessageBoxConnect(messageBox)
 
 /**
  * PROP TYPES
