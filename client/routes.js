@@ -1,27 +1,21 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { withRouter, Route, Switch } from 'react-router-dom'
+import MessageBox from './components/messageBox'
+import { firebaseDb } from './firebase'
+// import post from './store/posts'
 
-/**
- * COMPONENT
- */
+const dbRefObject = firebaseDb.ref().child('Posts')
+const postList = []
+dbRefObject.on('value', snap => {
+  postList.push(snap.val())
+  console.log(postList)
+})
 class Routes extends Component {
-  componentDidMount () {}
-
   render () {
     return (
-      <div className='box'>
-        <div className='title'>
-          <p className='title'>ALOL</p>
-          <button>X</button>
-        </div>
-        <div className='body'>
-          <p className='title'>Welcome!</p>
-          <div className='inner'>
-            <p>This is inner text</p>
-          </div>
-          <button>Submit</button>
-        </div>
+      <div>
+        <MessageBox posts={postList} />
       </div>
     )
   }
