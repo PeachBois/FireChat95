@@ -78,6 +78,16 @@ div.body button{
   position:relative;
   bottom:0px;
 }
+div.body input{
+  font-family:"MS Sans Serif";
+  height:100%;
+  width:calc(100% - 26px);
+  display:inline-block;
+  background-color: #FFFFFF;
+  border-width:1px;
+  border-color:#808080#FFFFFF   #FFFFFF#808080;
+  border-style:solid;
+}
 .inner{
   padding:13px 12px 12px;
   height:100%;
