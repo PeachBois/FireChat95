@@ -1,12 +1,18 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { withRouter, Route, Switch } from 'react-router-dom'
+import {
+  withRouter,
+  Route,
+  Switch,
+  BrowserRouter as Router
+} from 'react-router-dom'
 
 // Use recompose to organize your higher-order components. Since the higher-order components don’t depend on each other, the order doesn’t matter. Otherwise, it may be good to know that the compose function applies the higher-order components from right to left.
 import { compose } from 'recompose'
 
 import { withFirebase } from './Firebase'
 import MessageBox from './components/messageBox'
+import Login from './components/login'
 
 /**
  * COMPONENT
@@ -17,7 +23,8 @@ class RoutesBase extends Component {
   render () {
     return (
       <div>
-        <MessageBox />
+        <Route path='/' component={Login} />
+        <Route exact path='/chat' component={MessageBox} />
       </div>
     )
   }

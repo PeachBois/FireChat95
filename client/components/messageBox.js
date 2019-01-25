@@ -15,7 +15,11 @@ class messageBox extends Component {
     };
   }
   componentDidMount() {
+    if (typeof this.props.username !== 'string') {
+      this.props.history.push('/');
+    }
     let postList = [];
+
     const dbRefObject = firebase
       .database()
       .ref()
@@ -37,11 +41,21 @@ class messageBox extends Component {
   };
   handleSubmit = evt => {
     this.props.firebase.writeNewPost(this.state.username, this.state.body);
+    this.setState({ body: '' });
+  };
+
+  getRandomColor = () => {
+    var letters = '0123456789ABCDEF';
+    var color = '#';
+    for (var i = 0; i < 6; i++) {
+      color += letters[Math.floor(Math.random() * 16)];
+    }
+    return color;
   };
 
   render() {
     let { body } = this.state;
-
+    let hStyle = { color: this.getRandomColor() };
     return (
       <div className="box">
         <div className="title">
@@ -49,12 +63,13 @@ class messageBox extends Component {
           <button>X</button>
         </div>
         <div className="body">
-          <p className="title">Welcome {this.state.username}!</p>
+          <p className="title">Welcome!</p>
           <div className="inner">
             {this.state.postList.map(entry => {
               return (
-                <div id={entry.body}>
-                  <p>{`${entry.username}: ${entry.body}`}</p>
+                <div id={entry.body + Math.random()}>
+                  <p style={hStyle}>{entry.username}</p>
+                  <p>:{entry.body}</p>
                 </div>
               );
             })}
@@ -76,7 +91,7 @@ class messageBox extends Component {
  * CONTAINER
  */
 const mapState = state => {
-  return { username: 'Edwin' };
+  return { username: state.user };
 };
 
 const mapDispatch = dispatch => {
