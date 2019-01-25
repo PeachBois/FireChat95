@@ -89,16 +89,48 @@ div.body input{
   border-style:solid;
 }
 .inner{
+  
   padding:13px 12px 12px;
   height:200px;
   width:calc(100% - 26px);
-  display:inline-block;
   background-color: #FFFFFF;
   border-width:1px;
   border-color:#808080#FFFFFF   #FFFFFF#808080;
   border-style:solid;
-  overflow: scroll;
- 
+  overflow-y: scroll;
+  overflow-x: hidden;
   pointer-events: auto;
 
+}
+.inner div {
+  display:flex;
+  flex-wrap: wrap;
+}
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+
+  background:#C0C0C0;
+  
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  outline:1px solid #000000;
+  background:#cccccc;
+  border-width:1px;
+  border-style:solid;
+  border-color:#FFFFFF #808080 #808080 #FFFFFF;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  outline:1px solid #000000;
+  background:#C0C0C0;
+  border-width:1px;
+  border-style:solid;
+  border-color:#FFFFFF #808080 #808080 #FFFFFF;
 }
