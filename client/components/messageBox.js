@@ -44,8 +44,18 @@ class messageBox extends Component {
     this.setState({ body: '' })
   }
 
+  getRandomColor = () => {
+    var letters = '0123456789ABCDEF'
+    var color = '#'
+    for (var i = 0; i < 6; i++) {
+      color += letters[Math.floor(Math.random() * 16)]
+    }
+    return color
+  }
+
   render () {
     let { body } = this.state
+    let hStyle = { color: this.getRandomColor() }
     return (
       <div className='box'>
         <div className='title'>
@@ -58,7 +68,8 @@ class messageBox extends Component {
             {this.state.postList.map(entry => {
               return (
                 <div id={entry.body + Math.random()}>
-                  <p>{`${entry.username}: ${entry.body}`}</p>
+                  <p style={hStyle}>{entry.username}</p>
+                  <p>:{entry.body}</p>
                 </div>
               )
             })}
