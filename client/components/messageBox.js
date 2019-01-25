@@ -34,6 +34,12 @@ class messageBox extends Component {
       }
       this.setState({ postList, username: this.props.username });
     });
+
+    this.scrollToBottom();
+  }
+
+  componentDidUpdate() {
+    this.scrollToBottom();
   }
 
   handleChange = evt => {
@@ -51,6 +57,11 @@ class messageBox extends Component {
       color += letters[Math.floor(Math.random() * 16)];
     }
     return color;
+  };
+
+  scrollToBottom = () => {
+    console.log('messageEnd!!! ==> ', this.messageEnd);
+    this.messageEnd.scrollIntoView({ behavior: 'smooth' });
   };
 
   render() {
@@ -73,6 +84,12 @@ class messageBox extends Component {
                 </div>
               );
             })}
+            <div
+              style={{ float: 'left', clear: 'both' }}
+              ref={el => {
+                this.messageEnd = el;
+              }}
+            />
           </div>
           <input
             type="text"
