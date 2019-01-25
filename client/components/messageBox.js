@@ -3,25 +3,45 @@ import { connect } from 'react-redux'
 import { withRouter, Route, Switch } from 'react-router-dom'
 import { withFirebase } from '../Firebase/index'
 import { compose } from 'recompose'
+import firebase from 'firebase'
+
 class messageBox extends Component {
   constructor () {
     super()
     this.state = {
       username: '',
-      body: ''
+      body: '',
+      postList: []
     }
+  }
+  componentDidMount () {
+    let postList = []
+    const dbRefObject = firebase
+      .database()
+      .ref()
+      .child('posts')
+
+    dbRefObject.on('value', snap => {
+      postList = []
+      const postObj = snap.val()
+      let key = Object.keys(postObj)
+      for (key in postObj) {
+        postList.push(postObj[key])
+      }
+      this.setState({ postList, username: this.props.username })
+    })
   }
 
   handleChange = evt => {
     this.setState({ [evt.target.name]: evt.target.value })
   }
   handleSubmit = evt => {
-    console.log(this.props)
     this.props.firebase.writeNewPost(this.state.username, this.state.body)
   }
 
   render () {
-    let { body, username } = this.state
+    let { body } = this.state
+
     return (
       <div className='box'>
         <div className='title'>
@@ -29,22 +49,16 @@ class messageBox extends Component {
           <button>X</button>
         </div>
         <div className='body'>
-          <p className='title'>Welcome!</p>
+          <p className='title'>Welcome {this.state.username}!</p>
           <div className='inner'>
-            {/* {this.props.posts.map(entry => {
+            {this.state.postList.map(entry => {
               return (
-                <div id='1'>
-                  <p>{entry}</p>
+                <div id={entry.body}>
+                  <p>{`${entry.username}: ${entry.body}`}</p>
                 </div>
               )
-            })} */}
+            })}
           </div>
-          <input
-            type='text'
-            value={username}
-            name='username'
-            onChange={this.handleChange}
-          />
           <input
             type='text'
             value={body}
@@ -62,7 +76,7 @@ class messageBox extends Component {
  * CONTAINER
  */
 const mapState = state => {
-  return {}
+  return { username: 'Noah' }
 }
 
 const mapDispatch = dispatch => {

@@ -19,6 +19,7 @@ class Firebase {
   constructor () {
     firebase.initializeApp(config)
     this.database = firebase.database()
+    this.posts = []
   }
   writeNewPost = (username, body) => {
     // A post entry.
@@ -39,6 +40,7 @@ class Firebase {
     console.log(updates)
     return this.database.ref().update(updates)
   }
+
   // Add any relevant methods if we need to access the Firebase in our react components.
 }
 

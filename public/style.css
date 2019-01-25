@@ -90,12 +90,15 @@ div.body input{
 }
 .inner{
   padding:13px 12px 12px;
-  height:100%;
+  height:200px;
   width:calc(100% - 26px);
   display:inline-block;
   background-color: #FFFFFF;
   border-width:1px;
   border-color:#808080#FFFFFF   #FFFFFF#808080;
   border-style:solid;
+  overflow: scroll;
+ 
+  pointer-events: auto;
 
 }
