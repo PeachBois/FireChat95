@@ -25,7 +25,9 @@ class messageBox extends Component {
     const hash = await getGeoHash();
     this.setState({ hash });
     console.log(hash);
+
     this.props.firebase.findOrCreateRoom(hash);
+
     const dbRefObject = firebase
       .database()
       .ref()
