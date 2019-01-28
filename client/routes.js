@@ -27,11 +27,8 @@ class RoutesBase extends Component {
       <div>
         <Route exact path='/' component={Login} />
         <Route exact path='/chat' component={MessageBox} />
-<<<<<<< HEAD
         <Route exact path='/navtest' component={RoomSetUp} />
-=======
         <Route exact path='/setup' component={ChangeName} />
->>>>>>> ec991b9e7bddaacf45ce5c982a66b9c7f77f59b3
       </div>
     )
   }
