@@ -44,19 +44,19 @@ class Firebase {
 
     let newPostKey = this.database
       .ref()
-      .child(`/rooms/${hash}`)
+      .child(`/rooms/${hash}/`)
       .push().key
-    console.log(newPostKey)
+
     // Write the new post's data simultaneously in the posts list and the user's post list.
     var updates = {}
-    updates[newPostKey] = postData
+    updates[`/rooms/${hash}/` + newPostKey] = postData
     console.log(updates)
-    return this.database.ref(`/rooms/${hash}`).update(updates)
+    return this.database.ref().update(updates)
   }
   findOrCreateRoom = async room => {
     console.log(room)
-    if (!this.database.ref().child(`rooms/${room}`)) {
-      this.database.ref().child(`rooms/${room}`)
+    if (!this.database.ref(`/rooms/${room}/`)) {
+      this.database.ref().child(`/rooms/${room}/`)
     }
   }
 
