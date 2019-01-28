@@ -43,6 +43,6 @@ export const getGeoHash = async (precision) => {
   console.log(coordinates)
   const {latitude, longitude} = coordinates.coords
   const hash = Geohash.encode(latitude, longitude, precision)
-  // console.log(hash)
+  console.log(Geohash.bounds(hash))
   return hash
 }

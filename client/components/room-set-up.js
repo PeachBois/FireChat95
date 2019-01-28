@@ -16,7 +16,7 @@ class RoomSetUp extends Component {
         }
     }
     async componentDidMount() {
-        const geohash = await getGeoHash(6)
+        const geohash = await getGeoHash(8)
         console.log('geohash ====>', geohash)
         this.setState({
             location:{
