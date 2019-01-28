@@ -3,6 +3,7 @@
 
 import * as firebase from 'firebase/app'
 import 'firebase/database'
+import { getGeoHash } from '../components/utils'
 // import app from 'firebase/app';
 
 // Initializing Firebase:
@@ -32,7 +33,7 @@ class Firebase {
   users = () => this.database.ref('users')
 
   // Method to write new message in chat box.
-  writeNewPost = (username, body) => {
+  writeNewPost = (username, body, hash) => {
     // A post entry.
 
     let postData = {
@@ -43,14 +44,20 @@ class Firebase {
 
     let newPostKey = this.database
       .ref()
-      .child('posts')
+      .child(`/rooms/${hash}`)
       .push().key
     console.log(newPostKey)
     // Write the new post's data simultaneously in the posts list and the user's post list.
     var updates = {}
-    updates['/posts/' + newPostKey] = postData
+    updates[newPostKey] = postData
     console.log(updates)
-    return this.database.ref().update(updates)
+    return this.database.ref(`/rooms/${hash}`).update(updates)
+  }
+  findOrCreateRoom = async room => {
+    console.log(room)
+    if (!this.database.ref().child(`rooms/${room}`)) {
+      this.database.ref().child(`rooms/${room}`)
+    }
   }
 
   // Add any relevant methods if we need to access the Firebase in our react components.

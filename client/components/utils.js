@@ -4,7 +4,7 @@
 //             lat: null,
 //             long: null
 //         }
-       
+
 //         let test = await navigator.geolocation.getCurrentPosition(async position => {
 //             location.lat = await position.coords.latitude
 //             location.long = await position.coords.longitude
@@ -20,29 +20,31 @@
 import Geohash from 'latlon-geohash'
 
 export const getUserLocation = () => {
-    const geolocation = navigator.geolocation;
-    
-    const location = new Promise((resolve, reject) => {
-      if (!geolocation) {
-        reject(new Error('Not Supported'));
-      }
-      
-      geolocation.getCurrentPosition((position) => {
-        resolve(position);
-      }, () => {
-        reject (new Error('Permission denied'));
-      });
-    });
-    
-    return location
-  };
+  const geolocation = navigator.geolocation
 
-export const getGeoHash = async (precision) => {
-  getUserLocation()
-  const coordinates = await getUserLocation() 
+  const location = new Promise((resolve, reject) => {
+    if (!geolocation) {
+      reject(new Error('Not Supported'))
+    }
+
+    geolocation.getCurrentPosition(
+      position => {
+        resolve(position)
+      },
+      () => {
+        reject(new Error('Permission denied'))
+      }
+    )
+  })
+
+  return location
+}
+
+export const getGeoHash = async () => {
+  const coordinates = await getUserLocation()
   console.log(coordinates)
-  const {latitude, longitude} = coordinates.coords
-  const hash = Geohash.encode(latitude, longitude, precision)
-  console.log(Geohash.bounds(hash))
+  const { latitude, longitude } = coordinates.coords
+  const hash = Geohash.encode(latitude, longitude, 8)
+  // console.log(hash)
   return hash
 }

@@ -3,6 +3,7 @@ import { connect } from 'react-redux'
 import { withRouter, Route, Switch } from 'react-router-dom'
 import { withFirebase } from '../Firebase/index'
 import { compose } from 'recompose'
+import { getGeoHash } from './utils'
 import firebase from 'firebase'
 
 class messageBox extends Component {
@@ -11,19 +12,25 @@ class messageBox extends Component {
     this.state = {
       username: '',
       body: '',
-      postList: []
+      postList: [],
+      hash: ''
     }
   }
-  componentDidMount () {
+  async componentDidMount () {
     if (typeof this.props.user.username !== 'string') {
       this.props.history.push('/')
     }
     let postList = []
+    const hash = await getGeoHash()
+    this.setState({ hash })
+    console.log(hash)
+
+    this.props.firebase.findOrCreateRoom(hash)
 
     const dbRefObject = firebase
       .database()
       .ref()
-      .child('posts')
+      .child(`/rooms/${hash}`)
 
     dbRefObject.on('value', snap => {
       postList = []
@@ -46,7 +53,8 @@ class messageBox extends Component {
     this.setState({ [evt.target.name]: evt.target.value })
   }
   handleSubmit = evt => {
-    this.props.firebase.writeNewPost(this.props.user.username, this.state.body)
+    const { body, hash } = this.state
+    this.props.firebase.writeNewPost(this.props.user.username, body, hash)
     this.setState({ body: '' })
   }
 
