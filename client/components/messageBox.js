@@ -11,13 +11,15 @@ class messageBox extends Component {
     this.state = {
       username: '',
       body: '',
-      postList: []
+      postList: [],
+      style: { color: 'red' }
     }
   }
   componentDidMount () {
     if (typeof this.props.username !== 'string') {
       this.props.history.push('/')
     }
+
     let postList = []
 
     const dbRefObject = firebase
@@ -32,7 +34,11 @@ class messageBox extends Component {
       for (key in postObj) {
         postList.push(postObj[key])
       }
-      this.setState({ postList, username: this.props.username })
+      this.setState({
+        postList,
+        username: this.props.username,
+        style: { color: this.getRandomColor() }
+      })
     })
   }
 
@@ -55,7 +61,7 @@ class messageBox extends Component {
 
   render () {
     let { body } = this.state
-    let hStyle = { color: this.getRandomColor() }
+
     return (
       <div className='box'>
         <div className='title'>
@@ -68,7 +74,7 @@ class messageBox extends Component {
             {this.state.postList.map(entry => {
               return (
                 <div id={entry.body + Math.random()}>
-                  <p style={hStyle}>{entry.username}</p>
+                  <p style={this.state.style}>{entry.username}</p>
                   <p>:{entry.body}</p>
                 </div>
               )
