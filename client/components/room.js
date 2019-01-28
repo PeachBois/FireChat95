@@ -13,6 +13,8 @@ class RoomBase extends Component {
     };
   }
 
+  async;
+
   handleClick = async event => {
     console.log(this.props);
     console.log('==room.js==>', navigator.geolocation);

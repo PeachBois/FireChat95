@@ -4,7 +4,7 @@
 //             lat: null,
 //             long: null
 //         }
-       
+
 //         let test = await navigator.geolocation.getCurrentPosition(async position => {
 //             location.lat = await position.coords.latitude
 //             location.long = await position.coords.longitude
@@ -18,22 +18,27 @@
 //     }
 // }
 
+import Geohash from 'latlon-geohash';
+
 export const getUserLocation = () => {
-    const geolocation = navigator.geolocation;
-    
-    const location = new Promise((resolve, reject) => {
-      if (!geolocation) {
-        reject(new Error('Not Supported'));
-      }
-      
-      geolocation.getCurrentPosition((position) => {
+  const geolocation = navigator.geolocation;
+  console.log('>>>>>>>getIUSERPCATIPO', geolocation);
+  const location = new Promise((resolve, reject) => {
+    if (!geolocation) {
+      reject(new Error('Not Supported'));
+    }
+
+    geolocation.getCurrentPosition(
+      position => {
+        console.log('==pos==> ', position);
         resolve(position);
-      }, () => {
-        reject (new Error('Permission denied'));
-      });
-    });
-    
-    return location
-  };
+      },
+      err => {
+        console.log('errrrr', err);
+        reject(new Error('Permission denied'));
+      }
+    );
+  });
 
-
+  return location;
+};
