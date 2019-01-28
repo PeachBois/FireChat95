@@ -14,6 +14,8 @@ import { withFirebase } from './Firebase'
 import MessageBox from './components/messageBox'
 import Login from './components/login'
 import RoomSetUp from './components/room-set-up'
+import ChangeName from './components/changeName'
+
 /**
  * COMPONENT
  */
@@ -25,7 +27,11 @@ class RoutesBase extends Component {
       <div>
         <Route exact path='/' component={Login} />
         <Route exact path='/chat' component={MessageBox} />
+<<<<<<< HEAD
         <Route exact path='/navtest' component={RoomSetUp} />
+=======
+        <Route exact path='/setup' component={ChangeName} />
+>>>>>>> ec991b9e7bddaacf45ce5c982a66b9c7f77f59b3
       </div>
     )
   }

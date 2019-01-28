@@ -1,8 +1,8 @@
 // In this 'firebase.js' file:
 // configures Firebase and implements methods/functions for the Firebase class.
 
-import * as firebase from 'firebase/app';
-import 'firebase/database';
+import * as firebase from 'firebase/app'
+import 'firebase/database'
 // import app from 'firebase/app';
 
 // Initializing Firebase:
@@ -13,49 +13,50 @@ const config = {
   projectId: 'fir-exploration-deee2',
   storageBucket: 'fir-exploration-deee2.appspot.com',
   messagingSenderId: '752787901162'
-};
+}
 
 class Firebase {
-  constructor() {
-    firebase.initializeApp(config);
-    this.database = firebase.database();
-    this.auth = firebase.auth();
-    this.posts = [];
-    this.googleProvider = new firebase.auth.GoogleAuthProvider();
+  constructor () {
+    firebase.initializeApp(config)
+    this.database = firebase.database()
+    this.auth = firebase.auth()
+    this.posts = []
+    this.googleProvider = new firebase.auth.GoogleAuthProvider()
   }
 
-  //Auth API
-  signInWithGoogle = () => this.auth.signInWithPopup(this.googleProvider);
+  // Auth API
+  signInWithGoogle = () => this.auth.signInWithPopup(this.googleProvider)
 
-  //User API
-  user = uid => this.database.ref(`users/${uid}`);
-  users = () => this.database.ref('users');
+  // User API
+  user = uid => this.database.ref(`users/${uid}`)
+  users = () => this.database.ref('users')
 
-  //Method to write new message in chat box.
+  // Method to write new message in chat box.
   writeNewPost = (username, body) => {
     // A post entry.
+
     let postData = {
       username,
       body
-    };
-    console.log(postData);
+    }
+    console.log(postData)
 
     let newPostKey = this.database
       .ref()
       .child('posts')
-      .push().key;
-    console.log(newPostKey);
+      .push().key
+    console.log(newPostKey)
     // Write the new post's data simultaneously in the posts list and the user's post list.
-    var updates = {};
-    updates['/posts/' + newPostKey] = postData;
-    console.log(updates);
-    return this.database.ref().update(updates);
-  };
+    var updates = {}
+    updates['/posts/' + newPostKey] = postData
+    console.log(updates)
+    return this.database.ref().update(updates)
+  }
 
   // Add any relevant methods if we need to access the Firebase in our react components.
 }
 
-export default Firebase;
+export default Firebase
 
 // export const firebaseDb = firebase.database()
 // const auth = firebase.auth();

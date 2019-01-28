@@ -28,6 +28,7 @@ class RoomSetUp extends Component {
                 longitude
             }
         })
+        
     }
 
     render() {
