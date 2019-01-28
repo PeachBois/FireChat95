@@ -3,6 +3,7 @@
 
 import * as firebase from 'firebase/app'
 import 'firebase/database'
+import { getGeoHash } from '../components/utils'
 // import app from 'firebase/app';
 
 // Initializing Firebase:
@@ -51,6 +52,18 @@ class Firebase {
     updates['/posts/' + newPostKey] = postData
     console.log(updates)
     return this.database.ref().update(updates)
+  }
+  findOrCreateRoom = async room => {
+    if (this.database.ref(`rooms/${room}`)) {
+      return room
+    } else {
+      this.database.rooms(room).set({
+        users: 'Noah'
+      })
+      this.database.ref().child(`rooms/${room}`)
+      console.log(room)
+      return room
+    }
   }
 
   // Add any relevant methods if we need to access the Firebase in our react components.
