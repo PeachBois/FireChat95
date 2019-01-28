@@ -38,7 +38,7 @@ class Firebase {
   users = () => this.database.ref('users');
 
   // Method to write new message in chat box.
-  writeNewPost = (username, body) => {
+  writeNewPost = (username, body, hash) => {
     // A post entry.
 
     let postData = {
@@ -54,20 +54,14 @@ class Firebase {
     console.log(newPostKey);
     // Write the new post's data simultaneously in the posts list and the user's post list.
     var updates = {};
-    updates['/posts/' + newPostKey] = postData;
+    updates[`/rooms/${hash}` + newPostKey] = postData;
     console.log(updates);
     return this.database.ref().update(updates);
   };
   findOrCreateRoom = async room => {
-    if (this.database.ref(`rooms/${room}`)) {
-      return room;
-    } else {
-      this.database.rooms(room).set({
-        users: 'Noah'
-      });
+    console.log(room);
+    if (!this.database.ref().child(`rooms/${room}`)) {
       this.database.ref().child(`rooms/${room}`);
-      console.log(room);
-      return room;
     }
   };
 

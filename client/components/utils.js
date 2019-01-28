@@ -19,8 +19,6 @@
 // }
 import Geohash from 'latlon-geohash';
 
-import Geohash from 'latlon-geohash';
-
 export const getUserLocation = () => {
   const geolocation = navigator.geolocation;
 
