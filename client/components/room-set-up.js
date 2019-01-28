@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { getUserLocation } from './utils';
+import { getUserLocation, getGeoHash } from './utils';
 import { connect } from 'react-redux';
 import { withRouter, Route, Switch } from 'react-router-dom';
 import { withFirebase } from '../Firebase/index';
@@ -12,42 +12,28 @@ class RoomSetUp extends Component {
     super();
     this.state = {
       location: {
-        latitude: null,
-        longitude: null
-      },
-      geoHashRoom: {
-        room: ''
+        geohash: null
       }
     };
   }
   async componentDidMount() {
-    // console.log(getUserLocation())
-    const coordinates = await getUserLocation();
-    const { latitude, longitude } = coordinates.coords;
-    console.log(latitude, longitude);
-    // console.log(coordinates)
+    const geohash = await getGeoHash(6);
+    console.log('geohash ====>', geohash);
     this.setState({
       location: {
-        latitude,
-        longitude
+        geohash
       }
     });
+    // const coordinates = await getUserLocation()
+    // const {latitude, longitude} = coordinates.coords
+    // console.log(latitude, longitude)
 
-    const geohash = Geohash.encode(
-      this.state.location.latitude,
-      this.state.location.longitude
-      //   this.geoHashRoom.precision
-    );
-    console.log('geohash >>>>> ', geohash);
-    // this.props.firebase.rooms(geohash).set({
-    //     firtst
+    // this.setState({
+    //     location:{
+    //         latitude,
+    //         longitude
+    //     }
     // })
-    // Initialize the room based on the geohash
-    this.setState({
-      geoHashRoom: {
-        room: this.database.ref().child('rooms/' + geohash)
-      }
-    });
   }
 
   render() {
@@ -60,9 +46,7 @@ class RoomSetUp extends Component {
         </div>
         <div className="body">
           <p className="title">Finding a room...</p>
-          <p className="title">
-            {this.state.location.latitude}, {this.state.location.longitude}
-          </p>
+          <p className="title">{this.state.location.geohash}</p>
         </div>
       </div>
     );

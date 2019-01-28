@@ -17,12 +17,13 @@
 //         console.error(err)
 //     }
 // }
+import Geohash from 'latlon-geohash';
 
 import Geohash from 'latlon-geohash';
 
 export const getUserLocation = () => {
   const geolocation = navigator.geolocation;
-  console.log('>>>>>>>getIUSERPCATIPO', geolocation);
+
   const location = new Promise((resolve, reject) => {
     if (!geolocation) {
       reject(new Error('Not Supported'));
@@ -30,15 +31,22 @@ export const getUserLocation = () => {
 
     geolocation.getCurrentPosition(
       position => {
-        console.log('==pos==> ', position);
         resolve(position);
       },
-      err => {
-        console.log('errrrr', err);
+      () => {
         reject(new Error('Permission denied'));
       }
     );
   });
 
   return location;
+};
+
+export const getGeoHash = async () => {
+  const coordinates = await getUserLocation();
+  console.log(coordinates);
+  const { latitude, longitude } = coordinates.coords;
+  const hash = Geohash.encode(latitude, longitude, 8);
+  // console.log(hash)
+  return hash;
 };
