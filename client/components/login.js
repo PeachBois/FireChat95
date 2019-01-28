@@ -18,6 +18,7 @@ class Login extends Component {
   handleChange = evt => {
     this.setState({ [evt.target.name]: evt.target.value });
   };
+
   handleSubmit = evt => {
     this.props.me(this.state.username);
     this.props.history.push('/chat');

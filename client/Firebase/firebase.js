@@ -4,6 +4,7 @@
 import * as firebase from 'firebase/app';
 import 'firebase/database';
 // import app from 'firebase/app';
+import Geohash from 'latlon-geohash';
 
 // Initializing Firebase:
 const config = {
@@ -22,6 +23,10 @@ class Firebase {
     this.auth = firebase.auth();
     this.posts = [];
     this.googleProvider = new firebase.auth.GoogleAuthProvider();
+    this.geoHashRoom = {
+      room: null,
+      precision: 6
+    };
   }
 
   //Auth API
@@ -53,6 +58,63 @@ class Firebase {
   };
 
   // Add any relevant methods if we need to access the Firebase in our react components.
+
+  //Geohash Room creator method
+  roomInit = async () => {
+    console.log('navigator geolocation >>>> ', navigator.geolocation);
+    const geolocation = await navigator.geolocation;
+    console.log('geolocation===???===> ', geolocation);
+    if (geolocation) {
+      return geolocation.getCurrentPosition(
+        position => {
+          console.log('Inside firebase roomInit() ===> ', position);
+          // const geohash = Geohash.encode(
+          //   position.coords.latitude,
+          //   position.coords.longitude,
+          //   this.geoHashRoom.precision
+          // );
+
+          // //Initialize the room based on the geohash
+          // this.geoHashRoom.room = this.database.ref().child('rooms/' + geohash);
+        },
+        err => {
+          console.warn(`ERROR(${err.code}): ${err.message}`);
+        }
+      );
+    } else {
+      console.error('Not Supported!!!');
+    }
+
+    const location = new Promise((resolve, reject) => {
+      if (geolocation) {
+        console.log('roomInit method triggered???!!!!', geolocation);
+        geolocation.getCurrentPosition(position => {
+          console.log(position, '<<======= this is the position');
+          resolve(showLocation);
+        });
+      } else {
+        reject(new Error('Not Supported!!!'));
+      }
+    });
+    return location;
+  };
+
+  //   //Utility functions for Geohash room creator's roomInit():
+  //   showLocation = position => {
+  //     console.log('Inside firebase roomInit() ===> ', position);
+  //     const geohash = Geohash.encode(
+  //       position.coords.latitude,
+  //       position.coords.longitude,
+  //       this.geoHashRoom.precision
+  //     );
+
+  //     //Initialize the room based on the geohash
+  //     this.geoHashRoom.room = this.database.ref().child('rooms/' + geohash);
+  //   };
+
+  //   showError = err => {
+  //     console.warn(`ERROR(${err.code}): ${err.message}`);
+  //   };
 }
 
 export default Firebase;
