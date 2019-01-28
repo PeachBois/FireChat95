@@ -1,19 +1,11 @@
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import { withRouter, Route, Switch } from 'react-router-dom';
-import { withFirebase } from '../Firebase';
-import { compose } from 'recompose';
-import { me } from '../store/user';
+import React, { Component } from 'react'
+import { connect } from 'react-redux'
+import { withRouter, Route, Switch } from 'react-router-dom'
+import { withFirebase } from '../Firebase'
+import { compose } from 'recompose'
+import { me } from '../store/user'
 
-class SignInGoogleBase extends Component {
-  constructor() {
-    super();
-    this.state = {
-      error: null
-      // user: null
-    };
-  }
-
+const SignInGoogleBase = props => {
   // componentDidMount() {
   //   this.authListener();
   // }
@@ -31,56 +23,54 @@ class SignInGoogleBase extends Component {
   //   });
   // };
 
-  handleSubmit = async event => {
-    event.preventDefault();
+  const handleSubmit = async event => {
+    event.preventDefault()
     try {
-      const googleUser = await this.props.firebase.signInWithGoogle();
-      console.log('google AUTH USER ===> ', googleUser);
-      console.log('this.props ??? >>>>>', this.props);
-      await this.props.firebase.user(googleUser.user.uid).set({
+      const googleUser = await props.firebase.signInWithGoogle()
+      console.log(googleUser)
+      await props.firebase.user(googleUser.user.uid).set({
         username: googleUser.user.displayName,
         email: googleUser.user.email,
+        imgUrl: googleUser.user.photoURL,
         roles: []
-      });
+      })
+      const user = {
+        username: googleUser.user.displayName,
+        email: googleUser.user.email,
+        imgUrl: googleUser.user.photoURL,
+        roles: []
+      }
 
-      this.props.me(googleUser.user.displayName);
+      props.me(user)
 
-      this.setState({
-        error: null
-      });
-
-      this.props.history.push('/chat');
+      props.history.push('/setup')
     } catch (err) {
-      this.setState({
-        error: err
-      });
+      console.error(err)
     }
-  };
-
-  render() {
-    const { error } = this.state;
-    console.log('Inside render! error message>>', error);
-
-    return (
-      <form onSubmit={this.handleSubmit}>
-        <button type="submit">Google Signin</button>
-
-        {error && <p>{error.message}</p>}
-      </form>
-    );
   }
+
+  return (
+    <form onSubmit={handleSubmit}>
+      <button type='submit' className='google'>
+        Google Signin
+      </button>
+    </form>
+  )
 }
 
 const mapDispatch = dispatch => {
   return {
-    me: name => dispatch(me(name))
-  };
-};
+    me: user => dispatch(me(user))
+  }
+}
 
 const SignInGoogle = compose(
   withRouter,
   withFirebase,
-  connect(null, mapDispatch)
-);
+  connect(
+    null,
+    mapDispatch
+  )
+)
 
-export default SignInGoogle(SignInGoogleBase);
+export default SignInGoogle(SignInGoogleBase)

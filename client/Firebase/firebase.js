@@ -29,16 +29,17 @@ class Firebase {
     };
   }
 
-  //Auth API
+  // Auth API
   signInWithGoogle = () => this.auth.signInWithPopup(this.googleProvider);
 
-  //User API
+  // User API
   user = uid => this.database.ref(`users/${uid}`);
   users = () => this.database.ref('users');
 
-  //Method to write new message in chat box.
+  // Method to write new message in chat box.
   writeNewPost = (username, body) => {
     // A post entry.
+
     let postData = {
       username,
       body
@@ -85,18 +86,18 @@ class Firebase {
       console.error('Not Supported!!!');
     }
 
-    const location = new Promise((resolve, reject) => {
-      if (geolocation) {
-        console.log('roomInit method triggered???!!!!', geolocation);
-        geolocation.getCurrentPosition(position => {
-          console.log(position, '<<======= this is the position');
-          resolve(showLocation);
-        });
-      } else {
-        reject(new Error('Not Supported!!!'));
-      }
-    });
-    return location;
+    // const location = new Promise((resolve, reject) => {
+    //   if (geolocation) {
+    //     console.log('roomInit method triggered???!!!!', geolocation);
+    //     geolocation.getCurrentPosition(position => {
+    //       console.log(position, '<<======= this is the position');
+    //       resolve(showLocation);
+    //     });
+    //   } else {
+    //     reject(new Error('Not Supported!!!'));
+    //   }
+    // });
+    // return location;
   };
 
   //   //Utility functions for Geohash room creator's roomInit():
