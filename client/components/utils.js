@@ -17,6 +17,7 @@
 //         console.error(err)
 //     }
 // }
+import Geohash from 'latlon-geohash'
 
 export const getUserLocation = () => {
     const geolocation = navigator.geolocation;
@@ -36,4 +37,12 @@ export const getUserLocation = () => {
     return location
   };
 
-
+export const getGeoHash = async (precision) => {
+  getUserLocation()
+  const coordinates = await getUserLocation() 
+  console.log(coordinates)
+  const {latitude, longitude} = coordinates.coords
+  const hash = Geohash.encode(latitude, longitude, precision)
+  // console.log(hash)
+  return hash
+}
