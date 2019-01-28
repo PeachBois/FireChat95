@@ -12,7 +12,8 @@ class messageBox extends Component {
     this.state = {
       username: '',
       body: '',
-      postList: []
+      postList: [],
+      hash: ''
     }
   }
   async componentDidMount () {
@@ -21,16 +22,16 @@ class messageBox extends Component {
     }
     let postList = []
     const hash = await getGeoHash()
+    this.setState({ hash })
     console.log(hash)
     this.props.firebase.findOrCreateRoom(hash)
     const dbRefObject = firebase
       .database()
       .ref()
-      .child(`rooms/${hash}`)
+      .child(`/rooms/${hash}`)
 
     dbRefObject.on('value', snap => {
       postList = []
-      console.log(snap.val())
       const postObj = snap.val()
       let key = Object.keys(postObj)
       for (key in postObj) {
@@ -50,7 +51,8 @@ class messageBox extends Component {
     this.setState({ [evt.target.name]: evt.target.value })
   }
   handleSubmit = evt => {
-    this.props.firebase.writeNewPost(this.props.user.username, this.state.body)
+    const { body, hash } = this.state
+    this.props.firebase.writeNewPost(this.props.user.username, body, hash)
     this.setState({ body: '' })
   }
 
