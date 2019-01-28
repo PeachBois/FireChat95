@@ -55,6 +55,7 @@ class messageBox extends Component {
   };
   handleSubmit = evt => {
     const { body, hash } = this.state;
+    console.log(hash);
     this.props.firebase.writeNewPost(this.props.user.username, body, hash);
     this.setState({ body: '' });
   };
