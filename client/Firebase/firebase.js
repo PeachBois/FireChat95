@@ -58,10 +58,11 @@ class Firebase {
     console.log(updates);
     return this.database.ref().update(updates);
   };
+
   findOrCreateRoom = async room => {
     console.log(room);
     if (!this.database.ref().child(`rooms/${room}`)) {
-      this.database.ref().child(`rooms/${room}`);
+      await this.database.ref().child(`rooms/${room}`);
     }
   };
 
