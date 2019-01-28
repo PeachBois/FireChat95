@@ -13,7 +13,7 @@ import { compose } from 'recompose'
 import { withFirebase } from './Firebase'
 import MessageBox from './components/messageBox'
 import Login from './components/login'
-
+import RoomSetUp from './components/room-set-up'
 /**
  * COMPONENT
  */
@@ -23,8 +23,9 @@ class RoutesBase extends Component {
   render () {
     return (
       <div>
-        <Route path='/' component={Login} />
+        <Route exact path='/' component={Login} />
         <Route exact path='/chat' component={MessageBox} />
+        <Route exact path='/navtest' component={RoomSetUp} />
       </div>
     )
   }
