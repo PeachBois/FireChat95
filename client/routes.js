@@ -12,7 +12,8 @@ import { compose } from 'recompose'
 
 import { withFirebase } from './Firebase'
 import MessageBox from './components/messageBox'
-import Login from './components/login'
+import Login from './components/Login'
+import ChangeName from './components/changeName'
 
 /**
  * COMPONENT
@@ -25,6 +26,7 @@ class RoutesBase extends Component {
       <div>
         <Route path='/' component={Login} />
         <Route exact path='/chat' component={MessageBox} />
+        <Route exact path='/setup' component={ChangeName} />
       </div>
     )
   }

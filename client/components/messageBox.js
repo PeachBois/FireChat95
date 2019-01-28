@@ -11,15 +11,13 @@ class messageBox extends Component {
     this.state = {
       username: '',
       body: '',
-      postList: [],
-      style: { color: 'red' }
+      postList: []
     }
   }
   componentDidMount () {
-    if (typeof this.props.username !== 'string') {
+    if (typeof this.props.user.username !== 'string') {
       this.props.history.push('/')
     }
-
     let postList = []
 
     const dbRefObject = firebase
@@ -34,19 +32,21 @@ class messageBox extends Component {
       for (key in postObj) {
         postList.push(postObj[key])
       }
-      this.setState({
-        postList,
-        username: this.props.username,
-        style: { color: this.getRandomColor() }
-      })
+      this.setState({ postList, username: this.props.user.username })
     })
+
+    this.scrollToBottom()
+  }
+
+  componentDidUpdate () {
+    this.scrollToBottom()
   }
 
   handleChange = evt => {
     this.setState({ [evt.target.name]: evt.target.value })
   }
   handleSubmit = evt => {
-    this.props.firebase.writeNewPost(this.state.username, this.state.body)
+    this.props.firebase.writeNewPost(this.props.user.username, this.state.body)
     this.setState({ body: '' })
   }
 
@@ -59,9 +59,14 @@ class messageBox extends Component {
     return color
   }
 
+  scrollToBottom = () => {
+    console.log('messageEnd!!! ==> ', this.messageEnd)
+    this.messageEnd.scrollIntoView({ behavior: 'smooth' })
+  }
+
   render () {
     let { body } = this.state
-
+    let hStyle = { color: this.getRandomColor() }
     return (
       <div className='box'>
         <div className='title'>
@@ -79,6 +84,12 @@ class messageBox extends Component {
                 </div>
               )
             })}
+            <div
+              style={{ float: 'left', clear: 'both' }}
+              ref={el => {
+                this.messageEnd = el
+              }}
+            />
           </div>
           <input
             type='text'
@@ -97,7 +108,7 @@ class messageBox extends Component {
  * CONTAINER
  */
 const mapState = state => {
-  return { username: state.user }
+  return { user: state.user }
 }
 
 const mapDispatch = dispatch => {

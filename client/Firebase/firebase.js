@@ -19,10 +19,22 @@ class Firebase {
   constructor () {
     firebase.initializeApp(config)
     this.database = firebase.database()
+    this.auth = firebase.auth()
     this.posts = []
+    this.googleProvider = new firebase.auth.GoogleAuthProvider()
   }
+
+  // Auth API
+  signInWithGoogle = () => this.auth.signInWithPopup(this.googleProvider)
+
+  // User API
+  user = uid => this.database.ref(`users/${uid}`)
+  users = () => this.database.ref('users')
+
+  // Method to write new message in chat box.
   writeNewPost = (username, body) => {
     // A post entry.
+
     let postData = {
       username,
       body
