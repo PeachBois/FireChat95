@@ -1,0 +1,15 @@
+{
+  "short_name": "Ran Chat",
+  "name": "Random Chat App",
+  "icons": [
+    {
+      "src": "/Icon_Bird_512x512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ],
+  "start_url": "./index.html",
+  "display": "standalone",
+  "theme_color": "#000000",
+  "background_color": "#ffffff"
+}
