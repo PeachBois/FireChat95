@@ -31,7 +31,7 @@ class ChangeName extends Component {
         email: this.props.user.email
       })
     }
-    this.props.history.push('/chat')
+    this.props.history.push('/locating')
   }
 
   render () {
