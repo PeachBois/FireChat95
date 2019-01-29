@@ -14,21 +14,17 @@ class messageBox extends Component {
     }
   }
   async componentDidMount () {
-    const { username, email } = this.props.user
+    const { username } = this.props.user
     const hash = this.props.hash
     if (typeof username !== 'string') {
       this.props.history.push('/')
     }
-
-    console.log(hash)
     let postList = []
-
-    this.props.firebase.findOrCreateRoom(hash, email)
 
     const dbRefObject = firebase
       .database()
       .ref()
-      .child(`/rooms/${hash}`)
+      .child(`/rooms/${hash}/posts`)
 
     dbRefObject.on('value', snap => {
       postList = []
@@ -37,7 +33,7 @@ class messageBox extends Component {
       for (key in postObj) {
         postList.push(postObj[key])
       }
-      this.setState({ postList, username: this.props.user.username })
+      this.setState({ postList })
     })
 
     this.scrollToBottom()
@@ -117,19 +113,12 @@ const mapState = state => {
   return { user: state.user, hash: state.posts.hash }
 }
 
-const mapDispatch = dispatch => {
-  return {}
-}
-
 // The `withRouter` wrapper makes sure that updates are not blocked
 // when the url changes
 const MessageBoxConnect = compose(
   withRouter,
   withFirebase,
-  connect(
-    mapState,
-    mapDispatch
-  )
+  connect(mapState)
 )
 
 export default MessageBoxConnect(messageBox)
