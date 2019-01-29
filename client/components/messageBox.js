@@ -1,31 +1,29 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { withRouter, Route, Switch } from 'react-router-dom'
+import { withRouter } from 'react-router-dom'
 import { withFirebase } from '../Firebase/index'
 import { compose } from 'recompose'
-import { getGeoHash } from './utils'
 import firebase from 'firebase'
 
 class messageBox extends Component {
   constructor () {
     super()
     this.state = {
-      username: '',
       body: '',
-      postList: [],
-      hash: ''
+      postList: []
     }
   }
   async componentDidMount () {
-    if (typeof this.props.user.username !== 'string') {
+    const { username, email } = this.props.user
+    const hash = this.props.hash
+    if (typeof username !== 'string') {
       this.props.history.push('/')
     }
-    let postList = []
-    const hash = await getGeoHash()
-    this.setState({ hash })
-    console.log(hash)
 
-    this.props.firebase.findOrCreateRoom(hash)
+    console.log(hash)
+    let postList = []
+
+    this.props.firebase.findOrCreateRoom(hash, email)
 
     const dbRefObject = firebase
       .database()
@@ -53,8 +51,8 @@ class messageBox extends Component {
     this.setState({ [evt.target.name]: evt.target.value })
   }
   handleSubmit = evt => {
-    const { body, hash } = this.state
-    console.log(hash)
+    const hash = this.props.hash
+    const body = this.state.body
     this.props.firebase.writeNewPost(this.props.user.username, body, hash)
     this.setState({ body: '' })
   }
@@ -69,7 +67,6 @@ class messageBox extends Component {
   }
 
   scrollToBottom = () => {
-    console.log('messageEnd!!! ==> ', this.messageEnd)
     this.messageEnd.scrollIntoView({ behavior: 'smooth' })
   }
 
@@ -117,7 +114,7 @@ class messageBox extends Component {
  * CONTAINER
  */
 const mapState = state => {
-  return { user: state.user }
+  return { user: state.user, hash: state.posts.hash }
 }
 
 const mapDispatch = dispatch => {

@@ -1,9 +1,8 @@
 // In this 'firebase.js' file:
 // configures Firebase and implements methods/functions for the Firebase class.
-
+import { compose } from 'recompose'
 import * as firebase from 'firebase/app'
 import 'firebase/database'
-import { getGeoHash } from '../components/utils'
 // import app from 'firebase/app';
 
 // Initializing Firebase:
@@ -23,6 +22,7 @@ class Firebase {
     this.auth = firebase.auth()
     this.posts = []
     this.googleProvider = new firebase.auth.GoogleAuthProvider()
+    this.room = null
   }
 
   // Auth API
@@ -33,7 +33,7 @@ class Firebase {
   users = () => this.database.ref('users')
 
   // Method to write new message in chat box.
-  writeNewPost = (username, body, hash) => {
+  writeNewPost = (username, body) => {
     // A post entry.
 
     let postData = {
@@ -44,19 +44,37 @@ class Firebase {
 
     let newPostKey = this.database
       .ref()
-      .child(`/rooms/${hash}/`)
+      .child(`/rooms/${this.room}/`)
       .push().key
 
     // Write the new post's data simultaneously in the posts list and the user's post list.
     var updates = {}
-    updates[`/rooms/${hash}/` + newPostKey] = postData
+    updates[`/rooms/${this.room}/` + newPostKey] = postData
     console.log(updates)
     return this.database.ref().update(updates)
   }
-  findOrCreateRoom = async room => {
-    console.log(room)
-    if (!this.database.ref(`/rooms/${room}/`)) {
-      this.database.ref().child(`/rooms/${room}/`)
+  createRoom = (room, email, it) => {
+    this.database.ref().child(`/rooms/${room}${room}-${it}`)
+    this.database
+      .ref()
+      .child(`/rooms/${room}-${it}/users`)
+      .push(email)
+    this.room = `${room}-${it}`
+  }
+
+  findOrCreateRoom = async (room, email, it = 0) => {
+    if (!this.database.ref(`/rooms/${room}-${it}/`)) {
+      this.createRoom(room, email, it)
+    } else {
+      if (this.database.ref().child(`/rooms/${room}-${it}/users`).length >= 5) {
+        this.findOrCreateRoom(room, email, it + 1)
+      } else {
+        this.database
+          .ref()
+          .child(`/rooms/${room}-${it}/users`)
+          .push(email)
+        this.room = `${room}-${it}`
+      }
     }
   }
 

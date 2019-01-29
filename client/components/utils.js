@@ -1,22 +1,3 @@
-// export const getUserLocation = async () => {
-//     try {
-//         let location = {
-//             lat: null,
-//             long: null
-//         }
-
-//         let test = await navigator.geolocation.getCurrentPosition(async position => {
-//             location.lat = await position.coords.latitude
-//             location.long = await position.coords.longitude
-//             return location
-//         })
-//         console.log('OUTSIDE FUNC SCOPE', location)
-//         console.log('test', test)
-//         return test
-//     } catch (err) {
-//         console.error(err)
-//     }
-// }
 import Geohash from 'latlon-geohash'
 
 export const getUserLocation = () => {
@@ -40,11 +21,8 @@ export const getUserLocation = () => {
   return location
 }
 
-export const getGeoHash = async () => {
-  const coordinates = await getUserLocation()
-  console.log(coordinates)
+export const getGeoHash = async coordinates => {
   const { latitude, longitude } = coordinates.coords
-  const hash = Geohash.encode(latitude, longitude, 8)
-  // console.log(hash)
+  const hash = Geohash.encode(latitude, longitude, 4)
   return hash
 }

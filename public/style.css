@@ -10,9 +10,7 @@ button:focus{
 }
 .google {
   font-family:"helvetica";
-  
   background:orangered;
-
   padding:4px 10px;
   margin:20px auto 3px;
   display:block;
@@ -20,6 +18,7 @@ button:focus{
   bottom:0px;
 }
 .box{
+
   width:292px;
   background:#C0C0C0;
   border-width:1px;
@@ -63,13 +62,25 @@ p.title{
   font-weight:bold;
   font-family:Tahoma;
   text-align:center;
-  focus:none;
 }
 div.body{
   padding:13px 12px 12px;
   height:100%;
   width:calc(100% - 26px);
-  display:inline-block;
+}
+img.body{
+  height: 20%;
+  width: 20%;
+  position:relative;
+  padding:10px 10px;
+}
+.alert{
+display:flex;
+align-content: space-around;
+
+bottom:10px;
+
+
 }
 div.body p{
   font-family:"MS Sans Serif";
@@ -85,7 +96,6 @@ div.body button{
   border-color:#FFFFFF #808080 #808080 #FFFFFF;
   padding:4px 10px;
   margin:20px auto 3px;
-  display:block;
   position:relative;
   bottom:0px;
 }
@@ -93,7 +103,7 @@ div.body input{
   font-family:"MS Sans Serif";
   height:100%;
   width:calc(100% - 26px);
-  display:inline-block;
+ 
   background-color: #FFFFFF;
   border-width:1px;
   border-color:#808080#FFFFFF   #FFFFFF#808080;
