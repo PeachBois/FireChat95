@@ -52,6 +52,15 @@ class Loading extends Component {
       }
     })
   }
+  shutDown = () => {
+    dbRefObject.off()
+    firebase
+      .database()
+      .ref()
+      .child(`/rooms/${hash}/users`)
+      .remove()
+    this.props.history.push('/setup')
+  }
 
   render () {
     // console.log(this.state)
@@ -59,7 +68,7 @@ class Loading extends Component {
       <div className='box'>
         <div className='title'>
           <p className='title'>Finding a room...</p>
-          <button>X</button>
+          <button onClick={this.shutDown}>X</button>
         </div>
         <div className='alert'>
           <img className='body' src='/searching.gif' />
