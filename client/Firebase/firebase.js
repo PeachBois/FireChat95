@@ -3,6 +3,7 @@
 import { compose } from 'recompose'
 import * as firebase from 'firebase/app'
 import 'firebase/database'
+import { starter } from './firestarters'
 // import app from 'firebase/app';
 
 // Initializing Firebase:
@@ -51,22 +52,30 @@ class Firebase {
     // Write the new post's data simultaneously in the posts list and the user's post list.
     var updates = {}
     updates[`/rooms/${this.room}/posts/` + newPostKey] = postData
-    console.log(updates)
+    // console.log(updates)
     return this.database.ref().update(updates)
   }
   createRoom = async (room, email, it) => {
-    console.log(room, email, it)
+    // console.log(room, email, it)
     await this.database.ref().child(`/rooms/${room}-${it}`)
     await this.database
       .ref()
       .child(`/rooms/${room}-${it}/users`)
       .push(email)
+    await this.database
+      .ref()
+      .child(`/rooms/${room}-${it}/posts`)
+      .push({
+        username: 'StarterBot',
+        body: starter(),
+        img: `https://robohash.org/${room}`
+      })
+
     this.room = `${room}-${it}`
   }
 
   findOrCreateRoom = async (room, email, it = 0) => {
-    console.log(room, email, it)
-
+    // console.log(room, email, it)
     let users
     await this.database
       .ref()
@@ -79,15 +88,15 @@ class Firebase {
       })
       .then(async () => {
         if (!users) {
-          console.log('creating')
+          // console.log('creating')
           await this.createRoom(room, email, it)
           this.room = `${room}-${it}`
         } else {
           if (users.length >= 2) {
-            console.log('restarting')
+            // console.log('restarting')
             await this.findOrCreateRoom(room, email, it + 1)
           } else {
-            console.log('adding name')
+            // console.log('adding name')
             await this.database
               .ref()
               .child(`/rooms/${room}-${it}/users`)
