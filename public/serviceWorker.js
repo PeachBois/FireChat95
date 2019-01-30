@@ -6,6 +6,8 @@ const CACHE_DYNAMIC_NAME = 'dynamic-cache';
 
 console.log('++++++++HELLO!!!! from SERVICE WORKER!!!>>>>>>');
 
+//below needs more work done..
+
 //Triggers when user starts the app.
 self.addEventListener('install', event => {
   console.log('INSTALLING Service worker!!');
