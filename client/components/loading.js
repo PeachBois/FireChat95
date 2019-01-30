@@ -28,14 +28,11 @@ class Loading extends Component {
       longitude: coordinates.coords.longitude
     })
     const geohash = await getGeoHash(coordinates)
-
-    const room = new Promise((resolve, reject) => {
-      let roomId = this.props.firebase.findOrCreateRoom(
-        geohash,
-        this.props.user.email
-      )
-      resolve(roomId)
-    })
+    console.log('loading', coordinates, this.props.user.email)
+    const room = await this.props.firebase.findOrCreateRoom(
+      geohash,
+      this.props.user.email
+    )
 
     this.setState({ geohash })
     const userObj = firebase

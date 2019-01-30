@@ -76,18 +76,18 @@ class Firebase {
           console.log('exists!', users)
         }
       })
-      .then(() => {
+      .then(async () => {
         if (!users) {
           console.log('creating')
-          this.createRoom(room, email, it)
+          await this.createRoom(room, email, it)
           this.room = `${room}-${it}`
         } else {
           if (users.length >= 2) {
             console.log('restarting')
-            this.findOrCreateRoom(room, email, it + 1)
+            await this.findOrCreateRoom(room, email, it + 1)
           } else {
             console.log('adding name')
-            this.database
+            await this.database
               .ref()
               .child(`/rooms/${room}-${it}/users`)
               .push(email)
