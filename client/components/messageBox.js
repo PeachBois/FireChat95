@@ -59,17 +59,13 @@ class messageBox extends Component {
 
   getRandomColor = name => {
     let arr = name.split('').sort()
-    const letters = '0123456789ABCDEF'
+    const letters = '0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF'
     let result = []
     for (let i = 0; i < arr.length; i++) {
       if (!letters.includes(arr[i])) {
-        if (letters[i]) {
-          result.push(letters[i])
-        } else {
-          result.push(letters[5])
-        }
+        result.push(letters[letters.length - arr.slice(0, i).length])
       } else {
-        result.push(name[i])
+        result.push(arr[i])
       }
     }
 
@@ -85,7 +81,6 @@ class messageBox extends Component {
       return newArr
     }
     result = checkLength(result).join('')
-    console.log(result)
     var color = '#'
     for (var i = 0; i < 6; i++) {
       color += result
