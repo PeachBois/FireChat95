@@ -3,6 +3,7 @@
 import { compose } from 'recompose'
 import * as firebase from 'firebase/app'
 import 'firebase/database'
+import { starter } from './firestarters'
 // import app from 'firebase/app';
 
 // Initializing Firebase:
@@ -61,6 +62,15 @@ class Firebase {
       .ref()
       .child(`/rooms/${room}-${it}/users`)
       .push(email)
+    await this.database
+      .ref()
+      .child(`/rooms/${room}-${it}/posts`)
+      .push({
+        username: 'StarterBot',
+        body: starter(),
+        img: `https://robohash.org/${room}`
+      })
+
     this.room = `${room}-${it}`
   }
 
