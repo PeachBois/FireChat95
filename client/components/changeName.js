@@ -6,12 +6,14 @@ import { compose } from 'recompose'
 import firebase from 'firebase'
 import { me } from '../store/user'
 import SignInGoogle from './SignInGoogle'
+import { setRadius } from '../store/posts'
 
 class ChangeName extends Component {
   constructor () {
     super()
     this.state = {
-      displayName: ''
+      displayName: '',
+      radius: 4
     }
   }
   componentDidMount () {
@@ -30,6 +32,7 @@ class ChangeName extends Component {
         imgUrl: this.props.user.imgUrl,
         email: this.props.user.email
       })
+      this.props.setRadius(this.state.radius)
     }
     this.props.history.push('/locating')
   }
@@ -39,7 +42,7 @@ class ChangeName extends Component {
       this.props.history.push('/')
     }
 
-    let { displayName } = this.state
+    let { displayName, radius } = this.state
     const { imgUrl } = this.props.user
     return (
       <div className='box'>
@@ -59,15 +62,16 @@ class ChangeName extends Component {
                 name='displayName'
                 onChange={this.handleChange}
               />
-              <p>Search Range</p>
+              <p>Search Accuracy</p>
               <input
-                type='range'
+                name='radius'
+                type='number'
                 min='1'
-                max='100'
-                defaultValue='50'
-                className='slider'
-                id='myRange'
+                max='10'
+                defaultValue='5'
+                onChange={this.handleChange}
               />
+              <p>{radius}</p>
             </div>
           </div>
 
@@ -89,7 +93,8 @@ const mapState = state => {
 
 const mapDispatch = dispatch => {
   return {
-    me: name => dispatch(me(name))
+    me: name => dispatch(me(name)),
+    setRadius: radius => dispatch(setRadius(radius))
   }
 }
 

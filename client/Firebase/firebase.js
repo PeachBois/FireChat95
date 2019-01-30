@@ -33,12 +33,13 @@ class Firebase {
   users = () => this.database.ref('users')
 
   // Method to write new message in chat box.
-  writeNewPost = (username, body) => {
+  writeNewPost = (username, img, body) => {
     // A post entry.
 
     let postData = {
       username,
-      body
+      body,
+      img
     }
     console.log(postData)
 
