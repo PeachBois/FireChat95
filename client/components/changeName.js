@@ -5,6 +5,7 @@ import { withFirebase } from '../Firebase/index'
 import { compose } from 'recompose'
 import firebase from 'firebase'
 import { me } from '../store/user'
+import {loadLocation} from '../store/map'
 import SignInGoogle from './SignInGoogle'
 
 class ChangeName extends Component {
@@ -16,6 +17,7 @@ class ChangeName extends Component {
   }
   componentDidMount () {
     this.setState({ displayName: this.props.user.username })
+    this.props.loadLocation()
   }
 
   handleChange = evt => {
@@ -89,7 +91,8 @@ const mapState = state => {
 
 const mapDispatch = dispatch => {
   return {
-    me: name => dispatch(me(name))
+    me: name => dispatch(me(name)),
+    loadLocation: () => dispatch(loadLocation())
   }
 }
 

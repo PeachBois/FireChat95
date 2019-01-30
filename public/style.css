@@ -136,6 +136,10 @@ width: 75%;
 height: 20%
 }
 
+#map{
+  height: 100%;
+  float: left
+}
 
 
 

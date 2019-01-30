@@ -44,7 +44,7 @@ export const getGeoHash = async () => {
   const coordinates = await getUserLocation()
   console.log(coordinates)
   const { latitude, longitude } = coordinates.coords
-  const hash = Geohash.encode(latitude, longitude, 8)
+  const hash = Geohash.encode(latitude, longitude, 4)
   // console.log(hash)
   return hash
 }

@@ -4,8 +4,9 @@ import thunkMiddleware from 'redux-thunk'
 import { composeWithDevTools } from 'redux-devtools-extension'
 import user from './user'
 import posts from './posts'
+import position from './map'
 
-const reducer = combineReducers({ user, posts })
+const reducer = combineReducers({ user, posts, position })
 const middleware = composeWithDevTools(
   applyMiddleware(thunkMiddleware, createLogger({ collapsed: true }))
 )

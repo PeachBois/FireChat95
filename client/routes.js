@@ -15,6 +15,7 @@ import MessageBox from './components/messageBox'
 import Login from './components/login'
 import RoomSetUp from './components/room-set-up'
 import ChangeName from './components/changeName'
+import GoogleMap from './components/map'
 
 /**
  * COMPONENT
@@ -25,6 +26,7 @@ class RoutesBase extends Component {
   render () {
     return (
       <div>
+        <Route path='/' component={GoogleMap} />
         <Route exact path='/' component={Login} />
         <Route exact path='/chat' component={MessageBox} />
         <Route exact path='/navtest' component={RoomSetUp} />

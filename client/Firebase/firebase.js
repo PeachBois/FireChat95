@@ -53,10 +53,21 @@ class Firebase {
     console.log(updates)
     return this.database.ref().update(updates)
   }
-  findOrCreateRoom = async room => {
-    console.log(room)
-    if (!this.database.ref(`/rooms/${room}/`)) {
-      this.database.ref().child(`/rooms/${room}/`)
+   
+  findOrCreateRoom = async (room, email, it = 0) => {
+    const users = this.database.ref().child(`/rooms/${room}-${it}/users`)
+
+    if (!this.database.ref(`/rooms/${room}-${it}/`)) {
+      this.createRoom(room, email, it)
+    } else {
+      if (this.database.ref().child(`/rooms/${room}-${it}/users`).length >= 5) {
+        this.findOrCreateRoom(room, email, it + 1)
+      } else {
+        this.database
+          .ref()
+          .child(`/rooms/${room}-${it}/users`)
+          .push(email)
+      }
     }
   }
 
