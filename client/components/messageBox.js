@@ -57,35 +57,19 @@ class messageBox extends Component {
     this.setState({ body: '' })
   }
 
-  getRandomColor = name => {
-    let arr = name.split('').sort()
-    const letters = '0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF'
-    let result = []
-    for (let i = 0; i < arr.length; i++) {
-      if (!letters.includes(arr[i])) {
-        result.push(letters[letters.length - arr.slice(0, i).length])
-      } else {
-        result.push(arr[i])
-      }
+  hashCode = str => {
+    // java String#hashCode
+    var hash = 0
+    for (var i = 0; i < str.length; i++) {
+      hash = str.charCodeAt(i) + ((hash << 5) - hash)
     }
+    return hash
+  }
 
-    const checkLength = arr => {
-      let newArr = []
+  intToRGB = i => {
+    var c = (i & 0x00ffffff).toString(16).toUpperCase()
 
-      if (arr.length >= 6) {
-        newArr = arr.slice(0, 6)
-      } else {
-        newArr = [...arr, ...arr]
-        checkLength(newArr)
-      }
-      return newArr
-    }
-    result = checkLength(result).join('')
-    var color = '#'
-    for (var i = 0; i < 6; i++) {
-      color += result
-    }
-    return color
+    return '#' + '00000'.substring(0, 6 - c.length) + c
   }
 
   scrollToBottom = () => {
@@ -106,8 +90,12 @@ class messageBox extends Component {
           <div className='inner'>
             {this.state.postList.map(entry => {
               return (
-                <div id={entry.body + Math.random()}>
-                  <p style={{ color: this.getRandomColor(entry.username) }}>
+                <div key={this.hashCode(entry.body + Math.random())}>
+                  <p
+                    style={{
+                      color: this.intToRGB(this.hashCode(entry.username))
+                    }}
+                  >
                     {entry.username}
                   </p>
                   <p>:{entry.body}</p>
