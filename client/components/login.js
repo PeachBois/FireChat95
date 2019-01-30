@@ -1,25 +1,25 @@
-import React, { Component } from 'react'
+import React, { Component } from 'react';
 // import { connect } from 'react-redux'
 // import { withRouter, Route, Switch } from 'react-router-dom'
 // import { withFirebase } from '../Firebase/index'
 // import { compose } from 'recompose'
 // import firebase from 'firebase'
 // import { me } from '../store/user'
-import SignInGoogle from './SignInGoogle'
+import SignInGoogle from './SignInGoogle';
 
 const Login = () => {
   return (
-    <div className='box'>
-      <div className='title'>
-        <p className='title'>ALOL</p>
+    <div className="box">
+      <div className="title">
+        <p className="title">ALOL</p>
         <button>X</button>
       </div>
-      <div className='body'>
+      <div className="body">
         <SignInGoogle />
       </div>
     </div>
-  )
-}
+  );
+};
 
 // const mapState = state => {
 //   return {}
@@ -42,7 +42,7 @@ const Login = () => {
 //   )
 // )
 
-export default Login
+export default Login;
 
 /**
  * PROP TYPES
