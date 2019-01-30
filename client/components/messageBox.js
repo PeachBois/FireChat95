@@ -51,6 +51,7 @@ class messageBox extends Component {
     this.setState({ [evt.target.name]: evt.target.value });
   };
   handleSubmit = evt => {
+    evt.preventDefault();
     const { username, imgUrl } = this.props.user;
     const hash = this.props.hash;
     const body = this.state.body;
@@ -90,7 +91,7 @@ class messageBox extends Component {
           <p className="title">Welcome!</p>
           <div className="inner">
             {this.state.postList.map(entry => {
-              console.log(entry);
+              // console.log(entry)
               return (
                 <div
                   className="message"
@@ -115,13 +116,15 @@ class messageBox extends Component {
               }}
             />
           </div>
-          <input
-            type="text"
-            value={body}
-            name="body"
-            onChange={this.handleChange}
-          />
-          <button onClick={this.handleSubmit}>Submit</button>
+          <form onSubmit={this.handleSubmit}>
+            <input
+              type="text"
+              value={body}
+              name="body"
+              onChange={this.handleChange}
+            />
+            <button type="submit">Submit</button>
+          </form>
         </div>
       </div>
     );

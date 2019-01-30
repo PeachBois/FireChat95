@@ -65,13 +65,13 @@ class ChangeName extends Component {
               <p>Search Accuracy</p>
               <input
                 name='radius'
+                className='input'
                 type='number'
                 min='1'
                 max='10'
-                defaultValue='5'
+                defaultValue='4'
                 onChange={this.handleChange}
               />
-              <p>{radius}</p>
             </div>
           </div>
 
