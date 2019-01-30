@@ -28,30 +28,29 @@ class Loading extends Component {
       longitude: coordinates.coords.longitude
     })
     const geohash = await getGeoHash(coordinates)
-    const room = await this.props.firebase.findOrCreateRoom(
-      geohash,
-      this.props.user.email
-    )
 
-    this.props.setHash(room)
-    this.setState({ geohash })
+    const room = await this.props.firebase
+      .findOrCreateRoom(geohash, this.props.user.email)
+      .then(() => {
+        this.setState({ geohash })
 
-    const userObj = firebase
-      .database()
-      .ref()
-      .child(`/rooms/${room}/users`)
-
-    userObj.on('value', snap => {
-      let users = []
-      if (snap.val()) {
-        users = Object.values(snap.val())
-      }
-      console.log(users)
-
-      if (users.length >= 2) {
-        this.props.history.push('/chat')
-      }
-    })
+        const userObj = firebase
+          .database()
+          .ref()
+          .child(`/rooms/${room}/users`)
+        console.log(room)
+        userObj.on('value', snap => {
+          let users = []
+          if (snap.val()) {
+            users = Object.values(snap.val())
+          }
+          console.log(users, room)
+          this.props.setHash(room)
+          if (users.length >= 2) {
+            this.props.history.push('/chat')
+          }
+        })
+      })
   }
 
   render () {

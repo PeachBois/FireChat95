@@ -80,6 +80,7 @@ class Firebase {
         if (!users) {
           console.log('creating')
           this.createRoom(room, email, it)
+          this.room = `${room}-${it}`
         } else {
           if (users.length >= 2) {
             console.log('restarting')
@@ -90,13 +91,12 @@ class Firebase {
               .ref()
               .child(`/rooms/${room}-${it}/users`)
               .push(email)
+            this.room = `${room}-${it}`
           }
         }
       })
     return this.room
   }
-
-  // Add any relevant methods if we need to access the Firebase in our react components.
 }
 
 export default Firebase

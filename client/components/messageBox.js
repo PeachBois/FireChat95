@@ -20,7 +20,7 @@ class messageBox extends Component {
       this.props.history.push('/')
     }
     let postList = []
-
+    console.log(hash)
     const dbRefObject = firebase
       .database()
       .ref()
@@ -29,11 +29,15 @@ class messageBox extends Component {
     dbRefObject.on('value', snap => {
       postList = []
       const postObj = snap.val()
-      let key = Object.keys(postObj)
-      for (key in postObj) {
-        postList.push(postObj[key])
+      let key
+      if (postObj) {
+        Object.keys(postObj)
+
+        for (key in postObj) {
+          postList.push(postObj[key])
+        }
+        this.setState({ postList })
       }
-      this.setState({ postList })
     })
 
     this.scrollToBottom()
@@ -53,11 +57,38 @@ class messageBox extends Component {
     this.setState({ body: '' })
   }
 
-  getRandomColor = () => {
-    var letters = '0123456789ABCDEF'
+  getRandomColor = name => {
+    let arr = name.split('').sort()
+    const letters = '0123456789ABCDEF'
+    let result = []
+    for (let i = 0; i < arr.length; i++) {
+      if (!letters.includes(arr[i])) {
+        if (letters[i]) {
+          result.push(letters[i])
+        } else {
+          result.push(letters[5])
+        }
+      } else {
+        result.push(name[i])
+      }
+    }
+
+    const checkLength = arr => {
+      let newArr = []
+
+      if (arr.length >= 6) {
+        newArr = arr.slice(0, 6)
+      } else {
+        newArr = [...arr, ...arr]
+        checkLength(newArr)
+      }
+      return newArr
+    }
+    result = checkLength(result).join('')
+    console.log(result)
     var color = '#'
     for (var i = 0; i < 6; i++) {
-      color += letters[Math.floor(Math.random() * 16)]
+      color += result
     }
     return color
   }
@@ -68,7 +99,7 @@ class messageBox extends Component {
 
   render () {
     let { body } = this.state
-    let hStyle = { color: this.getRandomColor() }
+
     return (
       <div className='box'>
         <div className='title'>
@@ -81,7 +112,9 @@ class messageBox extends Component {
             {this.state.postList.map(entry => {
               return (
                 <div id={entry.body + Math.random()}>
-                  <p style={this.state.style}>{entry.username}</p>
+                  <p style={{ color: this.getRandomColor(entry.username) }}>
+                    {entry.username}
+                  </p>
                   <p>:{entry.body}</p>
                 </div>
               )
