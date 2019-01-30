@@ -1,11 +1,10 @@
 //Flag for enabling cache in production
 const doCache = true;
 
-const CACHE_NAME = 'pwa-app-cache';
+const CACHE_STATIC_NAME = 'static-cache';
+const CACHE_DYNAMIC_NAME = 'dynamic-cache';
 
 console.log('++++++++HELLO!!!! from SERVICE WORKER!!!>>>>>>');
-
-//"self": Requesting access to the service worker at the background
 
 //Triggers when user starts the app.
 self.addEventListener('install', event => {
@@ -14,20 +13,18 @@ self.addEventListener('install', event => {
   if (doCache) {
     console.log('Inside doCache if statement==caches=>', caches);
     event.waitUntil(
-      caches.open(CACHE_NAME).then(cache => {
+      caches.open(CACHE_STATIC_NAME).then(cache => {
         console.log('Service Worker: Pre-cache App Shell!!', cache);
 
         const urlsToCache = ['/', '/index.html'];
         cache.addAll(urlsToCache);
 
+        // //Edwin's comment: not sure about this part.. Comeback..
         // fetch('manifest.json')
         //   .then(response => {
         //     response.json();
         //   })
         //   .then(assets => {
-        //     //Edwin's comment: not sure about this part.. Comeback..
-        //     //Caches initial page and './index.js??
-        //     //Could also cache assets like CSS and images
         //     const urlsToCache = ['/', assets['index.html']];
         //     cache.addAll(urlsToCache);
         //   });
@@ -40,20 +37,22 @@ self.addEventListener('install', event => {
 self.addEventListener('activate', event => {
   console.log('ACTIVATING Service worker!!');
   console.log('Activate EVENT >>>> ', event);
-  return self.clients.claim();
 
-  // const currentCacheList = [CACHE_NAME];
-  // event.waitUntil(
-  //   caches.keys().then(keyList =>
-  //     Promise.all(
-  //       keyList.map(key => {
-  //         if (!currentCacheList.includes(key)) {
-  //           return caches.delete(key);
-  //         }
-  //       })
-  //     )
-  //   )
-  // );
+  const currentCacheList = [CACHE_STATIC_NAME, CACHE_DYNAMIC_NAME];
+
+  event.waitUntil(
+    caches.keys().then(keyList =>
+      Promise.all(
+        keyList.map(key => {
+          if (!currentCacheList.includes(key)) {
+            return caches.delete(key);
+          }
+        })
+      )
+    )
+  );
+
+  return self.clients.claim();
 });
 
 //In here, intercepts the network request and serves up the matching files.
@@ -68,7 +67,7 @@ self.addEventListener('fetch', event => {
           return response;
         } else {
           return fetch(event.request).then(serverRes =>
-            caches.open('dynamic-cache').then(cache => {
+            caches.open(CACHE_DYNAMIC_NAME).then(cache => {
               cache.put(event.request.url, serverRes.clone());
               return serverRes;
             })
