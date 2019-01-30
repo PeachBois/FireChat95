@@ -17,6 +17,10 @@ class Loading extends Component {
     }
   }
   async componentDidMount () {
+    if (typeof this.props.user.username !== 'string') {
+      this.props.history.push('/')
+    }
+    // CHECKS USER LOCATION
     const coordinates = await getUserLocation()
 
     this.setState({
@@ -24,12 +28,29 @@ class Loading extends Component {
       longitude: coordinates.coords.longitude
     })
     const geohash = await getGeoHash(coordinates)
+    console.log('loading', coordinates, this.props.user.email)
+    const room = await this.props.firebase.findOrCreateRoom(
+      geohash,
+      this.props.user.email
+    )
 
     this.setState({ geohash })
-    this.props.setHash(geohash)
-    setTimeout(() => {
-      this.props.history.push('/chat')
-    }, 5000)
+    const userObj = firebase
+      .database()
+      .ref()
+      .child(`/rooms/${room}/users`)
+    console.log(room)
+    userObj.on('value', snap => {
+      let users = []
+      if (snap.val()) {
+        users = Object.values(snap.val())
+      }
+      console.log(users, room)
+      this.props.setHash(room)
+      if (users.length >= 2) {
+        this.props.history.push('/chat')
+      }
+    })
   }
 
   render () {
@@ -62,7 +83,7 @@ class Loading extends Component {
 }
 
 const mapState = state => {
-  return {}
+  return { user: state.user }
 }
 
 const mapDispatch = dispatch => {

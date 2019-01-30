@@ -44,18 +44,19 @@ class Firebase {
 
     let newPostKey = this.database
       .ref()
-      .child(`/rooms/${this.room}/`)
+      .child(`/rooms/${this.room}/posts/`)
       .push().key
 
     // Write the new post's data simultaneously in the posts list and the user's post list.
     var updates = {}
-    updates[`/rooms/${this.room}/` + newPostKey] = postData
+    updates[`/rooms/${this.room}/posts/` + newPostKey] = postData
     console.log(updates)
     return this.database.ref().update(updates)
   }
-  createRoom = (room, email, it) => {
-    this.database.ref().child(`/rooms/${room}${room}-${it}`)
-    this.database
+  createRoom = async (room, email, it) => {
+    console.log(room, email, it)
+    await this.database.ref().child(`/rooms/${room}-${it}`)
+    await this.database
       .ref()
       .child(`/rooms/${room}-${it}/users`)
       .push(email)
@@ -63,22 +64,39 @@ class Firebase {
   }
 
   findOrCreateRoom = async (room, email, it = 0) => {
-    if (!this.database.ref(`/rooms/${room}-${it}/`)) {
-      this.createRoom(room, email, it)
-    } else {
-      if (this.database.ref().child(`/rooms/${room}-${it}/users`).length >= 5) {
-        this.findOrCreateRoom(room, email, it + 1)
-      } else {
-        this.database
-          .ref()
-          .child(`/rooms/${room}-${it}/users`)
-          .push(email)
-        this.room = `${room}-${it}`
-      }
-    }
-  }
+    console.log(room, email, it)
 
-  // Add any relevant methods if we need to access the Firebase in our react components.
+    let users
+    await this.database
+      .ref()
+      .child(`/rooms/${room}-${it}/users`)
+      .once('value', snapshot => {
+        if (snapshot.exists()) {
+          users = Object.values(snapshot.val())
+          console.log('exists!', users)
+        }
+      })
+      .then(async () => {
+        if (!users) {
+          console.log('creating')
+          await this.createRoom(room, email, it)
+          this.room = `${room}-${it}`
+        } else {
+          if (users.length >= 2) {
+            console.log('restarting')
+            await this.findOrCreateRoom(room, email, it + 1)
+          } else {
+            console.log('adding name')
+            await this.database
+              .ref()
+              .child(`/rooms/${room}-${it}/users`)
+              .push(email)
+            this.room = `${room}-${it}`
+          }
+        }
+      })
+    return this.room
+  }
 }
 
 export default Firebase
