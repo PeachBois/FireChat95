@@ -51,9 +51,10 @@ class messageBox extends Component {
     this.setState({ [evt.target.name]: evt.target.value })
   }
   handleSubmit = evt => {
+    const { username, imgUrl } = this.props.user
     const hash = this.props.hash
     const body = this.state.body
-    this.props.firebase.writeNewPost(this.props.user.username, body, hash)
+    this.props.firebase.writeNewPost(username, imgUrl, body)
     this.setState({ body: '' })
   }
 
@@ -89,8 +90,13 @@ class messageBox extends Component {
           <p className='title'>Welcome!</p>
           <div className='inner'>
             {this.state.postList.map(entry => {
+              console.log(entry)
               return (
-                <div key={this.hashCode(entry.body + Math.random())}>
+                <div
+                  className='message'
+                  key={this.hashCode(entry.body + Math.random())}
+                >
+                  <img src={entry.img} className='chatImg' />
                   <p
                     style={{
                       color: this.intToRGB(this.hashCode(entry.username))

@@ -135,6 +135,12 @@ div.body input{
   border-color:#808080#FFFFFF   #FFFFFF#808080;
   border-style:solid;
 }
+.chatImg{
+  height: 10%;
+  width: 10%;
+  padding: 0.5%;
+  
+}
 .userSpace{
   display: flex;
   flex-flow: wrap;
@@ -146,6 +152,11 @@ width: 75%;
 height: 20%
 }
 
+.message{
+  display: flex;
+  flex-flow: wrap;
+  align-items: center;
+}
 
 
 

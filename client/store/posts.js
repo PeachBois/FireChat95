@@ -5,6 +5,7 @@ import history from '../history'
  */
 const GET_POST = 'GET_POST'
 const SET_HASH = 'SET_HASH'
+const SET_RADIUS = 'SET_RADIUS'
 
 /**
  * INITIAL STATE
@@ -17,6 +18,7 @@ const defaultPosts = {}
 const gotPost = post => ({ type: GET_POST, post })
 
 export const setHash = hash => ({ type: SET_HASH, hash })
+export const setRadius = radius => ({ type: SET_RADIUS, radius })
 
 /**
  * THUNK CREATORS
@@ -42,6 +44,8 @@ export default function (state = defaultPosts, action) {
       return { ...state, posts: action.post }
     case SET_HASH:
       return { ...state, hash: action.hash }
+    case SET_RADIUS:
+      return { ...state, radius: action.radius }
 
     default:
       return state

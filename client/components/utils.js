@@ -21,8 +21,9 @@ export const getUserLocation = () => {
   return location
 }
 
-export const getGeoHash = async coordinates => {
+export const getGeoHash = async (coordinates, radius) => {
   const { latitude, longitude } = coordinates.coords
-  const hash = Geohash.encode(latitude, longitude, 4)
+  console.log(radius)
+  const hash = Geohash.encode(latitude, longitude, radius)
   return hash
 }

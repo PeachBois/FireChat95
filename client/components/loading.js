@@ -27,7 +27,7 @@ class Loading extends Component {
       latitude: coordinates.coords.latitude,
       longitude: coordinates.coords.longitude
     })
-    const geohash = await getGeoHash(coordinates)
+    const geohash = await getGeoHash(coordinates, this.props.radius)
     console.log('loading', coordinates, this.props.user.email)
     const room = await this.props.firebase.findOrCreateRoom(
       geohash,
@@ -83,7 +83,7 @@ class Loading extends Component {
 }
 
 const mapState = state => {
-  return { user: state.user }
+  return { user: state.user, radius: state.posts.radius }
 }
 
 const mapDispatch = dispatch => {
