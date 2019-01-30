@@ -116,15 +116,15 @@ class messageBox extends Component {
               }}
             />
           </div>
-          <input
-            type='text'
-            value={body}
-            name='body'
-            onChange={this.handleChange}
-          />
-          <button type='submit' onClick={this.handleSubmit}>
-            Submit
-          </button>
+          <form onSubmit={this.handleSubmit}>
+            <input
+              type='text'
+              value={body}
+              name='body'
+              onChange={this.handleChange}
+            />
+            <button type='submit'>Submit</button>
+          </form>
         </div>
       </div>
     )
