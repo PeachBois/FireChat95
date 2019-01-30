@@ -1,9 +1,8 @@
 // In this 'firebase.js' file:
 // configures Firebase and implements methods/functions for the Firebase class.
-
+import { compose } from 'recompose';
 import * as firebase from 'firebase/app';
 import 'firebase/database';
-import { getGeoHash } from '../components/utils';
 // import app from 'firebase/app';
 import Geohash from 'latlon-geohash';
 
@@ -24,10 +23,7 @@ class Firebase {
     this.auth = firebase.auth();
     this.posts = [];
     this.googleProvider = new firebase.auth.GoogleAuthProvider();
-    this.geoHashRoom = {
-      room: null,
-      precision: 6
-    };
+    this.room = null;
   }
 
   // Auth API
@@ -38,91 +34,71 @@ class Firebase {
   users = () => this.database.ref('users');
 
   // Method to write new message in chat box.
-  writeNewPost = (username, body, hash) => {
+  writeNewPost = (username, img, body) => {
     // A post entry.
 
     let postData = {
       username,
-      body
+      body,
+      img
     };
     console.log(postData);
 
     let newPostKey = this.database
       .ref()
-      .child(`/rooms/${hash}/`)
+      .child(`/rooms/${this.room}/posts/`)
       .push().key;
 
     // Write the new post's data simultaneously in the posts list and the user's post list.
     var updates = {};
-    updates[`/rooms/${hash}/` + newPostKey] = postData;
+    updates[`/rooms/${this.room}/posts/` + newPostKey] = postData;
     console.log(updates);
     return this.database.ref().update(updates);
   };
-  findOrCreateRoom = async room => {
-    console.log(room);
-    if (!this.database.ref(`/rooms/${room}/`)) {
-      this.database.ref().child(`/rooms/${room}/`);
-    }
+  createRoom = async (room, email, it) => {
+    console.log(room, email, it);
+    await this.database.ref().child(`/rooms/${room}-${it}`);
+    await this.database
+      .ref()
+      .child(`/rooms/${room}-${it}/users`)
+      .push(email);
+    this.room = `${room}-${it}`;
   };
 
-  // Add any relevant methods if we need to access the Firebase in our react components.
+  findOrCreateRoom = async (room, email, it = 0) => {
+    console.log(room, email, it);
 
-  //Geohash Room creator method
-  roomInit = async () => {
-    console.log('navigator geolocation >>>> ', navigator.geolocation);
-    const geolocation = await navigator.geolocation;
-    console.log('geolocation===???===> ', geolocation);
-    if (geolocation) {
-      return geolocation.getCurrentPosition(
-        position => {
-          console.log('Inside firebase roomInit() ===> ', position);
-          // const geohash = Geohash.encode(
-          //   position.coords.latitude,
-          //   position.coords.longitude,
-          //   this.geoHashRoom.precision
-          // );
-
-          // //Initialize the room based on the geohash
-          // this.geoHashRoom.room = this.database.ref().child('rooms/' + geohash);
-        },
-        err => {
-          console.warn(`ERROR(${err.code}): ${err.message}`);
+    let users;
+    await this.database
+      .ref()
+      .child(`/rooms/${room}-${it}/users`)
+      .once('value', snapshot => {
+        if (snapshot.exists()) {
+          users = Object.values(snapshot.val());
+          console.log('exists!', users);
         }
-      );
-    } else {
-      console.error('Not Supported!!!');
-    }
-
-    // const location = new Promise((resolve, reject) => {
-    //   if (geolocation) {
-    //     console.log('roomInit method triggered???!!!!', geolocation);
-    //     geolocation.getCurrentPosition(position => {
-    //       console.log(position, '<<======= this is the position');
-    //       resolve(showLocation);
-    //     });
-    //   } else {
-    //     reject(new Error('Not Supported!!!'));
-    //   }
-    // });
-    // return location;
+      })
+      .then(async () => {
+        if (!users) {
+          console.log('creating');
+          await this.createRoom(room, email, it);
+          this.room = `${room}-${it}`;
+        } else {
+          if (users.length >= 2) {
+            console.log('restarting');
+            await this.findOrCreateRoom(room, email, it + 1);
+          } else {
+            console.log('adding name');
+            await this.database
+              .ref()
+              .child(`/rooms/${room}-${it}/users`)
+              .push(email);
+            this.room = `${room}-${it}`;
+          }
+        }
+      });
+    return this.room;
   };
-
-  //   //Utility functions for Geohash room creator's roomInit():
-  //   showLocation = position => {
-  //     console.log('Inside firebase roomInit() ===> ', position);
-  //     const geohash = Geohash.encode(
-  //       position.coords.latitude,
-  //       position.coords.longitude,
-  //       this.geoHashRoom.precision
-  //     );
-
-  //     //Initialize the room based on the geohash
-  //     this.geoHashRoom.room = this.database.ref().child('rooms/' + geohash);
-  //   };
-
-  //   showError = err => {
-  //     console.warn(`ERROR(${err.code}): ${err.message}`);
-  //   };
 }
 
 export default Firebase;
