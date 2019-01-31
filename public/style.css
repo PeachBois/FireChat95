@@ -160,6 +160,10 @@ div.body input {
   text-align: center;
   font-weight: bold;
 }
+
+.enable-notifications {
+  display: none;
+}
 /* Above: For PWA: Improving progressive nature of the App (CSS) */
 
 .message {

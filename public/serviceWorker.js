@@ -1,8 +1,8 @@
 // Flag for enabling cache in production
-const doCache = true
+const doCache = true;
 
-const CACHE_STATIC_NAME = 'static-cache'
-const CACHE_DYNAMIC_NAME = 'dynamic-cache'
+const CACHE_STATIC_NAME = 'static-cache-v2';
+const CACHE_DYNAMIC_NAME = 'dynamic-cache';
 
 // below needs more work done..
 
@@ -11,8 +11,8 @@ self.addEventListener('install', event => {
   if (doCache) {
     event.waitUntil(
       caches.open(CACHE_STATIC_NAME).then(cache => {
-        const urlsToCache = ['/', '/index.html']
-        cache.addAll(urlsToCache)
+        const urlsToCache = ['/', '/index.html', '/offline.html'];
+        cache.addAll(urlsToCache);
 
         // //Edwin's comment: not sure about this part.. Comeback..
         // fetch('manifest.json')
@@ -24,28 +24,28 @@ self.addEventListener('install', event => {
         //     cache.addAll(urlsToCache);
         //   });
       })
-    )
+    );
   }
-})
+});
 
 // Deleting old chaches
 self.addEventListener('activate', event => {
-  const currentCacheList = [CACHE_STATIC_NAME, CACHE_DYNAMIC_NAME]
+  const currentCacheList = [CACHE_STATIC_NAME, CACHE_DYNAMIC_NAME];
 
   event.waitUntil(
     caches.keys().then(keyList =>
       Promise.all(
         keyList.map(key => {
           if (!currentCacheList.includes(key)) {
-            return caches.delete(key)
+            return caches.delete(key);
           }
         })
       )
     )
-  )
+  );
 
-  return self.clients.claim()
-})
+  return self.clients.claim();
+});
 
 // In here, intercepts the network request and serves up the matching files.
 // Fetch is triggered by the web application of the actual page unlike 'install' & 'activate' where they are triggered by the browser when service workers are being installed or was activated.
@@ -54,16 +54,27 @@ self.addEventListener('fetch', event => {
     event.respondWith(
       caches.match(event.request).then(response => {
         if (response) {
-          return response
+          return response;
         } else {
           return fetch(event.request).then(serverRes =>
             caches.open(CACHE_DYNAMIC_NAME).then(cache => {
-              cache.put(event.request.url, serverRes.clone())
-              return serverRes
+              cache.put(event.request.url, serverRes.clone());
+              return serverRes;
             })
-          )
+          );
+          // .catch(err => {
+          //   //When network offline, user should see the cached 'offline.html' displayed when clicking on login. Not working yet.. need to come back..
+          //   // console.error('SERVICE WORKER: offline fetch >> ', err);
+          //   console.log('url!!!', event.request.url);
+          //   if (event.request.url.indexOf('/socket.io/')) {
+          //     console.log('inside of if statement>>>>');
+          //     return caches.open(CACHE_STATIC_NAME).then(cache => {
+          //       return cache.match('/offline.html');
+          //     });
+          //   }
+          // });
         }
       })
-    )
+    );
   }
-})
+});
