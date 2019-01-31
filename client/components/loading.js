@@ -20,9 +20,7 @@ class Loading extends Component {
     if (typeof this.props.user.username !== 'string') {
       this.props.history.push('/')
     }
-    // CHECKS USER LOCATION
     const coordinates = await getUserLocation()
-
     this.setState({
       latitude: coordinates.coords.latitude,
       longitude: coordinates.coords.longitude
@@ -31,7 +29,8 @@ class Loading extends Component {
     console.log('loading', coordinates, this.props.user.email)
     const room = await this.props.firebase.findOrCreateRoom(
       geohash,
-      this.props.user.email
+      this.props.user.email,
+      this.props.roomCap
     )
 
     this.setState({ geohash })
@@ -92,7 +91,11 @@ class Loading extends Component {
 }
 
 const mapState = state => {
-  return { user: state.user, radius: state.posts.radius }
+  return {
+    user: state.user,
+    radius: state.posts.radius,
+    roomCap: state.posts.roomCap
+  }
 }
 
 const mapDispatch = dispatch => {

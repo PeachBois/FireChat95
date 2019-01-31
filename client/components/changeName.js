@@ -1,19 +1,18 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { withRouter, Route, Switch } from 'react-router-dom'
+import { withRouter } from 'react-router-dom'
 import { withFirebase } from '../Firebase/index'
 import { compose } from 'recompose'
-import firebase from 'firebase'
 import { me } from '../store/user'
-import SignInGoogle from './SignInGoogle'
-import { setRadius } from '../store/posts'
+import { setRadius, setCap } from '../store/posts'
 
 class ChangeName extends Component {
   constructor () {
     super()
     this.state = {
       displayName: '',
-      radius: 4
+      radius: 4,
+      roomCap: 2
     }
   }
   componentDidMount () {
@@ -33,6 +32,8 @@ class ChangeName extends Component {
         email: this.props.user.email
       })
       this.props.setRadius(this.state.radius)
+      this.props.setCap(this.state.roomCap)
+      console.log('done')
     }
     this.props.history.push('/locating')
   }
@@ -42,7 +43,7 @@ class ChangeName extends Component {
       this.props.history.push('/')
     }
 
-    let { displayName, radius } = this.state
+    let { displayName } = this.state
     const { imgUrl } = this.props.user
     return (
       <div className='box'>
@@ -69,7 +70,17 @@ class ChangeName extends Component {
                 type='number'
                 min='1'
                 max='10'
-                defaultValue='4'
+                value={this.state.radius}
+                onChange={this.handleChange}
+              />
+              <p>Max Users</p>
+              <input
+                name='roomCap'
+                className='input'
+                type='number'
+                min='1'
+                max='10'
+                value={this.state.roomCap}
                 onChange={this.handleChange}
               />
             </div>
@@ -94,7 +105,8 @@ const mapState = state => {
 const mapDispatch = dispatch => {
   return {
     me: name => dispatch(me(name)),
-    setRadius: radius => dispatch(setRadius(radius))
+    setRadius: radius => dispatch(setRadius(radius)),
+    setCap: cap => dispatch(setCap(cap))
   }
 }
 
