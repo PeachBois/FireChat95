@@ -40,6 +40,7 @@ class EnableNotifications extends Component {
   render() {
     console.log('permission comp. ==this.state.style>> ', this.state.style);
     if (this.state.style.display === 'inline-block') {
+      console.log('inside after style inline blocked?', this.state.style);
       return (
         <div className="enable-notifications" style={this.state.style}>
           <button onClick={this.handleClick}>Enable Notifications</button>

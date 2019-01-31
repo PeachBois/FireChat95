@@ -22,11 +22,11 @@ const Login = () => {
       </div>
       <div className="body">
         <SignInGoogle />
-        {/* {'Notification' in window ? (
+        {'Notification' in window ? (
           <EnableNotifications style={notificationDisplayStyle} />
         ) : (
           <div />
-        )} */}
+        )}
       </div>
     </div>
   );
