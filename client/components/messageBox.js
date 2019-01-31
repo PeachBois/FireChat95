@@ -13,11 +13,19 @@ class messageBox extends Component {
       postList: []
     }
   }
+  shutDown = () => {
+    dbRefObject.off()
+    firebase
+      .database()
+      .ref()
+      .child(`/rooms/${hash}/users`)
+      .remove()
+    this.props.history.push('/setup')
+  }
   async componentDidMount () {
     const { username } = this.props.user
     const hash = this.props.hash
     if (typeof username !== 'string') {
-      this.props.history.push('/')
     }
     let postList = []
     console.log(hash)
@@ -51,9 +59,11 @@ class messageBox extends Component {
     this.setState({ [evt.target.name]: evt.target.value })
   }
   handleSubmit = evt => {
+    evt.preventDefault()
+    const { username, imgUrl } = this.props.user
     const hash = this.props.hash
     const body = this.state.body
-    this.props.firebase.writeNewPost(this.props.user.username, body, hash)
+    this.props.firebase.writeNewPost(username, imgUrl, body)
     this.setState({ body: '' })
   }
 
@@ -83,14 +93,19 @@ class messageBox extends Component {
       <div className='box'>
         <div className='title'>
           <p className='title'>ALOL</p>
-          <button>X</button>
+          <button onClick={this.shutDown}>X</button>
         </div>
         <div className='body'>
           <p className='title'>Welcome!</p>
           <div className='inner'>
             {this.state.postList.map(entry => {
+              // console.log(entry)
               return (
-                <div key={this.hashCode(entry.body + Math.random())}>
+                <div
+                  className='message'
+                  key={this.hashCode(entry.body + Math.random())}
+                >
+                  <img src={entry.img} className='chatImg' />
                   <p
                     style={{
                       color: this.intToRGB(this.hashCode(entry.username))
@@ -109,13 +124,15 @@ class messageBox extends Component {
               }}
             />
           </div>
-          <input
-            type='text'
-            value={body}
-            name='body'
-            onChange={this.handleChange}
-          />
-          <button onClick={this.handleSubmit}>Submit</button>
+          <form onSubmit={this.handleSubmit}>
+            <input
+              type='text'
+              value={body}
+              name='body'
+              onChange={this.handleChange}
+            />
+            <button type='submit'>Submit</button>
+          </form>
         </div>
       </div>
     )

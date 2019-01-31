@@ -1,0 +1,23 @@
+{
+  "short_name": "RanChat",
+  "name": "Random Chat Progressive Web App",
+  "icons": [
+    {
+      "src": "/Icon_Bird_512x512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    },
+    {
+      "src": "/apple-touch-icon-144x144.png",
+      "sizes": "144x144",
+      "type": "image/png"
+    }
+  ],
+  "start_url": "/index.html",
+  "scope": ".",
+  "display": "standalone",
+  "theme_color": "#3f51b5",
+  "background_color": "#ffffff",
+  "description":
+    "A random chat app that allows you to talk within a set up of your proximty range."
+}
