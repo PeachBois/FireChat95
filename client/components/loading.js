@@ -1,109 +1,106 @@
-import React, { Component } from 'react'
-import { getUserLocation, getGeoHash } from './utils'
-import { connect } from 'react-redux'
-import { withRouter, Route, Switch } from 'react-router-dom'
-import { withFirebase } from '../Firebase/index'
-import { compose } from 'recompose'
-import firebase from 'firebase'
-import { setHash } from '../store/posts'
+import React, { Component } from 'react';
+import { getUserLocation, getGeoHash } from './utils';
+import { connect } from 'react-redux';
+import { withRouter, Route, Switch } from 'react-router-dom';
+import { withFirebase } from '../Firebase/index';
+import { compose } from 'recompose';
+import firebase from 'firebase';
+import { setHash } from '../store/posts';
 
 class Loading extends Component {
-  constructor () {
-    super()
+  constructor() {
+    super();
     this.state = {
       latitude: 0,
       longitude: 0,
       geohash: '...'
-    }
+    };
   }
-  async componentDidMount () {
+  async componentDidMount() {
     if (typeof this.props.user.username !== 'string') {
-      this.props.history.push('/')
+      this.props.history.push('/');
     }
     // CHECKS USER LOCATION
-    const coordinates = await getUserLocation()
+    const coordinates = getUserLocation();
 
     this.setState({
       latitude: coordinates.coords.latitude,
       longitude: coordinates.coords.longitude
-    })
-    const geohash = await getGeoHash(coordinates, this.props.radius)
-    console.log('loading', coordinates, this.props.user.email)
+    });
+    const geohash = await getGeoHash(coordinates, this.props.radius);
+    console.log('loading', coordinates, this.props.user.email);
     const room = await this.props.firebase.findOrCreateRoom(
       geohash,
       this.props.user.email
-    )
+    );
 
-    this.setState({ geohash })
+    this.setState({ geohash });
     const userObj = firebase
       .database()
       .ref()
-      .child(`/rooms/${room}/users`)
-    console.log(room)
+      .child(`/rooms/${room}/users`);
+    console.log(room);
     userObj.on('value', snap => {
-      let users = []
+      let users = [];
       if (snap.val()) {
-        users = Object.values(snap.val())
+        users = Object.values(snap.val());
       }
-      console.log(users, room)
-      this.props.setHash(room)
+      console.log(users, room);
+      this.props.setHash(room);
       if (users.length >= 2) {
-        this.props.history.push('/chat')
+        this.props.history.push('/chat');
       }
-    })
+    });
   }
 
-  render () {
+  render() {
     // console.log(this.state)
     return (
-      <div className='box'>
-        <div className='title'>
-          <p className='title'>Finding a room...</p>
+      <div className="box">
+        <div className="title">
+          <p className="title">Finding a room...</p>
           <button>X</button>
         </div>
-        <div className='alert'>
-          <img className='body' src='/searching.gif' />
+        <div className="alert">
+          <img className="body" src="/searching.gif" />
 
-          <div className='body'>
-            <p className='title'>
+          <div className="body">
+            <p className="title">
               Lat:{this.state.latitude.toString().substring(0, 8)}
             </p>
             <br />
-            <p className='title'>
+            <p className="title">
               Lon: {this.state.longitude.toString().substring(0, 8)}
             </p>
             <br />
-            <p className='title'>Geohash:{this.state.geohash}</p>
+            <p className="title">Geohash:{this.state.geohash}</p>
             <br />
           </div>
         </div>
       </div>
-    )
+    );
   }
 }
 
 const mapState = state => {
-  return { user: state.user, radius: state.posts.radius }
-}
+  return { user: state.user, radius: state.posts.radius };
+};
 
 const mapDispatch = dispatch => {
   return {
     setHash: hash => dispatch(setHash(hash))
-  }
-}
+  };
+};
 
 // The `withRouter` wrapper makes sure that updates are not blocked
 // when the url changes
 const LoadingSetUpConnect = compose(
   withRouter,
   withFirebase,
-  connect(
-    mapState,
-    mapDispatch
-  )
-)
+  connect(mapState, mapDispatch)
+);
 
-export default LoadingSetUpConnect(Loading)
+export default LoadingSetUpConnect(Loading);
 
 /**
  * PROP TYPES
