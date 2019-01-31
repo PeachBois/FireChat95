@@ -6,6 +6,7 @@ import { withFirebase } from '../Firebase/index'
 import { compose } from 'recompose'
 import firebase from 'firebase'
 import { setHash } from '../store/posts'
+const dialUp = new Audio('dialUp.mp3')
 
 class Loading extends Component {
   constructor () {
@@ -22,6 +23,7 @@ class Loading extends Component {
     if (typeof this.props.user.username !== 'string') {
       this.props.history.push('/')
     }
+    dialUp.play()
     const coordinates = await getUserLocation()
     this.setState({
       latitude: coordinates.coords.latitude,
@@ -50,6 +52,7 @@ class Loading extends Component {
       console.log(users, room)
       this.props.setHash(room)
       if (users.length >= 2) {
+        dialUp.stop()
         this.props.history.push('/chat')
       }
     })
@@ -67,6 +70,7 @@ class Loading extends Component {
       .ref()
       .child(`/rooms/${this.state.room}/users`)
       .remove()
+    dialUp.stop()
     this.props.history.push('/setup')
   }
 
