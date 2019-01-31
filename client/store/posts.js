@@ -1,42 +1,13 @@
-import history from '../history'
-
-/**
- * ACTION TYPES
- */
 const GET_POST = 'GET_POST'
 const SET_HASH = 'SET_HASH'
 const SET_RADIUS = 'SET_RADIUS'
+const SET_CAP = 'SET_CAP'
 
-/**
- * INITIAL STATE
- */
 const defaultPosts = {}
-
-/**
- * ACTION CREATORS
- */
-const gotPost = post => ({ type: GET_POST, post })
 
 export const setHash = hash => ({ type: SET_HASH, hash })
 export const setRadius = radius => ({ type: SET_RADIUS, radius })
-
-/**
- * THUNK CREATORS
- */
-let post = ''
-
-export const getPost = () => async dispatch => {
-  try {
-    console.log(post)
-    dispatch(gotPost(post))
-  } catch (authError) {
-    return dispatch(getUser({ error: authError }))
-  }
-}
-
-/**
- * REDUCER
- */
+export const setCap = roomCap => ({ type: SET_CAP, roomCap })
 
 export default function (state = defaultPosts, action) {
   switch (action.type) {
@@ -46,6 +17,8 @@ export default function (state = defaultPosts, action) {
       return { ...state, hash: action.hash }
     case SET_RADIUS:
       return { ...state, radius: action.radius }
+    case SET_CAP:
+      return { ...state, roomCap: action.roomCap }
 
     default:
       return state

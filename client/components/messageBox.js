@@ -14,7 +14,6 @@ class messageBox extends Component {
     }
   }
   shutDown = () => {
-    dbRefObject.off()
     firebase
       .database()
       .ref()

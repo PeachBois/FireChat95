@@ -52,7 +52,7 @@ const SignInGoogleBase = props => {
   return (
     <form onSubmit={handleSubmit}>
       <button type="submit" className="google">
-        Google Signin
+        <img className="icon" src="./google.png" />
       </button>
     </form>
   );

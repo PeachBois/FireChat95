@@ -1,19 +1,18 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { withRouter, Route, Switch } from 'react-router-dom'
+import { withRouter } from 'react-router-dom'
 import { withFirebase } from '../Firebase/index'
 import { compose } from 'recompose'
-import firebase from 'firebase'
-import { me } from '../store/user'
-import SignInGoogle from './SignInGoogle'
-import { setRadius } from '../store/posts'
+import { me, logout } from '../store/user'
+import { setRadius, setCap } from '../store/posts'
 
 class ChangeName extends Component {
   constructor () {
     super()
     this.state = {
       displayName: '',
-      radius: 4
+      radius: 4,
+      roomCap: 2
     }
   }
   componentDidMount () {
@@ -33,6 +32,8 @@ class ChangeName extends Component {
         email: this.props.user.email
       })
       this.props.setRadius(this.state.radius)
+      this.props.setCap(this.state.roomCap)
+      console.log('done')
     }
     this.props.history.push('/locating')
   }
@@ -42,36 +43,68 @@ class ChangeName extends Component {
       this.props.history.push('/')
     }
 
-    let { displayName, radius } = this.state
+    let { displayName } = this.state
     const { imgUrl } = this.props.user
     return (
       <div className='box'>
         <div className='title'>
           <p className='title'>ALOL</p>
-          <button>X</button>
+          <button
+            onClick={async () => {
+              await this.props.logout()
+              this.props.history.push('/')
+            }}
+          >
+            X
+          </button>
         </div>
         <div className='body'>
           <div className='userSpace'>
             <img src={imgUrl} className='userImg' />
 
             <div className='changeName'>
-              <p>Set A Display Name</p>
+              <p className='title'>Set A Display Name</p>
               <input
                 type='text'
                 value={displayName}
                 name='displayName'
                 onChange={this.handleChange}
               />
-              <p>Search Accuracy</p>
-              <input
+
+              <p className='title'>Search Accuracy</p>
+
+              <select
                 name='radius'
                 className='input'
-                type='number'
-                min='1'
-                max='10'
-                defaultValue='4'
+                value={this.state.radius}
                 onChange={this.handleChange}
-              />
+              >
+                <option value='1'>1</option>
+                <option value='2'>2</option>
+                <option value='3'>3</option>
+                <option value='4'>4</option>
+                <option value='5'>5</option>
+                <option value='6'>6</option>
+                <option value='7'>7</option>
+                <option value='8'>8</option>
+              </select>
+
+              <p className='title'>Max Users</p>
+              <select
+                name='roomCap'
+                className='input'
+                value={this.state.roomCap}
+                onChange={this.handleChange}
+              >
+                <option value='1'>1</option>
+                <option value='2'>2</option>
+                <option value='3'>3</option>
+                <option value='4'>4</option>
+                <option value='5'>5</option>
+                <option value='6'>6</option>
+                <option value='7'>7</option>
+                <option value='8'>8</option>
+              </select>
             </div>
           </div>
 
@@ -94,7 +127,9 @@ const mapState = state => {
 const mapDispatch = dispatch => {
   return {
     me: name => dispatch(me(name)),
-    setRadius: radius => dispatch(setRadius(radius))
+    setRadius: radius => dispatch(setRadius(radius)),
+    setCap: cap => dispatch(setCap(cap)),
+    logout: () => dispatch(logout())
   }
 }
 

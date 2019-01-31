@@ -6,6 +6,7 @@ import { withFirebase } from '../Firebase/index';
 import { compose } from 'recompose';
 import firebase from 'firebase';
 import { setHash } from '../store/posts';
+const dialUp = new Audio('dialUp.mp3');
 
 class Loading extends Component {
   constructor() {
@@ -13,16 +14,17 @@ class Loading extends Component {
     this.state = {
       latitude: 0,
       longitude: 0,
-      geohash: '...'
+      geohash: '...',
+      inRoom: false,
+      room: ''
     };
   }
   async componentDidMount() {
     if (typeof this.props.user.username !== 'string') {
       this.props.history.push('/');
     }
-    // CHECKS USER LOCATION
-    const coordinates = getUserLocation();
-
+    dialUp.play();
+    const coordinates = await getUserLocation();
     this.setState({
       latitude: coordinates.coords.latitude,
       longitude: coordinates.coords.longitude
@@ -31,15 +33,17 @@ class Loading extends Component {
     console.log('loading', coordinates, this.props.user.email);
     const room = await this.props.firebase.findOrCreateRoom(
       geohash,
-      this.props.user.email
+      this.props.user.email,
+      this.props.roomCap
     );
 
-    this.setState({ geohash });
+    this.setState({ geohash, room });
     const userObj = firebase
       .database()
       .ref()
       .child(`/rooms/${room}/users`);
-    console.log(room);
+    this.setState({ inRoom: true });
+
     userObj.on('value', snap => {
       let users = [];
       if (snap.val()) {
@@ -48,17 +52,25 @@ class Loading extends Component {
       console.log(users, room);
       this.props.setHash(room);
       if (users.length >= 2) {
+        dialUp.stop();
         this.props.history.push('/chat');
       }
     });
   }
   shutDown = () => {
-    dbRefObject.off();
+    this.setState({
+      latitude: 0,
+      longitude: 0,
+      geohash: '...',
+      inRoom: false,
+      room: ''
+    });
     firebase
       .database()
       .ref()
-      .child(`/rooms/${hash}/users`)
+      .child(`/rooms/${this.state.room}/users`)
       .remove();
+    dialUp.stop();
     this.props.history.push('/setup');
   };
 
@@ -67,7 +79,11 @@ class Loading extends Component {
     return (
       <div className="box">
         <div className="title">
-          <p className="title">Finding a room...</p>
+          {this.state.inRoom ? (
+            <p className="title">Waitng For Users...</p>
+          ) : (
+            <p className="title">Finding Room...</p>
+          )}
           <button onClick={this.shutDown}>X</button>
         </div>
         <div className="alert">
@@ -92,7 +108,11 @@ class Loading extends Component {
 }
 
 const mapState = state => {
-  return { user: state.user, radius: state.posts.radius };
+  return {
+    user: state.user,
+    radius: state.posts.radius,
+    roomCap: state.posts.roomCap
+  };
 };
 
 const mapDispatch = dispatch => {

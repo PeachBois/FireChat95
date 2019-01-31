@@ -21,6 +21,7 @@ const Login = () => {
         <button>X</button>
       </div>
       <div className="body">
+        <p className="title">Please Sign In</p>
         <SignInGoogle />
         {'Notification' in window ? (
           <EnableNotifications style={notificationDisplayStyle} />
