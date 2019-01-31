@@ -13,7 +13,9 @@ class Loading extends Component {
     this.state = {
       latitude: 0,
       longitude: 0,
-      geohash: '...'
+      geohash: '...',
+      inRoom: false,
+      room: ''
     }
   }
   async componentDidMount () {
@@ -33,12 +35,13 @@ class Loading extends Component {
       this.props.roomCap
     )
 
-    this.setState({ geohash })
+    this.setState({ geohash, room })
     const userObj = firebase
       .database()
       .ref()
       .child(`/rooms/${room}/users`)
-    console.log(room)
+    this.setState({ inRoom: true })
+
     userObj.on('value', snap => {
       let users = []
       if (snap.val()) {
@@ -52,11 +55,17 @@ class Loading extends Component {
     })
   }
   shutDown = () => {
-    dbRefObject.off()
+    this.setState({
+      latitude: 0,
+      longitude: 0,
+      geohash: '...',
+      inRoom: false,
+      room: ''
+    })
     firebase
       .database()
       .ref()
-      .child(`/rooms/${hash}/users`)
+      .child(`/rooms/${this.state.room}/users`)
       .remove()
     this.props.history.push('/setup')
   }
@@ -66,7 +75,11 @@ class Loading extends Component {
     return (
       <div className='box'>
         <div className='title'>
-          <p className='title'>Finding a room...</p>
+          {this.state.inRoom ? (
+            <p className='title'>Waitng For Users...</p>
+          ) : (
+            <p className='title'>Finding Room...</p>
+          )}
           <button onClick={this.shutDown}>X</button>
         </div>
         <div className='alert'>

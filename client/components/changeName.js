@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import { withRouter } from 'react-router-dom'
 import { withFirebase } from '../Firebase/index'
 import { compose } from 'recompose'
-import { me } from '../store/user'
+import { me, logout } from '../store/user'
 import { setRadius, setCap } from '../store/posts'
 
 class ChangeName extends Component {
@@ -49,40 +49,62 @@ class ChangeName extends Component {
       <div className='box'>
         <div className='title'>
           <p className='title'>ALOL</p>
-          <button>X</button>
+          <button
+            onClick={async () => {
+              await this.props.logout()
+              this.props.history.push('/')
+            }}
+          >
+            X
+          </button>
         </div>
         <div className='body'>
           <div className='userSpace'>
             <img src={imgUrl} className='userImg' />
 
             <div className='changeName'>
-              <p>Set A Display Name</p>
+              <p className='title'>Set A Display Name</p>
               <input
                 type='text'
                 value={displayName}
                 name='displayName'
                 onChange={this.handleChange}
               />
-              <p>Search Accuracy</p>
-              <input
+
+              <p className='title'>Search Accuracy</p>
+
+              <select
                 name='radius'
                 className='input'
-                type='number'
-                min='1'
-                max='10'
                 value={this.state.radius}
                 onChange={this.handleChange}
-              />
-              <p>Max Users</p>
-              <input
+              >
+                <option value='1'>1</option>
+                <option value='2'>2</option>
+                <option value='3'>3</option>
+                <option value='4'>4</option>
+                <option value='5'>5</option>
+                <option value='6'>6</option>
+                <option value='7'>7</option>
+                <option value='8'>8</option>
+              </select>
+
+              <p className='title'>Max Users</p>
+              <select
                 name='roomCap'
                 className='input'
-                type='number'
-                min='1'
-                max='10'
                 value={this.state.roomCap}
                 onChange={this.handleChange}
-              />
+              >
+                <option value='1'>1</option>
+                <option value='2'>2</option>
+                <option value='3'>3</option>
+                <option value='4'>4</option>
+                <option value='5'>5</option>
+                <option value='6'>6</option>
+                <option value='7'>7</option>
+                <option value='8'>8</option>
+              </select>
             </div>
           </div>
 
@@ -106,7 +128,8 @@ const mapDispatch = dispatch => {
   return {
     me: name => dispatch(me(name)),
     setRadius: radius => dispatch(setRadius(radius)),
-    setCap: cap => dispatch(setCap(cap))
+    setCap: cap => dispatch(setCap(cap)),
+    logout: () => dispatch(logout())
   }
 }
 
