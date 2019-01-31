@@ -21,6 +21,7 @@ class Loading extends Component {
   }
   async componentDidMount () {
     if (typeof this.props.user.username !== 'string') {
+      dialUp.pause()
       this.props.history.push('/')
     }
     dialUp.play()
@@ -52,7 +53,7 @@ class Loading extends Component {
       console.log(users, room)
       this.props.setHash(room)
       if (users.length >= 2) {
-        dialUp.stop()
+        dialUp.pause()
         this.props.history.push('/chat')
       }
     })
@@ -70,7 +71,7 @@ class Loading extends Component {
       .ref()
       .child(`/rooms/${this.state.room}/users`)
       .remove()
-    dialUp.stop()
+    dialUp.pause()
     this.props.history.push('/setup')
   }
 
