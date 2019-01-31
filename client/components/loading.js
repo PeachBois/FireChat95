@@ -69,7 +69,7 @@ class Loading extends Component {
     firebase
       .database()
       .ref()
-      .child(`/rooms/${this.state.room}/users`)
+      .child(`/rooms/${this.state.room}`)
       .remove()
     dialUp.pause()
     this.props.history.push('/setup')
