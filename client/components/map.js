@@ -2,32 +2,30 @@ import { connect } from 'react-redux'
 import {Map, GoogleApiWrapper} from 'google-maps-react';
 import React, {Component} from 'react'
 
-export class MapContainer extends Component {
-    constructor() {
-        super()
-        this.state = {
-            lat: 0,
-            lng: 0
-        }
-    }
-    componentWillReceiveProps(nextProps) {
-        this.setState({
-            lat: nextProps.position.lat,
-            lng: nextProps.position.lng         
-        })
-    }
+export class MapContainer extends Component {  
+
+   
 
     render() {
-    const {lat, lng} = this.state
+    const {lat, lng, zoom} = this.props.position
 
     return (
-        <div id="map">
-            <p>{lat},{lng}</p>
-            <Map google={this.props.google}
-                zoom={14} 
-                initialCenter={{lat, lng}}>
-            </Map>
-        </div>
+        // <div className="box">
+            <div id="map">
+                <Map google={this.props.google}
+                    zoom={zoom} 
+                    center={{lat, lng}}
+                    initialCenter={{lat, lng}}
+                    zoomControl={false}
+                    scaleControl={false}
+                    streetViewControl={false}
+                    mapTypeControl={false}
+                    rotateControl={false}
+                    fullscreenControl={false}
+                    gestureHandling={'none'}
+                   />
+            </div>
+        // </div> 
     );
   }
 }
@@ -37,7 +35,10 @@ const wrappedMapContainer =  GoogleApiWrapper({
 })(MapContainer)
 
 const mapState = (state) => {
-    return {position: state.position}
+    return {
+        position: state.position,
+        zoom: state.zoom
+    }
 }
 
 export default connect(mapState)(wrappedMapContainer)    

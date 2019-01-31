@@ -5,7 +5,7 @@ import { withFirebase } from '../Firebase/index'
 import { compose } from 'recompose'
 import firebase from 'firebase'
 import { me } from '../store/user'
-import {loadLocation} from '../store/map'
+import {loadLocation, setZoom} from '../store/map'
 import SignInGoogle from './SignInGoogle'
 
 class ChangeName extends Component {
@@ -17,7 +17,7 @@ class ChangeName extends Component {
   }
   componentDidMount () {
     this.setState({ displayName: this.props.user.username })
-    this.props.loadLocation()
+    this.props.loadLocation()//unnecessary?
   }
 
   handleChange = evt => {
@@ -33,9 +33,13 @@ class ChangeName extends Component {
         email: this.props.user.email
       })
     }
-    this.props.history.push('/chat')
+    this.props.history.push('/locating')
   }
-
+  searchArea = evt => {
+    //other functions can go here
+    console.log(typeof +evt.target.value)
+    this.props.setZoom(+evt.target.value)
+  }
   render () {
     if (!this.props.user.imgUrl) {
       this.props.history.push('/')
@@ -64,11 +68,13 @@ class ChangeName extends Component {
               <p>Search Range</p>
               <input
                 type='range'
-                min='1'
-                max='100'
-                defaultValue='50'
+                min='14'
+                max='22'
+                defaultValue='18'
                 className='slider'
                 id='myRange'
+                onChange={this.searchArea}
+                
               />
             </div>
           </div>
@@ -92,7 +98,8 @@ const mapState = state => {
 const mapDispatch = dispatch => {
   return {
     me: name => dispatch(me(name)),
-    loadLocation: () => dispatch(loadLocation())
+    loadLocation: () => dispatch(loadLocation()),
+    setZoom: value => dispatch(setZoom(value))
   }
 }
 

@@ -1,45 +1,43 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { withRouter, Route, Switch } from 'react-router-dom'
+import { withRouter } from 'react-router-dom'
 import { withFirebase } from '../Firebase/index'
 import { compose } from 'recompose'
-import { getGeoHash } from './utils'
 import firebase from 'firebase'
 
 class messageBox extends Component {
   constructor () {
     super()
     this.state = {
-      username: '',
       body: '',
-      postList: [],
-      hash: ''
+      postList: []
     }
   }
   async componentDidMount () {
-    if (typeof this.props.user.username !== 'string') {
+    const { username } = this.props.user
+    const hash = this.props.hash
+    if (typeof username !== 'string') {
       this.props.history.push('/')
     }
     let postList = []
-    const hash = await getGeoHash()
-    this.setState({ hash })
     console.log(hash)
-
-    this.props.firebase.findOrCreateRoom(hash)
-
     const dbRefObject = firebase
       .database()
       .ref()
-      .child(`/rooms/${hash}`)
+      .child(`/rooms/${hash}/posts`)
 
     dbRefObject.on('value', snap => {
       postList = []
       const postObj = snap.val()
-      let key = Object.keys(postObj)
-      for (key in postObj) {
-        postList.push(postObj[key])
+      let key
+      if (postObj) {
+        Object.keys(postObj)
+
+        for (key in postObj) {
+          postList.push(postObj[key])
+        }
+        this.setState({ postList })
       }
-      this.setState({ postList, username: this.props.user.username })
     })
 
     this.scrollToBottom()
@@ -53,29 +51,34 @@ class messageBox extends Component {
     this.setState({ [evt.target.name]: evt.target.value })
   }
   handleSubmit = evt => {
-    const { body, hash } = this.state
-    console.log(hash)
+    const hash = this.props.hash
+    const body = this.state.body
     this.props.firebase.writeNewPost(this.props.user.username, body, hash)
     this.setState({ body: '' })
   }
 
-  getRandomColor = () => {
-    var letters = '0123456789ABCDEF'
-    var color = '#'
-    for (var i = 0; i < 6; i++) {
-      color += letters[Math.floor(Math.random() * 16)]
+  hashCode = str => {
+    // java String#hashCode
+    var hash = 0
+    for (var i = 0; i < str.length; i++) {
+      hash = str.charCodeAt(i) + ((hash << 5) - hash)
     }
-    return color
+    return hash
+  }
+
+  intToRGB = i => {
+    var c = (i & 0x00ffffff).toString(16).toUpperCase()
+
+    return '#' + '00000'.substring(0, 6 - c.length) + c
   }
 
   scrollToBottom = () => {
-    console.log('messageEnd!!! ==> ', this.messageEnd)
     this.messageEnd.scrollIntoView({ behavior: 'smooth' })
   }
 
   render () {
     let { body } = this.state
-    let hStyle = { color: this.getRandomColor() }
+
     return (
       <div className='box'>
         <div className='title'>
@@ -87,8 +90,14 @@ class messageBox extends Component {
           <div className='inner'>
             {this.state.postList.map(entry => {
               return (
-                <div id={entry.body + Math.random()}>
-                  <p style={this.state.style}>{entry.username}</p>
+                <div key={this.hashCode(entry.body + Math.random())}>
+                  <p
+                    style={{
+                      color: this.intToRGB(this.hashCode(entry.username))
+                    }}
+                  >
+                    {entry.username}
+                  </p>
                   <p>:{entry.body}</p>
                 </div>
               )
@@ -117,11 +126,7 @@ class messageBox extends Component {
  * CONTAINER
  */
 const mapState = state => {
-  return { user: state.user }
-}
-
-const mapDispatch = dispatch => {
-  return {}
+  return { user: state.user, hash: state.posts.hash }
 }
 
 // The `withRouter` wrapper makes sure that updates are not blocked
@@ -129,10 +134,7 @@ const mapDispatch = dispatch => {
 const MessageBoxConnect = compose(
   withRouter,
   withFirebase,
-  connect(
-    mapState,
-    mapDispatch
-  )
+  connect(mapState)
 )
 
 export default MessageBoxConnect(messageBox)
