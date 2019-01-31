@@ -70,7 +70,6 @@ class ChangeName extends Component {
               />
               <p>Search Accuracy</p>
               <input
-<<<<<<< HEAD
                 type='range'
                 min='14'
                 max='22'
@@ -79,15 +78,6 @@ class ChangeName extends Component {
                 id='myRange'
                 onChange={this.searchArea}
                 
-=======
-                name='radius'
-                className='input'
-                type='number'
-                min='1'
-                max='10'
-                defaultValue='4'
-                onChange={this.handleChange}
->>>>>>> d4db6ca6bcce0a32b4ef087589fde92a8bc744e8
               />
             </div>
           </div>
@@ -111,12 +101,9 @@ const mapState = state => {
 const mapDispatch = dispatch => {
   return {
     me: name => dispatch(me(name)),
-<<<<<<< HEAD
     loadLocation: () => dispatch(loadLocation()),
-    setZoom: value => dispatch(setZoom(value))
-=======
+    setZoom: value => dispatch(setZoom(value)),
     setRadius: radius => dispatch(setRadius(radius))
->>>>>>> d4db6ca6bcce0a32b4ef087589fde92a8bc744e8
   }
 }
 

@@ -15,14 +15,7 @@ export const getUserLocation = () => {
       () => {
         reject(new Error('Permission denied'))
       },
-<<<<<<< HEAD
-      {
-        enableHighAccuracy: true,
-        maximumAge: 5000
-      }
-=======
       { maximumAge: 600000, timeout: 5000, enableHighAccuracy: true }
->>>>>>> d4db6ca6bcce0a32b4ef087589fde92a8bc744e8
     )
   })
   console.log(location)
