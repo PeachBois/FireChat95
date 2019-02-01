@@ -35,7 +35,7 @@ p.title {
   float: left;
   font-family: Tahoma;
   font-weight: bold;
-  font-size: 18px;
+  font-size: 20px;
 }
 .title button {
   /*position:absolute;
@@ -73,7 +73,8 @@ img.body {
 }
 div.body p {
   font-family: 'MS Sans Serif';
-  font-size: 16px;
+  font-size: 19px;
+  padding: 4px;
 }
 div.body button {
   font-family: 'MS Sans Serif';
@@ -167,6 +168,11 @@ div.body button {
 .icon{
   width: 50%;
   height: 40%;
+}
+.login {
+  padding: 10px 10px;
+  font-size: 20px;
+  font-weight: bold;
 }
 select {
   -webkit-appearance: none; 

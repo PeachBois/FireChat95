@@ -25,7 +25,7 @@ class messageBox extends Component {
   async componentDidMount () {
     const { username } = this.props.user
     const hash = this.props.hash
-    if (typeof username !== 'string') {
+    if (typeof this.props.hash !== 'string') {
     }
     window.addEventListener('beforeunload', function (e) {
       this.shutDown()
