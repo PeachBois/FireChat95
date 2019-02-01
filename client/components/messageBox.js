@@ -19,7 +19,7 @@ class messageBox extends Component {
       './computer.png',
       `${this.props.user.username} has left the room. :^( `
     )
-
+    this.props.firebase.leaveRoom()
     this.props.history.push('/setup')
   }
   async componentDidMount () {
@@ -27,6 +27,13 @@ class messageBox extends Component {
     const hash = this.props.hash
     if (typeof username !== 'string') {
     }
+    window.addEventListener('beforeunload', function (e) {
+      this.shutDown()
+      var confirmationMessage = 'GoodBye!'
+
+      ;(e || window.event).returnValue = confirmationMessage // Gecko + IE
+      return confirmationMessage // Webkit, Safari, Chrome
+    })
     let postList = []
 
     const dbRefObject = firebase
@@ -60,11 +67,12 @@ class messageBox extends Component {
   }
   handleSubmit = evt => {
     evt.preventDefault()
-    const { username, imgUrl } = this.props.user
-    const hash = this.props.hash
-    const body = this.state.body
-    this.props.firebase.writeNewPost(username, imgUrl, body)
-    this.setState({ body: '' })
+    if (this.state.body !== '') {
+      const { username, imgUrl } = this.props.user
+      const body = this.state.body
+      this.props.firebase.writeNewPost(username, imgUrl, body)
+      this.setState({ body: '' })
+    }
   }
 
   hashCode = str => {

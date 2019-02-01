@@ -4,8 +4,6 @@ import { compose } from 'recompose'
 import * as firebase from 'firebase/app'
 import 'firebase/database'
 import { starter } from './firestarters'
-// import app from 'firebase/app';
-import Geohash from 'latlon-geohash'
 
 // Initializing Firebase:
 const config = {
@@ -25,6 +23,7 @@ class Firebase {
     this.posts = []
     this.googleProvider = new firebase.auth.GoogleAuthProvider()
     this.room = null
+    this.cap = 0
   }
 
   // Auth API
@@ -33,7 +32,25 @@ class Firebase {
   // User API
   user = uid => this.database.ref(`users/${uid}`)
   users = () => this.database.ref('users')
-
+  leaveRoom = async () => {
+    await this.database
+      .ref(`/rooms/${this.room}/`)
+      .child(`rules/mia`)
+      .push('remove')
+    await this.database
+      .ref()
+      .child(`/rooms/${this.room}/rules/mia`)
+      .once('value', async snapshot => {
+        if (snapshot.exists()) {
+          if (Object.keys(snapshot.val()).length === this.cap) {
+            await this.database
+              .ref()
+              .child(`/rooms/${this.room}`)
+              .remove()
+          }
+        }
+      })
+  }
   // Method to write new message in chat box.
   writeNewPost = (username, img, body) => {
     // A post entry.
@@ -80,6 +97,7 @@ class Firebase {
   }
 
   findOrCreateRoom = async (room, email, cap, it = 0) => {
+    this.cap = cap
     console.log(room, email, cap, it)
     let users
     let roomCap
