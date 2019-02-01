@@ -13,12 +13,13 @@ class messageBox extends Component {
       postList: []
     }
   }
-  shutDown = () => {
-    firebase
-      .database()
-      .ref()
-      .child(`/rooms/${hash}/users`)
-      .remove()
+  shutDown = async () => {
+    await this.props.firebase.writeNewPost(
+      'StarterBot',
+      './computer.png',
+      `${this.props.user.username} has left the room. :^( `
+    )
+
     this.props.history.push('/setup')
   }
   async componentDidMount () {
@@ -27,7 +28,7 @@ class messageBox extends Component {
     if (typeof username !== 'string') {
     }
     let postList = []
-    console.log(hash)
+
     const dbRefObject = firebase
       .database()
       .ref()

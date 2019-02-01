@@ -70,7 +70,7 @@ class Firebase {
       .push({
         username: 'StarterBot',
         body: starter(),
-        img: `https://robohash.org/${room}`
+        img: `./computer.png`
       });
 
     this.room = `${room}-${it}`;
@@ -83,9 +83,17 @@ class Firebase {
     await this.database
       .ref()
       .child(`/rooms/${room}-${it}/`)
-      .once('value', snapshot => {
+      .once('value', async snapshot => {
         if (snapshot.exists()) {
-          users = Object.values(snapshot.val().users);
+          if (snapshot.val().users) {
+            users = Object.values(snapshot.val().users);
+          } else {
+            await this.database.ref(`/rooms/${room}-${it}`).remove();
+            setTimeout(() => {}, 1000);
+            await this.findOrCreateRoom(room, email, cap, it);
+            await this.database.ref(`/rooms/${room}-${it}/users`).remove();
+            await this.database.ref(`/rooms/${room}-${it}/users`).push(email);
+          }
           roomCap = Object.values(snapshot.val().rules)[0];
           console.log(roomCap);
         }
