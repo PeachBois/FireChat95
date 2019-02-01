@@ -1,11 +1,6 @@
-// In this 'firebase.js' file:
-// configures Firebase and implements methods/functions for the Firebase class.
-import { compose } from 'recompose'
 import * as firebase from 'firebase/app'
 import 'firebase/database'
-import { starter } from './firestarters'
 
-// Initializing Firebase:
 const config = {
   apiKey: 'AIzaSyBD2FYD63jQ5XQm2e79NNy2vz1odEjfgQw',
   authDomain: 'fir-exploration-deee2.firebaseapp.com',
@@ -98,7 +93,6 @@ class Firebase {
 
   findOrCreateRoom = async (room, email, cap, it = 0) => {
     this.cap = cap
-    console.log(room, email, cap, it)
     let users
     let roomCap
     await this.database
