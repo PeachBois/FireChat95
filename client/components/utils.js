@@ -28,3 +28,9 @@ export const getGeoHash = async (coordinates, radius) => {
   const hash = Geohash.encode(latitude, longitude, radius)
   return hash
 }
+
+export const getBounds = geohash => {
+  const bounds = Geohash.bounds(geohash)
+  console.log(bounds)
+  return bounds
+}

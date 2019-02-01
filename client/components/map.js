@@ -1,44 +1,77 @@
 import { connect } from 'react-redux'
-import {Map, GoogleApiWrapper} from 'google-maps-react';
+// import {Map, GoogleApiWrapper} from 'google-maps-react';
 import React, {Component} from 'react'
 
-export class MapContainer extends Component {  
+class MapContainer extends Component {  
+    constructor() {
+        super()
+        this.loading = true
+        this.map = {}
+    }
 
-   
+    componentDidMount() {
+        const script = document.createElement('script')
+        script.async = true;
+        script.defer = true;
+        script.src = "https://maps.googleapis.com/maps/api/js?key=AIzaSyBz7fOQpPA70ewMAtpQPIXjYxDq40fdTro&callback=initMap"
+        document.getElementById('map').appendChild(script)
+        this.loading = false;
+    }
 
+    initMap() {
+        this.map = new Map(document.getElementById('map'), {
+            center: {lat: -34.397, lng: 150.644},
+            zoom: 8
+          });
+    }
+    
     render() {
-    const {lat, lng, zoom} = this.props.position
-
-    return (
-        // <div className="box">
-            <div id="map">
-                <Map google={this.props.google}
-                    zoom={zoom} 
-                    center={{lat, lng}}
-                    initialCenter={{lat, lng}}
-                    zoomControl={false}
-                    scaleControl={false}
-                    streetViewControl={false}
-                    mapTypeControl={false}
-                    rotateControl={false}
-                    fullscreenControl={false}
-                    gestureHandling={'none'}
-                   />
+        this.initMap()
+        let isLoading = this.loading
+        return(
+            <div id='map'>
+                {isLoading
+                ? 'Loading' 
+                : 'loaded?'}
             </div>
-        // </div> 
-    );
+            
+        )
+    // const {lat, lng, zoom, bounds} = this.props.position
+    // return (
+    //     // <div className="box">
+    //         <div id="map">
+    //             <Map google={this.props.google}
+    //                 zoom={zoom} 
+    //                 center={{lat, lng}}
+    //                 initialCenter={{lat, lng}}
+    //                 zoomControl={false}
+    //                 scaleControl={false}
+    //                 streetViewControl={false}
+    //                 mapTypeControl={false}
+    //                 rotateControl={false}
+    //                 fullscreenControl={false}
+    //                 gestureHandling={'none'}
+    //                >
+    //                {/* <OverlayView bounds={this.props.bounds}>
+    //                    <p>hello</p>
+    //                </OverlayView> */}
+    //                </Map>
+    //         </div>
+    //     // </div> 
+    // );
   }
 }
  
-const wrappedMapContainer =  GoogleApiWrapper({
-  apiKey: 'AIzaSyBz7fOQpPA70ewMAtpQPIXjYxDq40fdTro'
-})(MapContainer)
+// const wrappedMapContainer =  GoogleApiWrapper({
+//   apiKey: 'AIzaSyBz7fOQpPA70ewMAtpQPIXjYxDq40fdTro'
+// })(MapContainer)
 
 const mapState = (state) => {
     return {
         position: state.position,
-        zoom: state.zoom
+        zoom: state.position.zoom,
+        bounds: state.position.bounds
     }
 }
 
-export default connect(mapState)(wrappedMapContainer)    
+export default connect(mapState)(MapContainer)    

@@ -1,17 +1,22 @@
 
-import {getUserLocation} from '../components/utils'
+import {getUserLocation, getGeoHash, getBounds} from '../components/utils'
 /**
  * ACTION TYPES
  */
 const SET_LOCATION = 'SET_LOCATION'
 const SET_ZOOM = 'SET_ZOOM'
+const SET_BOUNDS = 'SET_BOUNDS'
 /**
  * INITIAL STATE
  */
 const initialLocation = {
     lat: 41.895266,
     lng: -87.639035,
-    zoom: 18    
+    zoom: 18,
+    bounds: {
+      ne: {},
+      sw: {}
+    }
 }
 
 /**
@@ -21,6 +26,7 @@ const setLocation = (coordinates) => ({ type: SET_LOCATION, coordinates })
 export const setZoom = (value) => {
     return { type: SET_ZOOM, value }
 }
+export const setBounds = bounds => ({ type: SET_BOUNDS, bounds})
 
 /**
  * THUNK CREATORS
@@ -31,6 +37,9 @@ export const loadLocation = () => async dispatch => {
   try {
     const location = await getUserLocation()
     const coordinates = {lat: location.coords.latitude, lng: location.coords.longitude}
+    const geohash = await getGeoHash(location, 5)
+    const bounds = getBounds(geohash)
+    dispatch(setBounds(bounds))
     dispatch(setLocation(coordinates))
   } catch (err) {
     return console.error(err)
@@ -48,7 +57,8 @@ export default function (state = initialLocation, action) {
     case SET_ZOOM: {
         return { ...state, zoom: action.value}
     }
-    
+    case SET_BOUNDS:
+        return {...state, bounds: action.bounds }
     default:
         return state
   }
