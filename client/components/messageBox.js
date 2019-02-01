@@ -19,9 +19,6 @@ class messageBox extends Component {
       './computer.png',
       `${this.props.user.username} has left the room. :^( `
     )
-    firebase.database
-      .ref(`/rooms/${this.room}/users/`)
-      .push('${this.props.users}-removed')
 
     this.props.history.push('/setup')
   }
