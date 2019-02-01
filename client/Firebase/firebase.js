@@ -1,11 +1,11 @@
 // In this 'firebase.js' file:
 // configures Firebase and implements methods/functions for the Firebase class.
-import { compose } from 'recompose';
-import * as firebase from 'firebase/app';
-import 'firebase/database';
-import { starter } from './firestarters';
+import { compose } from 'recompose'
+import * as firebase from 'firebase/app'
+import 'firebase/database'
+import { starter } from './firestarters'
 // import app from 'firebase/app';
-import Geohash from 'latlon-geohash';
+import Geohash from 'latlon-geohash'
 
 // Initializing Firebase:
 const config = {
@@ -15,24 +15,24 @@ const config = {
   projectId: 'fir-exploration-deee2',
   storageBucket: 'fir-exploration-deee2.appspot.com',
   messagingSenderId: '752787901162'
-};
+}
 
 class Firebase {
-  constructor() {
-    firebase.initializeApp(config);
-    this.database = firebase.database();
-    this.auth = firebase.auth();
-    this.posts = [];
-    this.googleProvider = new firebase.auth.GoogleAuthProvider();
-    this.room = null;
+  constructor () {
+    firebase.initializeApp(config)
+    this.database = firebase.database()
+    this.auth = firebase.auth()
+    this.posts = []
+    this.googleProvider = new firebase.auth.GoogleAuthProvider()
+    this.room = null
   }
 
   // Auth API
-  signInWithGoogle = () => this.auth.signInWithPopup(this.googleProvider);
+  signInWithGoogle = () => this.auth.signInWithPopup(this.googleProvider)
 
   // User API
-  user = uid => this.database.ref(`users/${uid}`);
-  users = () => this.database.ref('users');
+  user = uid => this.database.ref(`users/${uid}`)
+  users = () => this.database.ref('users')
 
   // Method to write new message in chat box.
   writeNewPost = (username, img, body) => {
@@ -42,27 +42,31 @@ class Firebase {
       username,
       body,
       img
-    };
-    console.log(postData);
+    }
+    console.log(postData)
 
     let newPostKey = this.database
       .ref()
       .child(`/rooms/${this.room}/posts/`)
-      .push().key;
+      .push().key
 
     // Write the new post's data simultaneously in the posts list and the user's post list.
-    var updates = {};
-    updates[`/rooms/${this.room}/posts/` + newPostKey] = postData;
+    var updates = {}
+    updates[`/rooms/${this.room}/posts/` + newPostKey] = postData
     // console.log(updates)
-    return this.database.ref().update(updates);
-  };
-  createRoom = async (room, email, it) => {
+    return this.database.ref().update(updates)
+  }
+  createRoom = async (room, email, cap, it) => {
     // console.log(room, email, it)
-    await this.database.ref().child(`/rooms/${room}-${it}`);
+    await this.database.ref().child(`/rooms/${room}-${it}`)
     await this.database
       .ref()
       .child(`/rooms/${room}-${it}/users`)
-      .push(email);
+      .push(email)
+    await this.database
+      .ref()
+      .child(`/rooms/${room}-${it}/rules`)
+      .push(cap)
     await this.database
       .ref()
       .child(`/rooms/${room}-${it}/posts`)
@@ -70,47 +74,51 @@ class Firebase {
         username: 'StarterBot',
         body: starter(),
         img: `https://robohash.org/${room}`
-      });
+      })
 
-    this.room = `${room}-${it}`;
-  };
+    this.room = `${room}-${it}`
+  }
 
-  findOrCreateRoom = async (room, email, it = 0) => {
-    // console.log(room, email, it)
-    let users;
+  findOrCreateRoom = async (room, email, cap, it = 0) => {
+    console.log(room, email, cap, it)
+    let users
+    let roomCap
     await this.database
       .ref()
-      .child(`/rooms/${room}-${it}/users`)
+      .child(`/rooms/${room}-${it}/`)
       .once('value', snapshot => {
         if (snapshot.exists()) {
-          users = Object.values(snapshot.val());
-          console.log('exists!', users);
+          users = Object.values(snapshot.val().users)
+          roomCap = Object.values(snapshot.val().rules)[0]
+          console.log(roomCap)
         }
       })
+
       .then(async () => {
         if (!users) {
           // console.log('creating')
-          await this.createRoom(room, email, it);
-          this.room = `${room}-${it}`;
+          await this.createRoom(room, email, cap, it)
+          this.room = `${room}-${it}`
         } else {
-          if (users.length >= 2) {
+          console.log('cap:', cap, 'room cap:', roomCap, 'users:', users.length)
+          if (cap < users.length || users.length >= roomCap) {
             // console.log('restarting')
-            await this.findOrCreateRoom(room, email, it + 1);
+            await this.findOrCreateRoom(room, email, cap, it + 1)
           } else {
             // console.log('adding name')
             await this.database
               .ref()
               .child(`/rooms/${room}-${it}/users`)
-              .push(email);
-            this.room = `${room}-${it}`;
+              .push(email)
+            this.room = `${room}-${it}`
           }
         }
-      });
-    return this.room;
-  };
+      })
+    return this.room
+  }
 }
 
-export default Firebase;
+export default Firebase
 
 // export const firebaseDb = firebase.database()
 // const auth = firebase.auth();

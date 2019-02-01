@@ -13,26 +13,27 @@ class MapContainer extends Component {
         const script = document.createElement('script')
         script.async = true;
         script.defer = true;
+        script.body = 'hello'
         script.src = "https://maps.googleapis.com/maps/api/js?key=AIzaSyBz7fOQpPA70ewMAtpQPIXjYxDq40fdTro&callback=initMap"
         document.getElementById('map').appendChild(script)
         this.loading = false;
     }
 
     initMap() {
-        this.map = new Map(document.getElementById('map'), {
+        this.map = new google.maps.Map(document.getElementById('map'), {
             center: {lat: -34.397, lng: 150.644},
             zoom: 8
           });
     }
     
     render() {
-        this.initMap()
+        // this.initMap()
         let isLoading = this.loading
         return(
             <div id='map'>
                 {isLoading
                 ? 'Loading' 
-                : 'loaded?'}
+                : this.initMap()}
             </div>
             
         )
