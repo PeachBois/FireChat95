@@ -6,11 +6,6 @@ import React, { Component } from 'react';
 // import firebase from 'firebase'
 // import { me } from '../store/user'
 import SignInGoogle from './SignInGoogle';
-import EnableNotifications from './EnableNotifications';
-
-const notificationDisplayStyle = {
-  display: 'inline-block'
-};
 
 const Login = () => {
   console.log('are you in login???');
@@ -23,11 +18,6 @@ const Login = () => {
       <div className="body">
         <p className="title">Please Sign In</p>
         <SignInGoogle />
-        {'Notification' in window ? (
-          <EnableNotifications style={notificationDisplayStyle} />
-        ) : (
-          <div />
-        )}
       </div>
     </div>
   );
