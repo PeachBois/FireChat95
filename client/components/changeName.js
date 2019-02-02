@@ -70,46 +70,58 @@ class ChangeName extends Component {
                 name='displayName'
                 onChange={this.handleChange}
               />
+              <div className='apart'>
+                <p className='title'>Search Accuracy:</p>
 
-              <p className='title'>Search Accuracy</p>
-
-              <select
-                name='radius'
-                className='input'
-                value={this.state.radius}
-                onChange={this.handleChange}
-              >
-                <option value='1'>1</option>
-                <option value='2'>2</option>
-                <option value='3'>3</option>
-                <option value='4'>4</option>
-                <option value='5'>5</option>
-                <option value='6'>6</option>
-                <option value='7'>7</option>
-                <option value='8'>8</option>
-              </select>
-
-              <p className='title'>Max Users</p>
-              <select
-                name='roomCap'
-                className='input'
-                value={this.state.roomCap}
-                onChange={this.handleChange}
-              >
-                <option value='2'>2</option>
-                <option value='3'>3</option>
-                <option value='4'>4</option>
-                <option value='5'>5</option>
-                <option value='6'>6</option>
-                <option value='7'>7</option>
-                <option value='8'>8</option>
-              </select>
+                <select
+                  name='radius'
+                  className='input'
+                  value={this.state.radius}
+                  onChange={this.handleChange}
+                >
+                  <option value='1'>1</option>
+                  <option value='2'>2</option>
+                  <option value='3'>3</option>
+                  <option value='4'>4</option>
+                  <option value='5'>5</option>
+                  <option value='6'>6</option>
+                  <option value='7'>7</option>
+                  <option value='8'>8</option>
+                </select>
+              </div>
+              <div className='apart'>
+                <p className='title'>Max Users:</p>
+                <select
+                  name='roomCap'
+                  className='input'
+                  value={this.state.roomCap}
+                  onChange={this.handleChange}
+                >
+                  <option value='2'>2</option>
+                  <option value='3'>3</option>
+                  <option value='4'>4</option>
+                  <option value='5'>5</option>
+                  <option value='6'>6</option>
+                  <option value='7'>7</option>
+                  <option value='8'>8</option>
+                </select>
+              </div>
             </div>
           </div>
-
-          <button type='submit' onClick={this.handleSubmit}>
-            Login
-          </button>
+        </div>
+        <div className='bottomBar'>
+          <img src='computer.png' className='bottomBar' />
+          <div className='change'>
+            <button type='submit' onClick={this.handleSubmit}>
+              Login
+            </button>
+          </div>
+        </div>
+        <div className='body'>
+          <h4 className='log'>
+            >:Here you can change your display name, as well as how many people
+            you want in a chat and how exact your search area is!
+          </h4>
         </div>
       </div>
     )
