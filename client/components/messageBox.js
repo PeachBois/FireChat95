@@ -17,9 +17,9 @@ class messageBox extends Component {
   }
   shutDown = async () => {
     await this.props.firebase.writeNewPost(
-      'StarterBot',
+      'Winney',
       './computer.png',
-      `${this.props.user.username} has left the room. :^( `
+      `${this.props.user.username} has left the room. (╯°□°）╯ `
     )
     this.props.firebase.leaveRoom()
     this.props.history.push('/setup')
@@ -31,9 +31,9 @@ class messageBox extends Component {
     }
     window.addEventListener('beforeunload', function (e) {
       this.shutDown()
-      var confirmationMessage = 'GoodBye!'
-
-      ;(e || window.event).returnValue = confirmationMessage // Gecko + IE
+      var confirmationMessage = ('GoodBye!'(
+        e || window.event
+      ).returnValue = confirmationMessage) // Gecko + IE
       return confirmationMessage // Webkit, Safari, Chrome
     })
     let postList = []
@@ -47,6 +47,7 @@ class messageBox extends Component {
       postList = []
       const postObj = snap.val()
       let key
+
       if (postObj) {
         Object.keys(postObj)
 
@@ -127,9 +128,9 @@ class messageBox extends Component {
                       color: this.intToRGB(this.hashCode(entry.username))
                     }}
                   >
-                    {entry.username}
+                    {entry.username}:
                   </p>
-                  <p>:{entry.body}</p>
+                  <p>{entry.body}</p>
                 </div>
               )
             })}

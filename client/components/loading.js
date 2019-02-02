@@ -7,6 +7,7 @@ import { compose } from 'recompose'
 import firebase from 'firebase'
 import { setHash } from '../store/posts'
 const dialUp = new Audio('dialUp.mp3')
+const error = new Audio('error.mp3')
 
 export class Loading extends Component {
   constructor () {
@@ -71,6 +72,8 @@ export class Loading extends Component {
         })
       } else {
         this.setState({ failed: true })
+        dialUp.pause()
+        error.play()
       }
     }
   }

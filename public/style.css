@@ -151,7 +151,7 @@ div.login button {
   height: 200px;
   width: calc(100% - 26px);
   background-color: #ffffff;
-  border-width: 1px;
+  border-width: 2px;
   border-color: #808080#FFFFFF #FFFFFF#808080;
   border-style: solid;
   overflow-y: scroll;
@@ -286,20 +286,26 @@ img.bottomBar{
   width: 165px;
   justify-content: space-around;
 }
+.apart{
+  justify-content: space-between;
+  display: flex;
+
+}
 select {
-  -webkit-appearance: menulist;
-  -moz-appearance: none;
+  -webkit-appearance: button;
+  -moz-appearance: textfield;
   font-family: 'MS Sans Serif';
   font-size: 18px;
-  /* outline: 1px solid #676767; */
-  /* background: #c0c0c0; */
-  border-width: 2px;
-  border-style: solid;
-  border-color: #ffffff #808080 #808080 #ffffff;
+  background-image: url(./arrows.png);
+  text-align: center;
+  background: #dbdbdb;
   padding: 10px;
   margin: 2px;
-  /* bottom: 0px; */
+  border-width: 2px;
+  border-color: #808080#FFFFFF #FFFFFF#808080;
+  border-style: solid;
   width: 48px;
+}
 
 }
 ::-webkit-scrollbar {
