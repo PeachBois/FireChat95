@@ -85,7 +85,7 @@ class Firebase {
       .ref()
       .child(`/rooms/${room}-${it}/posts`)
       .push({
-        username: 'StarterBot',
+        username: 'Winney',
         body: starter(),
         img: `./computer.png`
       })

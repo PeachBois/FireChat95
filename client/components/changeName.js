@@ -71,7 +71,7 @@ class ChangeName extends Component {
                 onChange={this.handleChange}
               />
               <div className='apart'>
-                <p className='title'>Search Accuracy:</p>
+                <p className='title'>Search Threshold:</p>
 
                 <select
                   name='radius'
@@ -79,14 +79,14 @@ class ChangeName extends Component {
                   value={this.state.radius}
                   onChange={this.handleChange}
                 >
-                  <option value='1'>1</option>
+                  <option value='1'>1 (largest search area)</option>
                   <option value='2'>2</option>
                   <option value='3'>3</option>
                   <option value='4'>4</option>
                   <option value='5'>5</option>
                   <option value='6'>6</option>
                   <option value='7'>7</option>
-                  <option value='8'>8</option>
+                  <option value='8'>8 (smallest search area) </option>
                 </select>
               </div>
               <div className='apart'>
