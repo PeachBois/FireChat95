@@ -35,7 +35,7 @@ p.title {
   float: left;
   font-family: Tahoma;
   font-weight: bold;
-  font-size: 20px;
+  font-size: 17px;
 }
 .mascot {
   width: 30%;
@@ -126,11 +126,12 @@ div.body button {
 div.login button {
   font-family: 'MS Sans Serif';
   font-size: 18px;
-  outline: 1px solid #000000;
+  outline: 1px solid #676767;
   background: #c0c0c0;
-  border-width: 1px;
+  border-width: 3px;
   border-style: solid;
   border-color: #ffffff #808080 #808080 #ffffff;
+  margin-left: 23px;
   
 }
  input {
@@ -177,6 +178,9 @@ h4.log{
 .inner div {
   display: flex;
   flex-wrap: wrap;
+}
+.google{
+  width: 74%
 }
 .userImg {
   height: 30%;

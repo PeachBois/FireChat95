@@ -124,8 +124,8 @@ export class Loading extends Component {
         <div className='body'>
           <h4 className='log'>
             {this.state.failed
-              ? 'Location services are being blocked! ಠ_ಠ'
-              : 'Here the server finds your approximate location and gives the server a hint as to find who is closeby, it may take a moment, so be patient!'}
+              ? '>: Location services are being blocked! ಠ_ಠ'
+              : '>: Here the server finds your approximate location and gives the server a hint as to find who is closeby, it may take a moment, so be patient!'}
           </h4>
         </div>
       </div>
