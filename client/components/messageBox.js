@@ -4,13 +4,15 @@ import { withRouter } from 'react-router-dom'
 import { withFirebase } from '../Firebase/index'
 import { compose } from 'recompose'
 import firebase from 'firebase'
+const inbound = new Audio('jig0.wav')
 
 class messageBox extends Component {
   constructor () {
     super()
     this.state = {
       body: '',
-      postList: []
+      postList: [],
+      dbRefObject: false
     }
   }
   shutDown = async () => {
@@ -19,14 +21,21 @@ class messageBox extends Component {
       './computer.png',
       `${this.props.user.username} has left the room. :^( `
     )
-
+    this.props.firebase.leaveRoom()
     this.props.history.push('/setup')
   }
   async componentDidMount () {
-    const { username } = this.props.user
     const hash = this.props.hash
-    if (typeof username !== 'string') {
+    if (typeof hash !== 'string') {
+      this.props.history.push('/')
     }
+    window.addEventListener('beforeunload', function (e) {
+      this.shutDown()
+      var confirmationMessage = 'GoodBye!'
+
+      ;(e || window.event).returnValue = confirmationMessage // Gecko + IE
+      return confirmationMessage // Webkit, Safari, Chrome
+    })
     let postList = []
 
     const dbRefObject = firebase
@@ -44,15 +53,21 @@ class messageBox extends Component {
         for (key in postObj) {
           postList.push(postObj[key])
         }
+        inbound.play()
         this.setState({ postList })
       }
     })
-
+    this.setState({ dbRefObject })
     this.scrollToBottom()
   }
 
   componentDidUpdate () {
     this.scrollToBottom()
+  }
+  componentWillUnmount () {
+    if (this.state.dbRefObject) {
+      this.state.dbRefObject.off()
+    }
   }
 
   handleChange = evt => {
@@ -60,11 +75,12 @@ class messageBox extends Component {
   }
   handleSubmit = evt => {
     evt.preventDefault()
-    const { username, imgUrl } = this.props.user
-    const hash = this.props.hash
-    const body = this.state.body
-    this.props.firebase.writeNewPost(username, imgUrl, body)
-    this.setState({ body: '' })
+    if (this.state.body !== '') {
+      const { username, imgUrl } = this.props.user
+      const body = this.state.body
+      this.props.firebase.writeNewPost(username, imgUrl, body)
+      this.setState({ body: '' })
+    }
   }
 
   hashCode = str => {
