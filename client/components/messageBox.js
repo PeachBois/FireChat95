@@ -10,7 +10,8 @@ class messageBox extends Component {
     super()
     this.state = {
       body: '',
-      postList: []
+      postList: [],
+      dbRefObject: false
     }
   }
   shutDown = async () => {
@@ -23,9 +24,9 @@ class messageBox extends Component {
     this.props.history.push('/setup')
   }
   async componentDidMount () {
-    const { username } = this.props.user
     const hash = this.props.hash
-    if (typeof this.props.hash !== 'string') {
+    if (typeof hash !== 'string') {
+      this.props.history.push('/')
     }
     window.addEventListener('beforeunload', function (e) {
       this.shutDown()
@@ -54,12 +55,17 @@ class messageBox extends Component {
         this.setState({ postList })
       }
     })
-
+    this.setState({ dbRefObject })
     this.scrollToBottom()
   }
 
   componentDidUpdate () {
     this.scrollToBottom()
+  }
+  componentWillUnmount () {
+    if (this.state.dbRefObject) {
+      this.state.dbRefObject.off()
+    }
   }
 
   handleChange = evt => {

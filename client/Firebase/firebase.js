@@ -38,7 +38,7 @@ class Firebase {
       .child(`/rooms/${this.room}/rules/mia`)
       .once('value', async snapshot => {
         if (snapshot.exists()) {
-          if (Object.keys(snapshot.val()).length === this.cap) {
+          if (Object.keys(snapshot.val()).length >= this.cap - 1) {
             await this.database
               .ref()
               .child(`/rooms/${this.room}`)
@@ -46,6 +46,7 @@ class Firebase {
           }
         }
       })
+    this.room = null
   }
   // Method to write new message in chat box.
   writeNewPost = (username, img, body) => {

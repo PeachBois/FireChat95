@@ -15,9 +15,16 @@ const Login = () => {
         <p className='title'>ALOL</p>
         <button>X</button>
       </div>
-      <div className='body'>
-        <p className='title'>Please Sign In</p>
-        <SignInGoogle />
+      <div>
+        <div className='login'>
+          <img src='computer.png' className='mascot' />
+          <SignInGoogle />
+        </div>
+        <div className='body'>
+          <h4 className='log'>
+            Hello! My Name is Winny! Let me know a little about you!
+          </h4>
+        </div>
       </div>
     </div>
   )

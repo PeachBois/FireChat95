@@ -12,7 +12,7 @@ button:focus {
 .box {
   width: 350px;
   background: #c0c0c0;
-  border-width: 1px;
+  border-width: 2px;
   border-color: #ffffff #808080 #808080 #ffffff;
   border-style: solid;
   position: absolute;
@@ -37,6 +37,11 @@ p.title {
   font-weight: bold;
   font-size: 20px;
 }
+.mascot {
+  width: 30%;
+  padding: 10px;
+  height: 30%;
+}
 .title button {
   /*position:absolute;
   right:3px;
@@ -59,11 +64,18 @@ div.body {
   height: 100%;
   /* width: calc(100% - 26px); */
 }
+div.login {
+  padding: 13px 12px 12px;
+  height: 100%;
+  align-items: center;
+  /* width: calc(100% - 26px); */
+}
 img.body {
   height: 20%;
   width: 20%;
   position: relative;
   padding: 10px 10px;
+  align-self: center;
 }
 .alert {
   display: inline-flex;
@@ -76,12 +88,34 @@ div.body p {
   font-size: 19px;
   padding: 4px;
 }
+.change{
+  flex-direction: row-reverse;
+    font-size: 13px;
+    padding: 2px;
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    flex-direction: row-reverse;
+    padding: 18px;
+}
+div.change button {
+  font-family: 'MS Sans Serif';
+  font-size: 18px;
+  outline: 1px solid #676767;
+  background: #c0c0c0;
+  border-width: 2px;
+  border-style: solid;
+  border-color: #ffffff #808080 #808080 #ffffff;
+  padding: 4px 10px;
+  position: relative;
+
+}
 div.body button {
   font-family: 'MS Sans Serif';
   font-size: 18px;
-  outline: 1px solid #000000;
+  outline: 1px solid #676767;
   background: #c0c0c0;
-  border-width: 1px;
+  border-width: 2px;
   border-style: solid;
   border-color: #ffffff #808080 #808080 #ffffff;
   padding: 4px 10px;
@@ -89,13 +123,25 @@ div.body button {
   position: relative;
   bottom: 0px;
 }
+div.login button {
+  font-family: 'MS Sans Serif';
+  font-size: 18px;
+  outline: 1px solid #000000;
+  background: #c0c0c0;
+  border-width: 1px;
+  border-style: solid;
+  border-color: #ffffff #808080 #808080 #ffffff;
+  
+}
  input {
   margin-top: 4px;
-  height: 100%;
-  width: calc(100% - 26px);
+  margin-bottom: 5px;
+  margin-left: 7px;
+  height: 113%;
+  width: calc(100% - 15px);
   font-size: 16px;
   background-color: #ffffff;
-  border-width: 1px;
+  border-width: 2px;
   border-color: #808080#FFFFFF #FFFFFF#808080;
   border-style: solid;
 }
@@ -111,6 +157,23 @@ div.body button {
   overflow-x: hidden;
   pointer-events: auto;
 }
+.log{
+      /* padding: 13px 12px 12px; */
+      background-color: #181818;
+      /* border-width: 1px; */
+      border-color: #808080#FFFFFF #FFFFFF#808080;
+      border-style: solid;
+      /* overflow-y: scroll; */
+      /* overflow-x: hidden; */
+      /* pointer-events: auto; */
+      color: #e1e1e1;
+      font-weight: 100;
+}
+h4.log{
+  font-family: monospace;
+  font-size: 15px;
+  padding: 4px;
+}
 .inner div {
   display: flex;
   flex-wrap: wrap;
@@ -118,8 +181,9 @@ div.body button {
 .userImg {
   height: 30%;
   width: 30%;
+  margin-top: 18px;
   background-color: #ffffff;
-  border-width: 1px;
+  border-width: 3px;
   border-color: #808080#FFFFFF #FFFFFF#808080;
   border-style: solid;
 }
@@ -134,9 +198,12 @@ div.body button {
 }
 .changeName {
   padding: 5px 5px;
-  width: 75%;
+  width: 64%;
   height: 20%;
-  display: grid;
+  /* display: flex; */
+  /* align-items: end; */
+  /* flex-direction: column; */
+  /* justify-content: left; */
 }
 
 /* Below: For PWA: Improving progressive nature of the App (CSS) */
@@ -170,25 +237,65 @@ div.body button {
   height: 40%;
 }
 .login {
-  padding: 10px 10px;
-  font-size: 20px;
-  font-weight: bold;
+  display: flex;
+  justify-content: center;
+}
+p.login{
+  align-content: center;
+  font-weight: bolder;
+  font-size: large;
+  align-content: center;
+  border-width: 1px;
+  border-color: #808080#FFFFFF #FFFFFF#808080;
+  border-style: solid;
+  margin: 1px;
+  padding: 2px;
+
+}
+
+div.bottomBar{
+  font-size: 13px;
+  padding: 2px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-left: 18px;
+
+}
+img.bottomBar{
+      /* height: 20%; */
+      width: 13%;
+      /* font-size: 18px; */
+      /* outline: 1px solid #515151; */
+      border-width: 1px;
+      border-style: solid;
+      border-color: #ffffff #808080 #808080 #ffffff;
+      padding: 5px;
+}
+
+.bottomContain {
+  border-width: 1px;
+  border-color: #808080#FFFFFF #FFFFFF#808080;
+  border-style: solid;
+  margin: 1px;
+  padding: 2px;
+  width: 165px;
+  justify-content: space-around;
 }
 select {
-  -webkit-appearance: none; 
+  -webkit-appearance: menulist;
   -moz-appearance: none;
-  appearance: none;   
   font-family: 'MS Sans Serif';
   font-size: 18px;
-  outline: 1px solid #000000;
-  background: #c0c0c0;
-  border-width: 1px;
+  /* outline: 1px solid #676767; */
+  /* background: #c0c0c0; */
+  border-width: 2px;
   border-style: solid;
   border-color: #ffffff #808080 #808080 #ffffff;
-  padding: 4px 10px;
-
-  position: relative;
-  bottom: 0px;    /* remove default arrow */
+  padding: 10px;
+  margin: 2px;
+  /* bottom: 0px; */
+  width: 48px;
 
 }
 ::-webkit-scrollbar {
