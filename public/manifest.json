@@ -29,7 +29,7 @@
     }
   ],
   "gcm_sender_id": "103953800507",
-  "start_url": "/index.html",
+  "start_url": ".",
   "scope": ".",
   "display": "standalone",
   "theme_color": "#3f51b5",
