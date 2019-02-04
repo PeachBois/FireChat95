@@ -29,7 +29,34 @@ class ChangeName extends Component {
   handleChange = evt => {
     this.setState({ [evt.target.name]: evt.target.value })
     this.props.loadLocation(evt.target.value)
-    this.props.setZoom(1.5*evt.target.value + 7)
+    let zoom;
+    console.log(typeof +evt.target.value)
+    switch(+evt.target.value) {
+      case 1:
+        zoom = 2
+        break;
+      case 2:
+        zoom = 5
+        break;
+      case 3:
+        zoom = 7
+        break;
+      case 4:
+        zoom = 10
+        break;
+      case 5:
+        zoom = 12
+        break;
+      case 6:
+        zoom = 15
+        break;
+      case 7:
+        zoom = 17
+        break;
+      default:
+        zoom = 1.5*evt.target.value + 7
+    }
+    this.props.setZoom(zoom)
   }
 
   handleSubmit = evt => {
@@ -64,6 +91,7 @@ class ChangeName extends Component {
     if (!this.props.user.imgUrl) {
       this.props.history.push('/')
     }
+    let style = this.state.showMap ? {height: '190px'} : {height: '0px'}
 
     let { displayName } = this.state
     const { imgUrl } = this.props.user
@@ -81,7 +109,7 @@ class ChangeName extends Component {
             X
           </button>
         </div>
-          <div id="map"></div>
+          {/* <div id="map"></div> */}
         <div className='body'>
           <div className='userSpace'>
             <img src={imgUrl} className='userImg' />
@@ -152,6 +180,7 @@ class ChangeName extends Component {
             >:Here you can change your display name, as well as how many people
             you want in a chat and how exact your search area is!
           </h4>
+          <div id="map" style={style}></div>
         </div>
       </div>
     )

@@ -146,6 +146,7 @@ class messageBox extends Component {
               type='text'
               value={body}
               name='body'
+              autoComplete='off'
               onChange={this.handleChange}
             />
             <button type='submit'>Submit</button>

@@ -12,7 +12,7 @@ const SET_BOUNDS = 'SET_BOUNDS'
 const initialLocation = {
     lat: 41.895266,
     lng: -87.639035,
-    zoom: 11,
+    zoom: 10,
     bounds: {
       ne: {},
       sw: {}
@@ -36,6 +36,7 @@ export const setBounds = bounds => ({ type: SET_BOUNDS, bounds})
 export const loadLocation = (precision = 5) => async dispatch => {
   try {
     const location = await getUserLocation()
+    console.log('WHAT IT DO??', location)
     const coordinates = {lat: location.coords.latitude, lng: location.coords.longitude}
     console.log('radius is', precision)
     const geohash = await getGeoHash(location, precision)
