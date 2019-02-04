@@ -84,6 +84,11 @@ class Firebase {
       .push(cap)
     await this.database
       .ref()
+      .child(`/rooms/${room}-${it}`)
+      .update({ timestamp: Date.now() })
+
+    await this.database
+      .ref()
       .child(`/rooms/${room}-${it}/posts`)
       .push({
         username: 'Winney',

@@ -3,6 +3,7 @@ import { connect } from 'react-redux'
 import { withRouter } from 'react-router-dom'
 import { withFirebase } from '../Firebase/index'
 import { compose } from 'recompose'
+import { getGif } from './utils'
 import firebase from 'firebase'
 const inbound = new Audio('jig0.wav')
 
@@ -74,13 +75,28 @@ class messageBox extends Component {
   handleChange = evt => {
     this.setState({ [evt.target.name]: evt.target.value })
   }
-  handleSubmit = evt => {
+  handleSubmit = async evt => {
     evt.preventDefault()
+    let str = this.state.body
+    if (str.includes(':')) {
+      let first = str.indexOf(':') + 1
+      let last = str.lastIndexOf(':')
+      console.log(str.slice(first, last))
+      const gif = await getGif(str.slice(first, last))
+      str = { img: gif }
+      this.setState({ body: result })
+    }
+
     if (this.state.body !== '') {
       const { username, imgUrl } = this.props.user
       const body = this.state.body
       this.props.firebase.writeNewPost(username, imgUrl, body)
       this.setState({ body: '' })
+    }
+    if (str) {
+      const { username, imgUrl } = this.props.user
+      const body = str
+      this.props.firebase.writeNewPost(username, imgUrl, body, true)
     }
   }
 

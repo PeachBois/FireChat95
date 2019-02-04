@@ -1,4 +1,7 @@
 import Geohash from 'latlon-geohash'
+import axios from 'axios'
+const gifKey = 'hFS7FeDrqNadCFmst13zxWWIETMiEjiZ'
+
 export const getUserLocation = () => {
   const geolocation = navigator.geolocation
 
@@ -19,10 +22,20 @@ export const getUserLocation = () => {
   })
   return location
 }
-
 export const getGeoHash = async (coordinates, radius) => {
   const { latitude, longitude } = coordinates.coords
   console.log(radius)
   const hash = Geohash.encode(latitude, longitude, radius)
   return hash
+}
+export const getGif = async (string = 'win95') => {
+  string = string.split(' ').join('+')
+
+  const gif = await axios.get(
+    '//api.giphy.com/v1/gifs/search?q=' +
+      string +
+      '&api_key=hFS7FeDrqNadCFmst13zxWWIETMiEjiZ'
+  )
+
+  return gif.data.data[0].embed_url
 }

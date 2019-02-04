@@ -110,7 +110,6 @@ class ChangeName extends Component {
           </div>
         </div>
         <div className='bottomBar'>
-          <img src='computer.png' className='bottomBar' />
           <div className='change'>
             <button type='submit' onClick={this.handleSubmit}>
               Login
@@ -118,10 +117,13 @@ class ChangeName extends Component {
           </div>
         </div>
         <div className='body'>
-          <h4 className='log'>
-            >:Here you can change your display name, as well as how many people
-            you want in a chat and how exact your search area is!
-          </h4>
+          <div className='help'>
+            <img src='computer.png' className='bottomBar' />
+            <h4 className='log'>
+              >: Here you can change your display name, as well as how many
+              people you want in a chat and how exact your search area is!
+            </h4>
+          </div>
         </div>
       </div>
     )

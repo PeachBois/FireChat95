@@ -186,7 +186,7 @@ h4.log{
   height: 30%;
   width: 30%;
   margin-top: 18px;
-  background-color: #ffffff;
+  background-color: #c0c0c0;
   border-width: 3px;
   border-color: #808080#FFFFFF #FFFFFF#808080;
   border-style: solid;
@@ -244,6 +244,11 @@ h4.log{
   display: flex;
   justify-content: center;
 }
+.help{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
 p.login{
   align-content: center;
   font-weight: bolder;
@@ -260,17 +265,14 @@ p.login{
 div.bottomBar{
   font-size: 13px;
   padding: 2px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
   padding-left: 18px;
 
 }
 img.bottomBar{
-      /* height: 20%; */
+      height: 13%;
       width: 13%;
       /* font-size: 18px; */
-      /* outline: 1px solid #515151; */
+      margin: 7px;
       border-width: 1px;
       border-style: solid;
       border-color: #ffffff #808080 #808080 #ffffff;
@@ -307,9 +309,10 @@ select {
   width: 48px;
 }
 .anon {
-  display: flex;
   width: 161px;
   align-self: flex-end;
+  color: rgba(0,0,0,.54);
+  display: table-cell;
 }
 .logBox{
   display: flex;
