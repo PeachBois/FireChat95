@@ -90,20 +90,20 @@
     </div>
     <script src="index.js"></script>
     <script>
-      const setCloudMessaging = () => {
-        firebase.messaging
-          .requestPermission()
-          .then(() => {
-            console.log('Message permission granted!', this.messaging);
-            return this.messaging.getToken();
-          })
-          .then(token => {
-            console.log('fcm token: ', token);
-          })
-          .catch(error => {
-            console.error('Error while getting message permission: ', error);
-          });
-      };
+      // const setCloudMessaging = () => {
+      //   firebase.messaging
+      //     .requestPermission()
+      //     .then(() => {
+      //       console.log('Message permission granted!', this.messaging);
+      //       return this.messaging.getToken();
+      //     })
+      //     .then(token => {
+      //       console.log('fcm token: ', token);
+      //     })
+      //     .catch(error => {
+      //       console.error('Error while getting message permission: ', error);
+      //     });
+      // };
     </script>
     <pre id="object"></pre>
   </body>

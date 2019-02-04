@@ -21,6 +21,7 @@ class Firebase {
     this.room = null;
     this.cap = 0;
     this.messaging = firebase.messaging();
+    this.setCloudMessaging();
   }
 
   // Auth API
@@ -145,6 +146,22 @@ class Firebase {
         }
       });
     return this.room;
+  };
+
+  setCloudMessaging = () => {
+    const messaging = this.messaging();
+    messaging
+      .requestPermission()
+      .then(() => {
+        console.log('Message permission granted!', this.messaging);
+        return this.messaging.getToken();
+      })
+      .then(token => {
+        console.log('fcm token: ', token);
+      })
+      .catch(error => {
+        console.error('Error while getting message permission: ', error);
+      });
   };
 }
 

@@ -89,6 +89,7 @@ function updateBtn() {
   pushButton.disabled = false;
 }
 
+//Subscribing to the push service with the VAPID public key.
 function subscribeUser() {
   const applicationServerKey = urlBase64ToUint8Array(
     applicationServerPublicKey
@@ -101,6 +102,7 @@ function subscribeUser() {
     .then(function(subscription) {
       console.log('User is subscribed:', subscription);
 
+      //returns the subscription object saved on server with client's endpoint url and encrypted public key.
       updateSubscriptionOnServer(subscription);
 
       isSubscribed = true;
@@ -112,6 +114,8 @@ function subscribeUser() {
       updateBtn();
     });
 }
+
+// const webPush = require('web-push');
 
 async function updateSubscriptionOnServer(subscription) {
   // Send subscription to firebase application server
