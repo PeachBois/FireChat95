@@ -66,7 +66,8 @@ class SignInScreenBase extends Component {
     if (!this.state.isSignedIn) {
       return (
         <div className='logBox'>
-          {true ? (
+          {'matchMedia' in window &&
+window.matchMedia('(display-mode: standalone)').matches ? (
             <button onClick={this.AnonLog} className='anon'>
               <h3>Anonymous Login</h3>
             </button>
@@ -110,5 +111,4 @@ const SignInScreen = compose(
 
 export default SignInScreen(SignInScreenBase)
 
-// 'matchMedia' in window &&
-// window.matchMedia('(display-mode: standalone)').matches
+
