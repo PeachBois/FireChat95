@@ -139,9 +139,9 @@ div.body button {
 }
 
 #map{
-  height: 100px;
-  width: 100px;
-  float: left
+  height: 100%;
+  width: 100%;
+  /* display: inline-block */
 }
 /* Below: For PWA: Improving progressive nature of the App (CSS) */
 .navbar {

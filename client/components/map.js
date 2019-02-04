@@ -7,34 +7,66 @@ class MapContainer extends Component {
         super()
         this.loading = true
         this.map = {}
+        this.initMap = this.initMap.bind(this)
     }
 
-    componentDidMount() {
-        const script = document.createElement('script')
-        script.async = true;
-        script.defer = true;
-        script.body = 'hello'
-        script.src = "https://maps.googleapis.com/maps/api/js?key=AIzaSyBz7fOQpPA70ewMAtpQPIXjYxDq40fdTro&callback=initMap"
-        document.getElementById('map').appendChild(script)
-        this.loading = false;
-    }
+    // componentDidMount() {
+    //     const script = document.createElement('script')
+    //     script.async = true;
+    //     script.defer = true;
+    //     script.src = "https://maps.googleapis.com/maps/api/js?key=AIzaSyBz7fOQpPA70ewMAtpQPIXjYxDq40fdTro&callback=initMap"
+    //     document.getElementById('map').appendChild(script)
+    //     this.loading = false;
+    // }
 
     initMap() {
+        const {lat, lng, bounds, zoom} = this.props.position
+        const north = bounds.ne.lat;
+        const east = bounds.ne.lon;
+        const south = bounds.sw.lat;
+        const west = bounds.sw.lon;
         this.map = new google.maps.Map(document.getElementById('map'), {
-            center: {lat: -34.397, lng: 150.644},
-            zoom: 8
+            center: {
+                lat: ( (north+south) / 2 ),
+                lng: ( (east+west) / 2 ),
+            },
+            zoom,
+            disableDefaultUI: true
           });
+        
+        var marker = new google.maps.Marker({
+            position: {lat, lng},
+            map: this.map,
+            title: 'YOU'
+        });
+        
+        var rectangle = new google.maps.Rectangle({
+            strokeColor: '#FF0000',
+            strokeOpacity: 0.8,
+            strokeWeight: 2,
+            fillColor: '#FF0000',
+            fillOpacity: 0.35,
+            map: this.map,
+            bounds: {
+            north,
+            east,
+            south,
+            west
+            }
+        });
+        
     }
     
     render() {
         // this.initMap()
         let isLoading = this.loading
         return(
-            <div id='map'>
-                {isLoading
-                ? 'Loading' 
-                : this.initMap()}
-            </div>
+            // <div id='map'>
+            //     {isLoading
+            //     ? 'Loading' 
+            //     : this.initMap()}
+            // </div>
+            <React.Fragment>{this.initMap()}</React.Fragment>
             
         )
     // const {lat, lng, zoom, bounds} = this.props.position
@@ -70,8 +102,6 @@ class MapContainer extends Component {
 const mapState = (state) => {
     return {
         position: state.position,
-        zoom: state.position.zoom,
-        bounds: state.position.bounds
     }
 }
 

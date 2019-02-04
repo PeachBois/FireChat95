@@ -6,6 +6,8 @@ import { compose } from 'recompose'
 import { me, logout } from '../store/user'
 import {loadLocation, setZoom} from '../store/map'
 import { setRadius, setCap } from '../store/posts'
+import Map from '../components/map'
+import {getMapApi} from '../components/utils'
 
 class ChangeName extends Component {
   constructor () {
@@ -13,16 +15,21 @@ class ChangeName extends Component {
     this.state = {
       displayName: '',
       radius: 4,
-      roomCap: 2
+      roomCap: 2,
+      showMap: false
     }
+    this.toggleMap = this.toggleMap.bind(this)
   }
   componentDidMount () {
     this.setState({ displayName: this.props.user.username })
-    this.props.loadLocation()//unnecessary?
+    this.props.loadLocation(this.state.radius)
+    getMapApi()
   }
 
   handleChange = evt => {
     this.setState({ [evt.target.name]: evt.target.value })
+    this.props.loadLocation(evt.target.value)
+    this.props.setZoom(1.5*evt.target.value + 7)
   }
 
   handleSubmit = evt => {
@@ -39,11 +46,21 @@ class ChangeName extends Component {
     }
     this.props.history.push('/locating')
   }
-  searchArea = evt => {
-    //other functions can go here
-    console.log(typeof +evt.target.value)
-    this.props.setZoom(+evt.target.value)
-  }
+  // searchArea = evt => {
+  //   //other functions can go here
+  //   console.log(typeof +evt.target.value)
+  //   // this.props.setZoom(+evt.target.value)
+  // }
+
+    toggleMap() {
+      this.setState((prevState) => {
+        return {
+          showMap: !prevState.showMap
+        }
+      })
+      console.log(this.state.showMap)
+    }
+
   render () {
     if (!this.props.user.imgUrl) {
       this.props.history.push('/')
@@ -64,6 +81,7 @@ class ChangeName extends Component {
             X
           </button>
         </div>
+          <div id="map"></div>
         <div className='body'>
           <div className='userSpace'>
             <img src={imgUrl} className='userImg' />
@@ -112,10 +130,15 @@ class ChangeName extends Component {
               </select>
             </div>
           </div>
-
+          <button type='submit' onClick={this.toggleMap}>
+            {this.state.showMap
+            ? 'Hide Map'
+            : 'Show Map'}
+          </button>
           <button type='submit' onClick={this.handleSubmit}>
             Login
           </button>
+          {this.state.showMap && <Map/>}
         </div>
       </div>
     )
@@ -132,7 +155,7 @@ const mapState = state => {
 const mapDispatch = dispatch => {
   return {
     me: name => dispatch(me(name)),
-    loadLocation: () => dispatch(loadLocation()),
+    loadLocation: (radius) => dispatch(loadLocation(radius)),
     setZoom: value => dispatch(setZoom(value)),
     setRadius: radius => dispatch(setRadius(radius)),
     setCap: cap => dispatch(setCap(cap)),

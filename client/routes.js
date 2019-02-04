@@ -22,7 +22,7 @@ class RoutesBase extends Component {
   render() {
     return (
       <div>
-        <Route path='/' component={GoogleMap} />
+        {/* <Route path='/' component={GoogleMap} /> */}
         <Route exact path='/' component={Login} />
         <Route exact path='/chat' component={MessageBox} />
         {/* <Route exact path='/navtest' component={RoomSetUp} /> */}
