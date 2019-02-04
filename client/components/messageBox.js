@@ -3,6 +3,7 @@ import { connect } from 'react-redux'
 import { withRouter } from 'react-router-dom'
 import { withFirebase } from '../Firebase/index'
 import { compose } from 'recompose'
+import { getGif } from './utils'
 import firebase from 'firebase'
 const inbound = new Audio('jig0.wav')
 
@@ -74,8 +75,9 @@ class messageBox extends Component {
   handleChange = evt => {
     this.setState({ [evt.target.name]: evt.target.value })
   }
-  handleSubmit = evt => {
+  handleSubmit = async evt => {
     evt.preventDefault()
+
     if (this.state.body !== '') {
       const { username, imgUrl } = this.props.user
       const body = this.state.body
@@ -116,7 +118,9 @@ class messageBox extends Component {
           <p className='title'>Welcome!</p>
           <div className='inner'>
             {this.state.postList.map(entry => {
-              // console.log(entry)
+              if(entry.body.img){
+                console.log(entry.body.img)
+              }
               return (
                 <div
                   className='message'
@@ -130,7 +134,11 @@ class messageBox extends Component {
                   >
                     {entry.username}:
                   </p>
-                  <p>{entry.body}</p>
+                  { entry.body.img ? (
+                    <img src={entry.body.img} className='userImg' />
+                  ) : (
+                    <p>{entry.body}</p>
+                  )}
                 </div>
               )
             })}
