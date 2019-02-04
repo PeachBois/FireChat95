@@ -61,6 +61,7 @@ self.addEventListener('push', function(event) {
   console.log('[Service Worker] Push Received.');
   console.log(`[Service Worker] Push had this data: "${event.data.text()}"`);
 
+  console.log('push event listener for SW >>EVENT>> : ', event);
   // Push listener
   // let payload = event.data.json();
   // console.log('payload??? ', payload);

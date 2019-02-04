@@ -148,12 +148,13 @@ class Firebase {
     return this.room;
   };
 
+  //Giving permission for FCM notifications & access and saving FCM token
   setCloudMessaging = () => {
-    const messaging = this.messaging();
+    const messaging = this.messaging;
     messaging
       .requestPermission()
       .then(() => {
-        console.log('Message permission granted!', this.messaging);
+        console.log('FCM Message permission granted!', this.messaging);
         return this.messaging.getToken();
       })
       .then(token => {
@@ -161,6 +162,26 @@ class Firebase {
       })
       .catch(error => {
         console.error('Error while getting message permission: ', error);
+      });
+  };
+
+  setLogin = user => {
+    this.saveFCMToken();
+  };
+
+  saveFCMToken = () => {
+    const cbGetToken = token => {
+      console.log('setLogin fcmId get: ', token);
+      const userUid = this.auth.currentUser.uid;
+      const fcmIdRef = this.database.ref('FcmId/' + userUid);
+      fcmIdRef.set(token);
+    };
+
+    this.messaging()
+      .getToken()
+      .then(cbGetToken.bind(this))
+      .catch(error => {
+        console.error('Error while verifying fcmId...', error);
       });
   };
 }
