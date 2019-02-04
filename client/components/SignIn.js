@@ -86,18 +86,20 @@ class SignInScreenBase extends Component {
     if (!this.state.isSignedIn) {
       return (
         <div className='logBox'>
-          {'matchMedia' in window &&
-window.matchMedia('(display-mode: standalone)').matches && (This.getOs() === 'iOS') ? (
-            <button onClick={this.AnonLog} className='anon'>
+         <button onClick={this.AnonLog} className='anon'>
               <h3>Anonymous Login</h3>
             </button>
-          ) : (
-            ''
-          )}
+          {'matchMedia' in window &&
+             window.matchMedia('(display-mode: standalone)').matches && (This.getOs() === 'iOS') ? (
+               <div/>
+         
+          ) : 
+          
           <StyledFirebaseAuth
             uiConfig={this.uiConfig}
             firebaseAuth={firebase.auth()}
           />
+          }
         </div>
       )
     }
