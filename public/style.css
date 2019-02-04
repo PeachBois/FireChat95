@@ -210,6 +210,11 @@ h4.log{
   /* justify-content: left; */
 }
 
+#map{
+  /* height: 200px; */
+  width: 100%;
+  /* display: inline-block */
+}
 /* Below: For PWA: Improving progressive nature of the App (CSS) */
 .navbar {
   background-color: #01c8e5;
