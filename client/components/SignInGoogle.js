@@ -27,18 +27,15 @@ const SignInGoogleBase = props => {
     event.preventDefault()
     try {
       const googleUser = await props.firebase.signInWithGoogle()
-      console.log(googleUser)
       await props.firebase.user(googleUser.user.uid).set({
         username: googleUser.user.displayName,
-        email: googleUser.user.email,
-        imgUrl: googleUser.user.photoURL,
-        roles: []
+        imgUrl: googleUser.user.photoURL
       })
+
       const user = {
         username: googleUser.user.displayName,
-        email: googleUser.user.email,
-        imgUrl: googleUser.user.photoURL,
-        roles: []
+
+        imgUrl: googleUser.user.photoURL
       }
 
       props.me(user)
