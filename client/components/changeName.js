@@ -27,9 +27,8 @@ class ChangeName extends Component {
     if (this.state.displayName !== '') {
       this.props.me({
         username: this.state.displayName,
-        roles: this.props.user.rules,
-        imgUrl: this.props.user.imgUrl,
-        email: this.props.user.email
+        email: this.props.user.email,
+        imgUrl: this.props.user.imgUrl
       })
       this.props.setRadius(this.state.radius)
       this.props.setCap(this.state.roomCap)
@@ -52,6 +51,7 @@ class ChangeName extends Component {
           <button
             onClick={async () => {
               await this.props.logout()
+              await this.props.firebase.auth.signOut()
               this.props.history.push('/')
             }}
           >
