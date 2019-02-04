@@ -31,7 +31,7 @@ class SignInScreenBase extends Component {
   AnonLog = () => {
     const newUser = {
       username: 'Anonymous User',
-      imgUrl: 'computer-'+Math.floor(Math.random() * (0 - 4) ) +'.png',
+      imgUrl: 'computer-' + Math.floor(Math.random() * (0 - 4)) + '.png',
       email: 'anon@fakeassemail.com'
     }
 
@@ -51,7 +51,7 @@ class SignInScreenBase extends Component {
             imgUrl: photoURL,
             email
           }
-console.log(newUser)
+          console.log(newUser)
           this.props.me(newUser)
           if (this.props.user.username !== undefined) {
             this.props.history.push('/setup')
@@ -65,13 +65,15 @@ console.log(newUser)
   render () {
     if (!this.state.isSignedIn) {
       return (
-        <div>
+        <div className='logBox'>
           {'matchMedia' in window &&
-          window.matchMedia('(display-mode: standalone)').matches ? (
-            <button onClick={this.AnonLog}><h3>Anonymous Login</h3></button>
-            ) : (
-              ''
-            )}
+window.matchMedia('(display-mode: standalone)').matches ? (
+            <button onClick={this.AnonLog} className='anon'>
+              <h3>Anonymous Login</h3>
+            </button>
+          ) : (
+            ''
+          )}
           <StyledFirebaseAuth
             uiConfig={this.uiConfig}
             firebaseAuth={firebase.auth()}
@@ -108,3 +110,5 @@ const SignInScreen = compose(
 )
 
 export default SignInScreen(SignInScreenBase)
+
+

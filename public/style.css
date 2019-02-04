@@ -306,7 +306,15 @@ select {
   border-style: solid;
   width: 48px;
 }
-
+.anon {
+  display: flex;
+  width: 161px;
+  align-self: flex-end;
+}
+.logBox{
+  display: flex;
+  flex-direction: column;
+  flex-basis: flex-end;
 }
 ::-webkit-scrollbar {
   width: 15px;
