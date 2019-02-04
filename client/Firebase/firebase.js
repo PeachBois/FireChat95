@@ -1,6 +1,7 @@
 import * as firebase from 'firebase/app'
 import 'firebase/database'
 import { starter } from './firestarters'
+import { getGif } from '../components/utils'
 
 const config = {
   apiKey: 'AIzaSyBD2FYD63jQ5XQm2e79NNy2vz1odEjfgQw',
@@ -50,16 +51,25 @@ class Firebase {
     this.room = null
   }
   // Method to write new message in chat box.
-  writeNewPost = (username, img, body) => {
+  writeNewPost = async (username, img, body) => {
     // A post entry.
 
+    
+    let str = body
+
+    if (str.includes(':')) {
+      let first = str.indexOf(':') + 1
+      let last = str.lastIndexOf(':')
+      console.log(str.slice(first, last))
+      const gif = await getGif(str.slice(first, last))
+      str = { img: gif }
+      body = str
+    }
     let postData = {
       username,
       body,
       img
     }
-    console.log(postData)
-
     let newPostKey = this.database
       .ref()
       .child(`/rooms/${this.room}/posts/`)

@@ -40,6 +40,7 @@ self.addEventListener('fetch', event => {
   if (doCache) {
     event.respondWith(
       caches.match(event.request).then(response => {
+        console.log(response)
         if (response) {
           return response
         } else {

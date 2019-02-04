@@ -77,26 +77,12 @@ class messageBox extends Component {
   }
   handleSubmit = async evt => {
     evt.preventDefault()
-    let str = this.state.body
-    if (str.includes(':')) {
-      let first = str.indexOf(':') + 1
-      let last = str.lastIndexOf(':')
-      console.log(str.slice(first, last))
-      const gif = await getGif(str.slice(first, last))
-      str = { img: gif }
-      this.setState({ body: result })
-    }
 
     if (this.state.body !== '') {
       const { username, imgUrl } = this.props.user
       const body = this.state.body
       this.props.firebase.writeNewPost(username, imgUrl, body)
       this.setState({ body: '' })
-    }
-    if (str) {
-      const { username, imgUrl } = this.props.user
-      const body = str
-      this.props.firebase.writeNewPost(username, imgUrl, body, true)
     }
   }
 
@@ -132,7 +118,9 @@ class messageBox extends Component {
           <p className='title'>Welcome!</p>
           <div className='inner'>
             {this.state.postList.map(entry => {
-              // console.log(entry)
+              if(entry.body.img){
+                console.log(entry.body.img)
+              }
               return (
                 <div
                   className='message'
@@ -146,7 +134,11 @@ class messageBox extends Component {
                   >
                     {entry.username}:
                   </p>
-                  <p>{entry.body}</p>
+                  { entry.body.img ? (
+                    <img src={entry.body.img} className='userImg' />
+                  ) : (
+                    <p>{entry.body}</p>
+                  )}
                 </div>
               )
             })}
