@@ -1,9 +1,8 @@
 import Geohash from 'latlon-geohash'
-
 export const getUserLocation = () => {
   const geolocation = navigator.geolocation
 
-  const location = new Promise((resolve, reject) => {
+  let location = new Promise((resolve, reject) => {
     if (!geolocation) {
       reject(new Error('Not Supported'))
     }
@@ -13,12 +12,11 @@ export const getUserLocation = () => {
         resolve(position)
       },
       () => {
-        reject(new Error('Permission denied'))
+        resolve('failed')
       },
-      { maximumAge: 600000, timeout: 5000, enableHighAccuracy: true }
+      { maximumAge: 0, timeout: 5000, enableHighAccuracy: true }
     )
   })
-  console.log(location)
   return location
 }
 

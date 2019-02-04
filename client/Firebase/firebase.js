@@ -1,13 +1,7 @@
-// In this 'firebase.js' file:
-// configures Firebase and implements methods/functions for the Firebase class.
-import { compose } from 'recompose'
 import * as firebase from 'firebase/app'
 import 'firebase/database'
 import { starter } from './firestarters'
-// import app from 'firebase/app';
-import Geohash from 'latlon-geohash'
 
-// Initializing Firebase:
 const config = {
   apiKey: 'AIzaSyBD2FYD63jQ5XQm2e79NNy2vz1odEjfgQw',
   authDomain: 'fir-exploration-deee2.firebaseapp.com',
@@ -19,12 +13,14 @@ const config = {
 
 class Firebase {
   constructor () {
+    this.firebase = firebase
     firebase.initializeApp(config)
     this.database = firebase.database()
     this.auth = firebase.auth()
     this.posts = []
     this.googleProvider = new firebase.auth.GoogleAuthProvider()
     this.room = null
+    this.cap = 0
   }
 
   // Auth API
@@ -33,7 +29,26 @@ class Firebase {
   // User API
   user = uid => this.database.ref(`users/${uid}`)
   users = () => this.database.ref('users')
-
+  leaveRoom = async () => {
+    await this.database
+      .ref(`/rooms/${this.room}/`)
+      .child(`rules/mia`)
+      .push('remove')
+    await this.database
+      .ref()
+      .child(`/rooms/${this.room}/rules/mia`)
+      .once('value', async snapshot => {
+        if (snapshot.exists()) {
+          if (Object.keys(snapshot.val()).length >= this.cap - 1) {
+            await this.database
+              .ref()
+              .child(`/rooms/${this.room}`)
+              .remove()
+          }
+        }
+      })
+    this.room = null
+  }
   // Method to write new message in chat box.
   writeNewPost = (username, img, body) => {
     // A post entry.
@@ -71,24 +86,32 @@ class Firebase {
       .ref()
       .child(`/rooms/${room}-${it}/posts`)
       .push({
-        username: 'StarterBot',
+        username: 'Winney',
         body: starter(),
-        img: `https://robohash.org/${room}`
+        img: `./computer.png`
       })
 
     this.room = `${room}-${it}`
   }
 
   findOrCreateRoom = async (room, email, cap, it = 0) => {
-    console.log(room, email, cap, it)
+    this.cap = cap
     let users
     let roomCap
     await this.database
       .ref()
       .child(`/rooms/${room}-${it}/`)
-      .once('value', snapshot => {
+      .once('value', async snapshot => {
         if (snapshot.exists()) {
-          users = Object.values(snapshot.val().users)
+          if (snapshot.val().users) {
+            users = Object.values(snapshot.val().users)
+          } else {
+            await this.database.ref(`/rooms/${room}-${it}`).remove()
+            setTimeout(() => {}, 1000)
+            await this.findOrCreateRoom(room, email, cap, it)
+            await this.database.ref(`/rooms/${room}-${it}/users`).remove()
+            await this.database.ref(`/rooms/${room}-${it}/users`).push(email)
+          }
           roomCap = Object.values(snapshot.val().rules)[0]
           console.log(roomCap)
         }

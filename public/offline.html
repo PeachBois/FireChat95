@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <link rel="manifest" href="/manifest.json" />
+  <link rel="shortcut icon" href="/favicon.ico" />
+  <!-- Tell the browser it's a PWA -->
+  <meta name="mobile-web-app-capable" content="yes" />
+
+  <!-- Tell iOS(Safari) it's a PWA -->
+  <!-- Might need other image sizes for different devices... -->
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  <meta name="apple-mobile-web-app-title" content="RanChat" />
+  <link rel="apple-touch-icon" href="/apple-touch-icon-144x144.png" sizes="144x144" />
+
+  <title>Boilermaker</title>
+
+  <link rel="stylesheet" href="/style.css" />
+  <script defer src="/bundle.js"></script>
+</head>
+
+<body>
+  <div id="app">
+    <!-- Below two lines added: App will render an empty root div until the JavaScript loads and React hooks the initial route. Must ensure the app works without any JS loading and displays a bit of CSS and HTML before React comes into play.  -->
+    <div class="navbar"><a href="/">You're Offline!</a></div>
+    <img src='computer-offline' <p class="page-info">You need network connection!</p>
+  </div>
+  <!-- <script>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', function() {
+          navigator.serviceWorker
+            .register('/serviceWorker.js')
+            .then(
+              function(registration) {
+                console.log(
+                  'Worker registration successful!',
+                  registration.scope
+                );
+              },
+              function(err) {
+                console.log('Worker registration failed', err);
+              }
+            )
+            .catch(function(err) {
+              console.log(err);
+            });
+        });
+      } else {
+        console.log('Service Worker is not supported by browser.');
+      }
+    </script> -->
+  <pre id="object"></pre>
+</body>
+
+</html>

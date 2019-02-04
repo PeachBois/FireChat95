@@ -36,9 +36,8 @@ class ChangeName extends Component {
     if (this.state.displayName !== '') {
       this.props.me({
         username: this.state.displayName,
-        roles: this.props.user.rules,
-        imgUrl: this.props.user.imgUrl,
-        email: this.props.user.email
+        email: this.props.user.email,
+        imgUrl: this.props.user.imgUrl
       })
       this.props.setRadius(this.state.radius)
       this.props.setCap(this.state.roomCap)
@@ -75,6 +74,7 @@ class ChangeName extends Component {
           <button
             onClick={async () => {
               await this.props.logout()
+              await this.props.firebase.auth.signOut()
               this.props.history.push('/')
             }}
           >
@@ -94,40 +94,42 @@ class ChangeName extends Component {
                 name='displayName'
                 onChange={this.handleChange}
               />
+              <div className='apart'>
+                <p className='title'>Search Threshold:</p>
 
-              <p className='title'>Search Accuracy</p>
-
-              <select
-                name='radius'
-                className='input'
-                value={this.state.radius}
-                onChange={this.handleChange}
-              >
-                <option value='1'>1</option>
-                <option value='2'>2</option>
-                <option value='3'>3</option>
-                <option value='4'>4</option>
-                <option value='5'>5</option>
-                <option value='6'>6</option>
-                <option value='7'>7</option>
-                <option value='8'>8</option>
-              </select>
-
-              <p className='title'>Max Users</p>
-              <select
-                name='roomCap'
-                className='input'
-                value={this.state.roomCap}
-                onChange={this.handleChange}
-              >
-                <option value='2'>2</option>
-                <option value='3'>3</option>
-                <option value='4'>4</option>
-                <option value='5'>5</option>
-                <option value='6'>6</option>
-                <option value='7'>7</option>
-                <option value='8'>8</option>
-              </select>
+                <select
+                  name='radius'
+                  className='input'
+                  value={this.state.radius}
+                  onChange={this.handleChange}
+                >
+                  <option value='1'>1 (largest search area)</option>
+                  <option value='2'>2</option>
+                  <option value='3'>3</option>
+                  <option value='4'>4</option>
+                  <option value='5'>5</option>
+                  <option value='6'>6</option>
+                  <option value='7'>7</option>
+                  <option value='8'>8 (smallest search area) </option>
+                </select>
+              </div>
+              <div className='apart'>
+                <p className='title'>Max Users:</p>
+                <select
+                  name='roomCap'
+                  className='input'
+                  value={this.state.roomCap}
+                  onChange={this.handleChange}
+                >
+                  <option value='2'>2</option>
+                  <option value='3'>3</option>
+                  <option value='4'>4</option>
+                  <option value='5'>5</option>
+                  <option value='6'>6</option>
+                  <option value='7'>7</option>
+                  <option value='8'>8</option>
+                </select>
+              </div>
             </div>
           </div>
           <button type='submit' onClick={this.toggleMap}>
@@ -135,10 +137,21 @@ class ChangeName extends Component {
             ? 'Hide Map'
             : 'Show Map'}
           </button>
-          <button type='submit' onClick={this.handleSubmit}>
-            Login
-          </button>
           {this.state.showMap && <Map/>}
+        </div>
+        <div className='bottomBar'>
+          <img src='computer.png' className='bottomBar' />
+          <div className='change'>
+            <button type='submit' onClick={this.handleSubmit}>
+              Login
+            </button>
+          </div>
+        </div>
+        <div className='body'>
+          <h4 className='log'>
+            >:Here you can change your display name, as well as how many people
+            you want in a chat and how exact your search area is!
+          </h4>
         </div>
       </div>
     )
