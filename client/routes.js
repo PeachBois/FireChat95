@@ -13,6 +13,7 @@ import MessageBox from './components/messageBox'
 import Login from './components/login'
 import RoomSetUp from './components/room-set-up'
 import ChangeName from './components/changeName'
+import GoogleMap from './components/map'
 import Loading from './components/loading'
 
 class RoutesBase extends Component {
@@ -21,9 +22,8 @@ class RoutesBase extends Component {
   render () {
     return (
       <div>
-        <Route exactpath='/' component={Login} />
+        <Route exact path='/' component={Login} />
         <Route exact path='/chat' component={MessageBox} />
-        <Route exact path='/navtest' component={RoomSetUp} />
         <Route exact path='/setup' component={ChangeName} />
         <Route exact path='/locating' component={Loading} />
       </div>

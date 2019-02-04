@@ -39,3 +39,18 @@ export const getGif = async (string = 'win95') => {
 
   return gif.data.data[0].embed_url
 }
+
+export const getBounds = geohash => {
+  const bounds = Geohash.bounds(geohash)
+  console.log(bounds)
+  return bounds
+}
+
+export const getMapApi = () => {
+  const script = document.createElement('script')
+  script.async = true
+  script.defer = true
+  script.src =
+    'https://maps.googleapis.com/maps/api/js?key=AIzaSyBz7fOQpPA70ewMAtpQPIXjYxDq40fdTro&callback=initMap'
+  document.getElementById('map').appendChild(script)
+}
