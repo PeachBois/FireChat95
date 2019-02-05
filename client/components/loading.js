@@ -6,6 +6,7 @@ import { withFirebase } from '../Firebase/index'
 import { compose } from 'recompose'
 import firebase from 'firebase'
 import { setHash } from '../store/posts'
+import { getTip } from './tips'
 const dialUp = new Audio('dialUp.mp3')
 const error = new Audio('error.mp3')
 
@@ -18,7 +19,8 @@ export class Loading extends Component {
       geohash: '...',
       inRoom: false,
       room: '',
-      failed: false
+      failed: false,
+      tip: ''
     }
     this.getRejectedIdiot = this.getRejectedIdiot.bind(this)
   }
@@ -36,14 +38,15 @@ export class Loading extends Component {
       this.props.history.push('/')
     } else {
       dialUp.play()
-      const coordinates = await getUserLocation()
-      if (coordinates !== 'failed') {
+      const coordinates = this.props.location
+
+      if (coordinates.lat !== undefined) {
         this.setState({
-          latitude: coordinates.coords.latitude,
-          longitude: coordinates.coords.longitude
+          latitude: coordinates.lat,
+          longitude: coordinates.lng
         })
+
         const geohash = await getGeoHash(coordinates, this.props.radius)
-        console.log('loading', coordinates, this.props.user.email)
 
         const room = await this.props.firebase.findOrCreateRoom(
           geohash,
@@ -51,7 +54,7 @@ export class Loading extends Component {
           this.props.roomCap
         )
 
-        this.setState({ geohash, room })
+        this.setState({ geohash, room, tip: getTip() })
         const userObj = firebase
           .database()
           .ref()
@@ -125,11 +128,21 @@ export class Loading extends Component {
           </div>
         </div>
         <div className='body'>
-          <h4 className='log'>
-            {this.state.failed
-              ? '>: Location services are being blocked! ಠ_ಠ'
-              : '>: Here the server finds your approximate location and gives the server a hint as to find who is closeby, it may take a moment, so be patient!'}
-          </h4>
+          <div className='help'>
+            <img
+              src='computer.png'
+              className='buttonPic'
+              onClick={() => {
+                this.setState({ tip: getTip() })
+              }}
+            />
+
+            <h4 className='log'>
+              {this.state.failed
+                ? '>: Location services are being blocked! ಠ_ಠ'
+                : this.state.tip}
+            </h4>
+          </div>
         </div>
       </div>
     )
@@ -140,7 +153,8 @@ const mapState = state => {
   return {
     user: state.user,
     radius: state.posts.radius,
-    roomCap: state.posts.roomCap
+    roomCap: state.posts.roomCap,
+    location: state.position
   }
 }
 

@@ -44,6 +44,7 @@ class SignInScreenBase extends Component {
       .onAuthStateChanged(async user => {
         this.setState({ isSignedIn: !!user })
         if (firebase.auth().currentUser !== null) {
+          console.log(firebase.auth().currentUser)
           const { displayName, photoURL, email } = await firebase.auth()
             .currentUser
           const newUser = {
@@ -78,9 +79,9 @@ class SignInScreenBase extends Component {
 
     return 'unknown'
   }
-  componentWillUnmount () {
-    this.unregisterAuthObserver()
-  }
+  // componentWillUnmount () {
+  //   this.unregisterAuthObserver()
+  // }
   render () {
     if (!this.state.isSignedIn) {
       return (

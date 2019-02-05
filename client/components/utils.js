@@ -1,6 +1,5 @@
 import Geohash from 'latlon-geohash'
 import axios from 'axios'
-const gifKey = 'hFS7FeDrqNadCFmst13zxWWIETMiEjiZ'
 
 export const getUserLocation = () => {
   const geolocation = navigator.geolocation
@@ -22,10 +21,11 @@ export const getUserLocation = () => {
   })
   return location
 }
+
 export const getGeoHash = async (coordinates, radius) => {
-  const { latitude, longitude } = coordinates.coords
-  console.log(radius)
-  const hash = Geohash.encode(latitude, longitude, radius)
+  const { lat, lng } = coordinates
+  console.log(lat, lng, radius)
+  const hash = Geohash.encode(lat, lng, radius)
   return hash
 }
 export const getGif = async (string = 'win95') => {
@@ -40,8 +40,8 @@ export const getGif = async (string = 'win95') => {
   return gif.data.data[0].images.downsized_medium.url
 }
 
-export const getBounds = geohash => {
-  const bounds = Geohash.bounds(geohash)
+export const getBounds = async geohash => {
+  const bounds = await Geohash.bounds(geohash)
   console.log(bounds)
   return bounds
 }

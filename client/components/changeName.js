@@ -17,27 +17,32 @@ class ChangeName extends Component {
       radius: 4,
       roomCap: 2,
       showMap: false,
-      mapFailed: false
+      mapFailed: false,
+      located: false
     }
     this.toggleMap = this.toggleMap.bind(this)
   }
   componentDidMount () {
     this.setState({ displayName: this.props.user.username })
-    this.props.loadLocation(this.state.radius)
-    getMapApi()
+    if (!this.state.located) {
+      this.setState({ located: true })
+      this.props.loadLocation(this.state.radius)
+      getMapApi()
 
-    if (this.props.position) {
-      if (this.props.position.bounds === 'failed') {
-        this.setState({ mapFailed: true })
+      if (this.props.position) {
+        if (this.props.position.bounds === 'failed') {
+          this.setState({ mapFailed: true })
+        }
       }
     }
   }
 
   handleChange = evt => {
     this.setState({ [evt.target.name]: evt.target.value })
+  }
+  handleZoom = evt => {
     this.props.loadLocation(evt.target.value)
     let zoom
-    console.log(typeof +evt.target.value)
     switch (+evt.target.value) {
       case 1:
         zoom = 2
@@ -65,7 +70,6 @@ class ChangeName extends Component {
     }
     this.props.setZoom(zoom)
   }
-
   handleSubmit = evt => {
     if (this.state.displayName !== '') {
       this.props.me({
@@ -108,9 +112,10 @@ class ChangeName extends Component {
           <p className='title'>ALOL</p>
           <button
             onClick={async () => {
-              await this.props.logout()
-              await this.props.firebase.auth.signOut()
-              this.props.history.push('/')
+              this.props.logout()
+              await this.props.firebase.auth.signOut().then(() => {
+                this.props.history.push('/')
+              })
             }}
           >
             X
@@ -136,7 +141,7 @@ class ChangeName extends Component {
                   name='radius'
                   className='input'
                   value={this.state.radius}
-                  onChange={this.handleChange}
+                  onChange={this.handleZoom}
                 >
                   <option value='1'>1 (largest search area)</option>
                   <option value='2'>2</option>
@@ -178,6 +183,13 @@ class ChangeName extends Component {
               Login
             </button>
           </div>
+          <div className='map'>
+            {this.state.mapFailed ? (
+              <h4>Bust!</h4>
+            ) : (
+              <div id='map' style={style} />
+            )}
+          </div>
         </div>
         <div className='body'>
           <div className='help'>
@@ -186,13 +198,6 @@ class ChangeName extends Component {
               >: Here you can change your display name, as well as how many
               people you want in a chat and how exact your search area is!
             </h4>
-          </div>
-          <div className='help'>
-            {this.state.mapFailed ? (
-              <h4>Bust!</h4>
-            ) : (
-              <div id='map' style={style} />
-            )}
           </div>
         </div>
       </div>

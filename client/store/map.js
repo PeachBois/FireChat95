@@ -33,25 +33,35 @@ export const setBounds = bounds => ({ type: SET_BOUNDS, bounds })
 
 export const loadLocation = (precision = 5) => async dispatch => {
   try {
+    console.log('trying')
     const location = await getUserLocation()
-    let coordinates
-    try {
-      coordinates = {
-        lat: location.coords.latitude,
-        lng: location.coords.longitude
-      }
-    } catch (error) {
-      dispatch(setBounds('failed'))
-      dispatch(setLocation('failed'))
-    }
+    console.log('location:', location)
 
-    const geohash = await getGeoHash(location, precision)
-    const bounds = getBounds(geohash)
+    const coordinates = {
+      lat: location.coords.latitude,
+      lng: location.coords.longitude
+    }
+    const geohash = await getGeoHash(coordinates, precision)
+    console.log('geohash', geohash)
+    const bounds = await getBounds(geohash)
+    console.log('bounds', bounds)
+    console.log(
+      'coords:',
+      coordinates,
+      'geohash:',
+      geohash,
+      'bounds:',
+      bounds,
+      'location:',
+      location
+    )
     dispatch(setBounds(bounds))
     dispatch(setLocation(coordinates))
   } catch (err) {
     dispatch(setBounds('failed'))
     dispatch(setLocation('failed'))
+    console.log('failed')
+    console.error(err)
   }
 }
 
