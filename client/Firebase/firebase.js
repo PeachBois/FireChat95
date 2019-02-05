@@ -80,13 +80,13 @@ class Firebase {
     // console.log(updates)
     return this.database.ref().update(updates)
   }
-  createRoom = async (room, email, cap, it) => {
+  createRoom = async (room, email, cap, img, it) => {
     // console.log(room, email, it)
     await this.database.ref().child(`/rooms/${room}-${it}`)
     await this.database
       .ref()
       .child(`/rooms/${room}-${it}/users`)
-      .push(email)
+      .push({ email, img })
     await this.database
       .ref()
       .child(`/rooms/${room}-${it}/rules`)
@@ -108,7 +108,7 @@ class Firebase {
     this.room = `${room}-${it}`
   }
 
-  findOrCreateRoom = async (room, email, cap, it = 0) => {
+  findOrCreateRoom = async (room, email, cap, img, it = 0) => {
     this.cap = cap
     console.log(room)
     let users
@@ -123,9 +123,11 @@ class Firebase {
           } else {
             await this.database.ref(`/rooms/${room}-${it}`).remove()
             setTimeout(() => {}, 1000)
-            await this.findOrCreateRoom(room, email, cap, it)
+            await this.findOrCreateRoom(room, email, cap, img, it)
             await this.database.ref(`/rooms/${room}-${it}/users`).remove()
-            await this.database.ref(`/rooms/${room}-${it}/users`).push(email)
+            await this.database
+              .ref(`/rooms/${room}-${it}/users`)
+              .push({ email, img })
           }
           roomCap = Object.values(snapshot.val().rules)[0]
           console.log(roomCap)
@@ -135,13 +137,13 @@ class Firebase {
       .then(async () => {
         if (!users) {
           // console.log('creating')
-          await this.createRoom(room, email, cap, it)
+          await this.createRoom(room, email, cap, img, it)
           this.room = `${room}-${it}`
         } else {
           console.log('cap:', cap, 'room cap:', roomCap, 'users:', users.length)
           if (cap < users.length || users.length >= roomCap) {
             // console.log('restarting')
-            await this.findOrCreateRoom(room, email, cap, it + 1)
+            await this.findOrCreateRoom(room, email, cap, img, it + 1)
           } else {
             // console.log('adding name')
             await this.database

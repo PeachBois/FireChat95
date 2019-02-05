@@ -149,7 +149,7 @@ div.login button {
 }
 .inner {
   padding: 13px 12px 12px;
-  height: 200px;
+  height: 450px;
   width: calc(100% - 26px);
   background-color: #ffffff;
   border-width: 2px;
@@ -261,6 +261,12 @@ h4.log{
   display: flex;
   flex-flow: wrap;
   align-items: center;
+}
+.self{
+  display: flex;
+  flex-flow: wrap;
+  align-items: center;
+  flex-direction: row-reverse;
 }
 .icon{
   width: 50%;
