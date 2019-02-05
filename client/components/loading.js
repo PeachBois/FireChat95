@@ -52,9 +52,13 @@ export class Loading extends Component {
           geohash,
           this.props.roomCap,
           this.props.user.imgUrl,
+<<<<<<< HEAD
           this.props.user.username,
           this.props.user.color
     
+=======
+          this.props.user.username
+>>>>>>> fba21d49a488de7b081538914edb17fc682d7e45
         )
 
         this.setState({ geohash, room, tip: getTip() })
@@ -69,11 +73,14 @@ export class Loading extends Component {
           if (snap.val()) {
             users = Object.values(snap.val())
           }
-          console.log(users, room)
           this.props.setHash(room)
           if (users.length >= 2) {
             dialUp.pause()
             this.props.history.push('/chat')
+            if (users.length < 2) {
+              dialUp.pause()
+              this.props.history.push('/setup')
+            }
           }
         })
       } else {

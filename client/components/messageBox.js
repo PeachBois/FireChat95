@@ -15,7 +15,9 @@ class messageBox extends Component {
       body: '',
       postList: [],
       dbRefObject: false,
-      username: ''
+      username: '',
+      users: [],
+      imgId: ''
     }
   }
   shutDown = async () => {
@@ -24,7 +26,7 @@ class messageBox extends Component {
       './computer.png',
       `${this.props.user.username} has left the room. (╯°□°）╯ `
     )
-    this.props.firebase.leaveRoom()
+    this.props.firebase.leaveRoom(this.state.imgId)
     this.props.history.push('/setup')
   }
   async componentDidMount () {
@@ -32,23 +34,40 @@ class messageBox extends Component {
     if (typeof hash !== 'string') {
       this.props.history.push('/')
     }
-    window.addEventListener('beforeunload', function (e) {
-      this.shutDown()
-      var confirmationMessage = ('GoodBye!'(
-        e || window.event
-      ).returnValue = confirmationMessage) // Gecko + IE
-      return confirmationMessage // Webkit, Safari, Chrome
-    })
+
     let postList = []
 
     const dbRefObject = firebase
       .database()
       .ref()
       .child(`/rooms/${hash}/posts`)
-    const users = firebase
+    const usersDb = firebase
       .database()
       .ref()
       .child(`/rooms/${hash}/users`)
+    if (this.props.user.username) {
+      usersDb.on('value', snap => {
+        let users = []
+        if (snap.exists()) {
+          const userObject = snap.val()
+          if (userObject) {
+            let i = 0
+            let keys = Object.keys(userObject)
+            Object.values(userObject).forEach(element => {
+              if (element.username === this.props.user.username) {
+                this.setState({ imgId: keys[i] })
+                console.log(this.state.imgId)
+              }
+              users.push({ key: Object.keys(element), img: element.img })
+              i++
+            })
+            this.setState({ users })
+          }
+        } else {
+          this.props.history.push('/setup')
+        }
+      })
+    }
 
     dbRefObject.on('value', snap => {
       postList = []
@@ -62,7 +81,7 @@ class messageBox extends Component {
           postList.push(postObj[key])
         }
         inbound.play()
-        this.setState({ postList, username: this.props.user.username })
+        this.setState({ postList })
       }
     })
     this.setState({ dbRefObject })
@@ -122,13 +141,17 @@ class messageBox extends Component {
         </div>
         <div className='body'>
           <p className='title'>Welcome!</p>
+          <div className='userBar'>
+            {this.state.users.map(user => {
+              return <img className='userBarIcon' src={user.img} />
+            })}
+          </div>
           <div className='inner'>
             {this.state.postList.map(entry => {
               if (entry.body.img) {
                 console.log(entry.body.img)
               }
               let style = 'message'
-              console.log(entry.username, this.state.username)
               if (entry.username === this.state.username) {
                 style = 'self'
               }
