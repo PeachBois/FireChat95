@@ -50,9 +50,9 @@ export class Loading extends Component {
 
         const room = await this.props.firebase.findOrCreateRoom(
           geohash,
-          this.props.user.email,
           this.props.roomCap,
-          this.props.user.imgUrl
+          this.props.user.imgUrl,
+          this.props.user.username
         )
 
         this.setState({ geohash, room, tip: getTip() })
@@ -67,11 +67,14 @@ export class Loading extends Component {
           if (snap.val()) {
             users = Object.values(snap.val())
           }
-          console.log(users, room)
           this.props.setHash(room)
           if (users.length >= 2) {
             dialUp.pause()
             this.props.history.push('/chat')
+            if (users.length < 2) {
+              dialUp.pause()
+              this.props.history.push('/setup')
+            }
           }
         })
       } else {
