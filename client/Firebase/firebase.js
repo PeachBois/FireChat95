@@ -48,7 +48,10 @@ class Firebase {
       })
     this.room = null
   }
-  writeNewPost = async (username, img, body) => {
+  // Method to write new message in chat box.
+  writeNewPost = async (username, img, body, color='#FF0000') => {
+    // A post entry.
+
     let str = body
     if (str.includes(':')) {
       let first = str.indexOf(':') + 1
@@ -61,7 +64,8 @@ class Firebase {
     let postData = {
       username,
       body,
-      img
+      img,
+      color
     }
     let newPostKey = this.database
       .ref()
@@ -95,14 +99,7 @@ class Firebase {
     this.room = `${room}-${it}`
   }
 
-  findOrCreateRoom = async (
-    room,
-    cap,
-    img,
-    username,
-    color = 'red',
-    it = 0
-  ) => {
+  findOrCreateRoom = async (room, cap, img, username, color="#FF0000", it = 0) => {
     this.cap = cap
     console.log(room)
     let users
@@ -117,7 +114,7 @@ class Firebase {
           } else {
             await this.database.ref(`/rooms/${room}-${it}`).remove()
             setTimeout(() => {}, 1000)
-            await this.findOrCreateRoom(room, cap, img, it)
+            await this.findOrCreateRoom(room, cap, img, username, color, it)
             await this.database.ref(`/rooms/${room}-${it}/users`).remove()
             await this.database
               .ref(`/rooms/${room}-${it}/users`)
@@ -129,19 +126,14 @@ class Firebase {
       })
       .then(async () => {
         if (!users) {
-          await this.createRoom(room, cap, img, username, (color = 'red'), it)
+          // console.log('creating')
+          await this.createRoom(room, cap, img, username, color, it)
           this.room = `${room}-${it}`
         } else {
           console.log('cap:', cap, 'room cap:', roomCap, 'users:', users.length)
           if (cap < users.length || users.length >= roomCap) {
-            await this.findOrCreateRoom(
-              room,
-              cap,
-              img,
-              username,
-              (color = 'red'),
-              it + 1
-            )
+            // console.log('restarting')
+            await this.findOrCreateRoom(room, cap, img, username, color, it + 1)
           } else {
             await this.database
               .ref(`/rooms/${room}-${it}/users`)

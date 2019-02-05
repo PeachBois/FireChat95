@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import { withRouter } from 'react-router-dom'
 import { withFirebase } from '../Firebase/index'
 import { compose } from 'recompose'
-import { me, logout } from '../store/user'
+import { me, logout, setColor } from '../store/user'
 import { loadLocation, setZoom } from '../store/map'
 import { setRadius, setCap } from '../store/posts'
 import Map from '../components/map'
@@ -18,7 +18,8 @@ class ChangeName extends Component {
       roomCap: 2,
       showMap: false,
       mapFailed: false,
-      located: false
+      located: false,
+      color: '#FF0000'
     }
     this.toggleMap = this.toggleMap.bind(this)
   }
@@ -81,6 +82,7 @@ class ChangeName extends Component {
         email: this.props.user.email,
         imgUrl: this.props.user.imgUrl
       })
+      this.props.setColor(this.state.color)
       this.props.setRadius(this.state.radius)
       this.props.setCap(this.state.roomCap)
     }
@@ -106,7 +108,7 @@ class ChangeName extends Component {
     }
     let style = this.state.showMap ? { height: '190px' } : { height: '0px' }
 
-    let { displayName } = this.state
+    let { displayName, color } = this.state
     const { imgUrl } = this.props.user
     return (
       <div className='box'>
@@ -130,12 +132,29 @@ class ChangeName extends Component {
 
             <div className='changeName'>
               <p className='title'>Set A Display Name</p>
-              <input
-                type='text'
-                value={displayName}
-                name='displayName'
-                onChange={this.handleChange}
-              />
+              {/* <select
+                  name='color'
+                  type=
+                  className='input'
+                  value={this.state.color}
+                  onChange={this.handleChange}
+                >
+                  <option value='#FF0000'>red</option>
+                  <option value='#000000'>black</option>
+                </select> */}
+                  <input
+                    type='color'
+                    width='15px'
+                    value={color}
+                    name='color'
+                    onChange={this.handleChange}
+                  />
+                <input
+                  type='text'
+                  value={displayName}
+                  name='displayName'
+                  onChange={this.handleChange}
+                />
               <div className='apart'>
                 <p className='title'>Search Threshold:</p>
 
@@ -222,7 +241,8 @@ const mapDispatch = dispatch => {
     setZoom: value => dispatch(setZoom(value)),
     setRadius: radius => dispatch(setRadius(radius)),
     setCap: cap => dispatch(setCap(cap)),
-    logout: () => dispatch(logout())
+    logout: () => dispatch(logout()),
+    setColor: (color) => dispatch(setColor(color))
   }
 }
 
