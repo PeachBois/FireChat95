@@ -25,15 +25,13 @@ class ChangeName extends Component {
   }
   componentDidMount () {
     this.setState({ displayName: this.props.user.username })
-    if (!this.state.located) {
-      this.setState({ located: true })
-      this.props.loadLocation(this.state.radius)
-      getMapApi()
+    this.setState({ located: true })
+    this.props.loadLocation(this.state.radius)
+    getMapApi()
 
-      if (this.props.position) {
-        if (this.props.position.bounds === 'failed') {
-          this.setState({ mapFailed: true })
-        }
+    if (this.props.position) {
+      if (this.props.position.bounds === 'failed') {
+        this.setState({ mapFailed: true })
       }
     }
   }
@@ -133,28 +131,21 @@ class ChangeName extends Component {
             <div className='changeName'>
               <p className='title'>Set A Display Name</p>
               {/* <select
-                  name='color'
-                  type=
-                  className='input'
-                  value={this.state.color}
-                  onChange={this.handleChange}
-                >
-                  <option value='#FF0000'>red</option>
-                  <option value='#000000'>black</option>
-                </select> */}
-                  <input
-                    type='color'
-                    width='15px'
-                    value={color}
-                    name='color'
-                    onChange={this.handleChange}
-                  />
-                <input
-                  type='text'
-                  value={displayName}
-                  name='displayName'
-                  onChange={this.handleChange}
-                />
+                name='color'
+                className='input'
+                value={this.state.color}
+                onChange={this.handleChange}
+              >
+                <option value='#FF0000'>red</option>
+                <option value='#000000'>black</option>
+              </select> */}
+
+              <input
+                type='text'
+                value={displayName}
+                name='displayName'
+                onChange={this.handleChange}
+              />
               <div className='apart'>
                 <p className='title'>Search Threshold:</p>
 
@@ -242,7 +233,7 @@ const mapDispatch = dispatch => {
     setRadius: radius => dispatch(setRadius(radius)),
     setCap: cap => dispatch(setCap(cap)),
     logout: () => dispatch(logout()),
-    setColor: (color) => dispatch(setColor(color))
+    setColor: color => dispatch(setColor(color))
   }
 }
 

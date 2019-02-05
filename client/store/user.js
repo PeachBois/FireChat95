@@ -67,7 +67,7 @@ export default function (state = defaultUser, action) {
     case REMOVE_USER:
       return defaultUser
     case SET_COLOR:
-      return {...state, color: action.color}
+      return { ...state, color: action.color }
     default:
       return state
   }

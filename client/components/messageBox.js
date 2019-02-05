@@ -25,10 +25,8 @@ class messageBox extends Component {
       './computer.png',
       `${this.props.user.username} has left the room. (╯°□°）╯ `
     )
-    if (this.state.imgId) {
-      this.props.firebase.leaveRoom(this.state.imgId)
-      this.props.history.push('/setup')
-    }
+    this.props.firebase.leaveRoom(this.state.imgId)
+    this.props.history.push('/setup')
   }
   async componentDidMount () {
     const hash = this.props.hash
@@ -37,18 +35,16 @@ class messageBox extends Component {
     }
 
     let postList = []
-    let dbRefObject
-    let usersDb
-    if (hash) {
-      dbRefObject = firebase
-        .database()
-        .ref()
-        .child(`/rooms/${hash}/posts`)
-      usersDb = firebase
-        .database()
-        .ref()
-        .child(`/rooms/${hash}/users`)
-    }
+
+    const dbRefObject = firebase
+      .database()
+      .ref()
+      .child(`/rooms/${hash}/posts`)
+    const usersDb = firebase
+      .database()
+      .ref()
+      .child(`/rooms/${hash}/users`)
+
     if (this.props.user.username) {
       usersDb.on('value', snap => {
         let users = []
@@ -60,9 +56,9 @@ class messageBox extends Component {
             Object.values(userObject).forEach(element => {
               if (element.username === this.props.user.username) {
                 this.setState({ imgId: keys[i] })
-                console.log(this.state.imgId)
+                console.log(this.state.imgId, 'ran')
               }
-              users.push({ key: Object.keys(element), img: element.img })
+              users.push({ img: element.img })
               i++
             })
             this.setState({ users })
@@ -94,18 +90,6 @@ class messageBox extends Component {
 
   componentDidUpdate () {
     this.scrollToBottom()
-  }
-  componentWillUnmount () {
-    const dbRefObject = firebase
-      .database()
-      .ref()
-      .child(`/rooms/${hash}/posts`)
-    const usersDb = firebase
-      .database()
-      .ref()
-      .child(`/rooms/${hash}/users`)
-    usersDb.off()
-    dbRefObject.off()
   }
 
   handleChange = evt => {
@@ -173,7 +157,8 @@ class messageBox extends Component {
                   <img src={entry.img} className='chatImg' />
                   <p
                     style={{
-                      color: this.intToRGB(this.hashCode(entry.username))
+                      color: entry.color,
+                      fontWeight: 'bold'
                     }}
                   >
                     {entry.username}

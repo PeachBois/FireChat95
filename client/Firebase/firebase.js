@@ -49,7 +49,7 @@ class Firebase {
     this.room = null
   }
   // Method to write new message in chat box.
-  writeNewPost = async (username, img, body, color='#FF0000') => {
+  writeNewPost = async (username, img, body) => {
     // A post entry.
 
     let str = body
@@ -64,8 +64,7 @@ class Firebase {
     let postData = {
       username,
       body,
-      img,
-      color
+      img
     }
     let newPostKey = this.database
       .ref()
@@ -75,7 +74,7 @@ class Firebase {
     updates[`/rooms/${this.room}/posts/` + newPostKey] = postData
     return this.database.ref().update(updates)
   }
-  createRoom = async (room, cap, img, username, color = 'red', it) => {
+  createRoom = async (room, cap, img, username, color, it) => {
     await this.database.ref().child(`/rooms/${room}-${it}`)
     await this.database
       .ref(`/rooms/${room}-${it}/users`)
@@ -99,9 +98,15 @@ class Firebase {
     this.room = `${room}-${it}`
   }
 
-  findOrCreateRoom = async (room, cap, img, username, color="#FF0000", it = 0) => {
+  findOrCreateRoom = async (
+    room,
+    cap,
+    img,
+    username,
+    color = '#FF0000',
+    it = 0
+  ) => {
     this.cap = cap
-    console.log(room)
     let users
     let roomCap
     await this.database
@@ -114,7 +119,7 @@ class Firebase {
           } else {
             await this.database.ref(`/rooms/${room}-${it}`).remove()
             setTimeout(() => {}, 1000)
-            await this.findOrCreateRoom(room, cap, img, username, color, it)
+            await this.findOrCreateRoom(room, cap, img, username, it)
             await this.database.ref(`/rooms/${room}-${it}/users`).remove()
             await this.database
               .ref(`/rooms/${room}-${it}/users`)
