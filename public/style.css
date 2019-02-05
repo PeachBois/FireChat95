@@ -191,6 +191,15 @@ h4.log{
   border-color: #808080#FFFFFF #FFFFFF#808080;
   border-style: solid;
 }
+.gif{
+  height: 60%;
+  width: 60%;
+  margin-top: 18px;
+  background-color: #c0c0c0;
+  border-width: 3px;
+  border-color: #808080#FFFFFF #FFFFFF#808080;
+  border-style: solid;
+}
 .chatImg {
   height: 10%;
   width: 10%;
