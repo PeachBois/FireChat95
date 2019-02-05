@@ -10,7 +10,7 @@ export const getTip = () => {
   ]
   const result = tips[i]
   ++i
-  if (i > 4) {
+  if (i > tips.length) {
     i = 1
   }
   return result

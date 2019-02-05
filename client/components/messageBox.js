@@ -13,7 +13,8 @@ class messageBox extends Component {
     this.state = {
       body: '',
       postList: [],
-      dbRefObject: false
+      dbRefObject: false,
+      username: ''
     }
   }
   shutDown = async () => {
@@ -43,6 +44,10 @@ class messageBox extends Component {
       .database()
       .ref()
       .child(`/rooms/${hash}/posts`)
+    const users = firebase
+      .database()
+      .ref()
+      .child(`/rooms/${hash}/users`)
 
     dbRefObject.on('value', snap => {
       postList = []
@@ -56,7 +61,7 @@ class messageBox extends Component {
           postList.push(postObj[key])
         }
         inbound.play()
-        this.setState({ postList })
+        this.setState({ postList, username: this.props.user.username })
       }
     })
     this.setState({ dbRefObject })
@@ -102,7 +107,7 @@ class messageBox extends Component {
   }
 
   scrollToBottom = () => {
-    this.messageEnd.scrollIntoView({ behavior: 'smooth' })
+    this.messageEnd.scrollIntoView({ behavior: 'smooth', block: 'end' })
   }
 
   render () {
@@ -121,9 +126,14 @@ class messageBox extends Component {
               if (entry.body.img) {
                 console.log(entry.body.img)
               }
+              let style = 'message'
+              console.log(entry.username, this.state.username)
+              if (entry.username === this.state.username) {
+                style = 'self'
+              }
               return (
                 <div
-                  className='message'
+                  className={style}
                   key={this.hashCode(entry.body + Math.random())}
                 >
                   <img src={entry.img} className='chatImg' />
@@ -132,13 +142,13 @@ class messageBox extends Component {
                       color: this.intToRGB(this.hashCode(entry.username))
                     }}
                   >
-                    {entry.username}:
+                    {entry.username}
                   </p>
                   {entry.body.img ? (
                     <img src={entry.body.img} className='gif' />
                   ) : (
                     <p>{entry.body}</p>
-                  )}
+                  )}{' '}
                 </div>
               )
             })}
