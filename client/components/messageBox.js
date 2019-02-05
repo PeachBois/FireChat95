@@ -5,7 +5,6 @@ import { withFirebase } from '../Firebase/index'
 import { compose } from 'recompose'
 import { getGif } from './utils'
 import firebase from 'firebase'
-// import { callUserCallback } from '@firebase/database/dist/src/core/util/util';
 const inbound = new Audio('jig0.wav')
 
 class messageBox extends Component {
@@ -28,7 +27,8 @@ class messageBox extends Component {
     )
     if (this.state.imgId) {
       this.props.firebase.leaveRoom(this.state.imgId)
-      this.props.history.push('/setup')  }
+      this.props.history.push('/setup')
+    }
   }
   async componentDidMount () {
     const hash = this.props.hash
@@ -37,15 +37,18 @@ class messageBox extends Component {
     }
 
     let postList = []
-
-    const dbRefObject = firebase
-      .database()
-      .ref()
-      .child(`/rooms/${hash}/posts`)
-    const usersDb = firebase
-      .database()
-      .ref()
-      .child(`/rooms/${hash}/users`)
+    let dbRefObject
+    let usersDb
+    if (hash) {
+      dbRefObject = firebase
+        .database()
+        .ref()
+        .child(`/rooms/${hash}/posts`)
+      usersDb = firebase
+        .database()
+        .ref()
+        .child(`/rooms/${hash}/users`)
+    }
     if (this.props.user.username) {
       usersDb.on('value', snap => {
         let users = []
@@ -93,9 +96,16 @@ class messageBox extends Component {
     this.scrollToBottom()
   }
   componentWillUnmount () {
-    if (this.state.dbRefObject) {
-      this.state.dbRefObject.off()
-    }
+    const dbRefObject = firebase
+      .database()
+      .ref()
+      .child(`/rooms/${hash}/posts`)
+    const usersDb = firebase
+      .database()
+      .ref()
+      .child(`/rooms/${hash}/users`)
+    usersDb.off()
+    dbRefObject.off()
   }
 
   handleChange = evt => {
@@ -105,9 +115,9 @@ class messageBox extends Component {
     evt.preventDefault()
 
     if (this.state.body !== '') {
-      const { username, imgUrl, color } = this.props.user
+      const { username, imgUrl } = this.props.user
       const body = this.state.body
-      this.props.firebase.writeNewPost(username, imgUrl, body, color)
+      this.props.firebase.writeNewPost(username, imgUrl, body)
       this.setState({ body: '' })
     }
   }
@@ -163,8 +173,7 @@ class messageBox extends Component {
                   <img src={entry.img} className='chatImg' />
                   <p
                     style={{
-                      color: entry.color,
-                      fontWeight: 'bold'
+                      color: this.intToRGB(this.hashCode(entry.username))
                     }}
                   >
                     {entry.username}
