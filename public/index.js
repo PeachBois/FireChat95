@@ -1,6 +1,11 @@
-const webPush = require('web-push');
+// const firebase = require('firebase/app');
+// import firebase from 'firebase/app';
+// // const functions = require('firebase-functions');
+// // const admin = require('firebase-admin');
 
-const firebase = require('firebase/app');
+// const webPush = require('web-push');
+// const cors = require('cors')({ origin: true });
+// admin.initializeApp({});
 
 //This file is for the browser notifications (push, allow, etc) referring to the service worker.
 
@@ -31,7 +36,7 @@ if ('serviceWorker' in navigator && 'PushManager' in window) {
   window.addEventListener('load', function() {
     // Registering service worker.
     navigator.serviceWorker
-      .register('/serviceWorker.js')
+      .register('/firebase-messaging-sw.js')
       .then(
         function(registration) {
           console.log('Service worker registration successful!', registration);
@@ -142,14 +147,7 @@ async function updateSubscriptionOnServer(subscription) {
       privateKey: vapidPrivateKey
     }
   };
-
-//   webPush.sendNotification(PushSubscription, payload, options);
-//   // console.log(
-//   //   'after firebase subscribed: subscriptionJSON ==> ',
-//   //   subscriptionJSON
-//   // );
-//   return subscriptionJSON;
-// }
+}
 
 function unsubscribeUser() {
   swRegistration.pushManager
@@ -188,3 +186,24 @@ function urlBase64ToUint8Array(base64String) {
   }
   return outputArray;
 }
+
+//   webPush.sendNotification(PushSubscription, payload, options);
+//   // console.log(
+//   //   'after firebase subscribed: subscriptionJSON ==> ',
+//   //   subscriptionJSON
+//   // );
+//   return subscriptionJSON;
+// }
+
+// exports.sendNotification = functions.database
+//   .ref(`rooms/{roomId}/users/{userId}`)
+//   .onCreate(event => {
+//     console.log('Send Notification from firebase functions!!');
+//     console.log('event.data: ', event.data);
+//     console.log('event.data.val() : ', event.data.val());
+
+//     const dataVal = event.data.val();
+//     if (!dataVal) {
+//       return console.log('Message data null! ');
+//     }
+//   });

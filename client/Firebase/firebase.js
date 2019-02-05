@@ -1,5 +1,19 @@
 import * as firebase from 'firebase/app';
 import 'firebase/database';
+import 'firebase/auth';
+// import 'firebase/database';
+// const firebase = require('firebase');
+// require('firebase/auth');
+// require('firebase/database');
+// require('firebase/firestore');
+// require('firebase/messaging');
+// require('firebase/functions');
+
+// "firebase-admin": "^7.0.0",
+// "firebase-functions": "^2.2.0",
+// "firebase-messaging": "^1.0.6",
+
+console.log('firebase', firebase);
 import { starter } from './firestarters';
 
 const config = {
@@ -173,7 +187,9 @@ class Firebase {
     const cbGetToken = token => {
       console.log('setLogin fcmId get: ', token);
       const userUid = this.auth.currentUser.uid;
-      const fcmIdRef = this.database.ref('FcmId/' + userUid);
+      const fcmIdRef = this.database
+        .ref()
+        .child(`/rooms/${this.room}/users/${userUid}`);
       fcmIdRef.set(token);
     };
 

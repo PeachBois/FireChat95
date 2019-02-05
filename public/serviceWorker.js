@@ -1,3 +1,15 @@
+// importScripts('https://www.gstatic.com/firebasejs/4.6.1/firebase-app.js');
+// importScripts('https://www.gstatic.com/firebasejs/4.6.1/firebase-messaging.js');
+
+const firebase = require('firebase/app');
+require('firebase/messaging');
+
+firebase.initializeApp({
+  messagingSenderId: '752787901162'
+});
+
+const messaging = firebase.messaging();
+
 // Flag for enabling cache in production
 const doCache = true;
 
@@ -84,5 +96,6 @@ self.addEventListener('notificationclick', function(event) {
 
   let data = event.notification.data;
   event.notification.close();
-  event.waitUntil(caches.openWindow(data.url));
+  // event.waitUntil(caches.openWindow(data.url));
+  event.waitUntil(clients.openWindow(event.notification.data));
 });
