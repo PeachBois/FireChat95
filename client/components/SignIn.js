@@ -31,7 +31,6 @@ class SignInScreenBase extends Component {
       imgUrl: 'computer-' + Math.floor(Math.random() * (4 - 0)) + '.png',
       email: 'anon@fakeassemail.com'
     }
-    console.log(newUser)
 
     this.props.me(newUser)
     this.props.history.push('/setup')
@@ -44,7 +43,6 @@ class SignInScreenBase extends Component {
       .onAuthStateChanged(async user => {
         this.setState({ isSignedIn: !!user })
         if (firebase.auth().currentUser !== null) {
-          console.log(firebase.auth().currentUser)
           const { displayName, photoURL, email } = await firebase.auth()
             .currentUser
           const newUser = {

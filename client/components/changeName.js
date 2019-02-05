@@ -95,7 +95,6 @@ class ChangeName extends Component {
         showMap: !prevState.showMap
       }
     })
-    console.log(this.state.showMap)
   }
 
   render () {

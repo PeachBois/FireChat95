@@ -36,21 +36,21 @@ export const getGif = async (string = 'win95') => {
       string +
       '&api_key=hFS7FeDrqNadCFmst13zxWWIETMiEjiZ'
   )
-  console.log(gif)
   return gif.data.data[0].images.downsized_medium.url
 }
 
 export const getBounds = async geohash => {
   const bounds = await Geohash.bounds(geohash)
-  console.log(bounds)
   return bounds
 }
 
 export const getMapApi = () => {
-  const script = document.createElement('script')
-  script.async = true
-  script.defer = true
-  script.src =
-    'https://maps.googleapis.com/maps/api/js?key=AIzaSyBz7fOQpPA70ewMAtpQPIXjYxDq40fdTro&callback=initMap'
-  document.getElementById('map').appendChild(script)
+  try {
+    const script = document.createElement('script')
+    script.async = true
+    script.defer = true
+    script.src =
+      'https://maps.googleapis.com/maps/api/js?key=AIzaSyBz7fOQpPA70ewMAtpQPIXjYxDq40fdTro'
+    document.getElementById('map').appendChild(script)
+  } catch (error) {}
 }
