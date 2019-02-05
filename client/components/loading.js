@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { getUserLocation, getGeoHash } from './utils'
+import { getGeoHash } from './utils'
 import { connect } from 'react-redux'
 import { withRouter, Route, Switch } from 'react-router-dom'
 import { withFirebase } from '../Firebase/index'

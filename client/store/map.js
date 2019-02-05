@@ -20,7 +20,7 @@ export const setZoom = value => {
 }
 export const setBounds = bounds => ({ type: SET_BOUNDS, bounds })
 
-export const loadLocation = (precision = 5) => async dispatch => {
+export const loadLocation = (precision = 4) => async dispatch => {
   try {
     const location = await getUserLocation()
     const coordinates = {

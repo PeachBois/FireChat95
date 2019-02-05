@@ -1,4 +1,4 @@
-export const makeMap = (bounds, position) => {
+export const makeMap = (position, bounds) => {
   const { lat, lng, zoom } = position
   if (bounds !== 'failed') {
     const north = bounds.ne.lat
@@ -135,20 +135,22 @@ export const makeMap = (bounds, position) => {
       title: 'YOU'
     })
 
-    var rectangle = new google.maps.Rectangle({
-      strokeColor: '#FF8C00',
-      strokeOpacity: 0.8,
-      strokeWeight: 2,
-      fillColor: '#FFFF33',
-      fillOpacity: 0.35,
-      map,
-      bounds: {
-        north,
-        east,
-        south,
-        west
-      }
-    })
+    if (bounds) {
+      var rectangle = new google.maps.Rectangle({
+        strokeColor: '#FF8C00',
+        strokeOpacity: 0.8,
+        strokeWeight: 2,
+        fillColor: '#FFFF33',
+        fillOpacity: 0.35,
+        map,
+        bounds: {
+          north,
+          east,
+          south,
+          west
+        }
+      })
+    }
   }
   return map
 }

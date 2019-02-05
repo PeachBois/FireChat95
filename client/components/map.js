@@ -11,7 +11,11 @@ class MapContainer extends Component {
   }
 
   initMap = bounds => {
-    this.map = makeMap(bounds, this.props.position)
+    if (bounds) {
+      this.map = makeMap(this.props.position, bounds)
+    } else {
+      this.map = makeMap(this.props.position)
+    }
   }
 
   render () {

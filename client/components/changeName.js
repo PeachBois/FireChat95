@@ -41,9 +41,13 @@ class ChangeName extends Component {
     this.setState({ [evt.target.name]: evt.target.value })
   }
   handleZoom = evt => {
+    this.setState({ [evt.target.name]: evt.target.value })
     this.props.loadLocation(evt.target.value)
     let zoom
     switch (+evt.target.value) {
+      case 0:
+        zoom = 0
+        break
       case 1:
         zoom = 2
         break
@@ -142,6 +146,7 @@ class ChangeName extends Component {
                   value={this.state.radius}
                   onChange={this.handleZoom}
                 >
+                  <option value='0'>0 (entire planet)</option>
                   <option value='1'>1 (largest search area)</option>
                   <option value='2'>2</option>
                   <option value='3'>3</option>

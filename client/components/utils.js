@@ -23,10 +23,15 @@ export const getUserLocation = () => {
 }
 
 export const getGeoHash = async (coordinates, radius) => {
-  const { lat, lng } = coordinates
-  console.log(lat, lng, radius)
-  const hash = Geohash.encode(lat, lng, radius)
-  return hash
+  console.log('radius', radius)
+  if (Number(radius) === 0) {
+    return 'Earth'
+  } else {
+    const { lat, lng } = coordinates
+    console.log(lat, lng, radius)
+    const hash = Geohash.encode(lat, lng, radius)
+    return hash
+  }
 }
 export const getGif = async (string = 'win95') => {
   string = string.split(' ').join('+')
