@@ -52,13 +52,9 @@ export class Loading extends Component {
           geohash,
           this.props.roomCap,
           this.props.user.imgUrl,
-<<<<<<< HEAD
           this.props.user.username,
           this.props.user.color
     
-=======
-          this.props.user.username
->>>>>>> fba21d49a488de7b081538914edb17fc682d7e45
         )
 
         this.setState({ geohash, room, tip: getTip() })

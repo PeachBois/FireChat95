@@ -48,14 +48,10 @@ class Firebase {
       })
     this.room = null
   }
-<<<<<<< HEAD
   // Method to write new message in chat box.
   writeNewPost = async (username, img, body, color='#FF0000') => {
     // A post entry.
 
-=======
-  writeNewPost = async (username, img, body) => {
->>>>>>> fba21d49a488de7b081538914edb17fc682d7e45
     let str = body
     if (str.includes(':')) {
       let first = str.indexOf(':') + 1
@@ -79,21 +75,11 @@ class Firebase {
     updates[`/rooms/${this.room}/posts/` + newPostKey] = postData
     return this.database.ref().update(updates)
   }
-<<<<<<< HEAD
-  createRoom = async (room, email, cap, img, color, it) => {
-    // console.log(room, email, it)
-    await this.database.ref().child(`/rooms/${room}-${it}`)
-    await this.database
-      .ref()
-      .child(`/rooms/${room}-${it}/users`)
-      .push({ email, img, color })
-=======
   createRoom = async (room, cap, img, username, color = 'red', it) => {
     await this.database.ref().child(`/rooms/${room}-${it}`)
     await this.database
       .ref(`/rooms/${room}-${it}/users`)
       .push({ username, img, color })
->>>>>>> fba21d49a488de7b081538914edb17fc682d7e45
     await this.database
       .ref()
       .child(`/rooms/${room}-${it}/rules`)
@@ -113,18 +99,7 @@ class Firebase {
     this.room = `${room}-${it}`
   }
 
-<<<<<<< HEAD
-  findOrCreateRoom = async (room, cap, img, username, color, it = 0) => {
-=======
-  findOrCreateRoom = async (
-    room,
-    cap,
-    img,
-    username,
-    color = 'red',
-    it = 0
-  ) => {
->>>>>>> fba21d49a488de7b081538914edb17fc682d7e45
+  findOrCreateRoom = async (room, cap, img, username, color="#FF0000", it = 0) => {
     this.cap = cap
     console.log(room)
     let users
@@ -139,11 +114,7 @@ class Firebase {
           } else {
             await this.database.ref(`/rooms/${room}-${it}`).remove()
             setTimeout(() => {}, 1000)
-<<<<<<< HEAD
             await this.findOrCreateRoom(room, cap, img, username, color, it)
-=======
-            await this.findOrCreateRoom(room, cap, img, it)
->>>>>>> fba21d49a488de7b081538914edb17fc682d7e45
             await this.database.ref(`/rooms/${room}-${it}/users`).remove()
             await this.database
               .ref(`/rooms/${room}-${it}/users`)
@@ -155,39 +126,18 @@ class Firebase {
       })
       .then(async () => {
         if (!users) {
-<<<<<<< HEAD
           // console.log('creating')
           await this.createRoom(room, cap, img, username, color, it)
-=======
-          await this.createRoom(room, cap, img, username, (color = 'red'), it)
->>>>>>> fba21d49a488de7b081538914edb17fc682d7e45
           this.room = `${room}-${it}`
         } else {
           console.log('cap:', cap, 'room cap:', roomCap, 'users:', users.length)
           if (cap < users.length || users.length >= roomCap) {
-<<<<<<< HEAD
             // console.log('restarting')
             await this.findOrCreateRoom(room, cap, img, username, color, it + 1)
-=======
-            await this.findOrCreateRoom(
-              room,
-              cap,
-              img,
-              username,
-              (color = 'red'),
-              it + 1
-            )
->>>>>>> fba21d49a488de7b081538914edb17fc682d7e45
           } else {
             await this.database
-<<<<<<< HEAD
-              .ref()
-              .child(`/rooms/${room}-${it}/users`)
-              .push({ username, img, color})
-=======
               .ref(`/rooms/${room}-${it}/users`)
               .push({ username, img, color })
->>>>>>> fba21d49a488de7b081538914edb17fc682d7e45
             this.room = `${room}-${it}`
           }
         }
