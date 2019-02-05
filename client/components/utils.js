@@ -1,6 +1,5 @@
 import Geohash from 'latlon-geohash'
 import axios from 'axios'
-const gifKey = 'hFS7FeDrqNadCFmst13zxWWIETMiEjiZ'
 
 export const getUserLocation = () => {
   const geolocation = navigator.geolocation
@@ -22,11 +21,17 @@ export const getUserLocation = () => {
   })
   return location
 }
+
 export const getGeoHash = async (coordinates, radius) => {
-  const { latitude, longitude } = coordinates.coords
-  console.log(radius)
-  const hash = Geohash.encode(latitude, longitude, radius)
-  return hash
+  console.log('radius', radius)
+  if (Number(radius) === 0) {
+    return 'Earth'
+  } else {
+    const { lat, lng } = coordinates
+    console.log(lat, lng, radius)
+    const hash = Geohash.encode(lat, lng, radius)
+    return hash
+  }
 }
 export const getGif = async (string = 'win95') => {
   string = string.split(' ').join('+')
@@ -36,21 +41,21 @@ export const getGif = async (string = 'win95') => {
       string +
       '&api_key=hFS7FeDrqNadCFmst13zxWWIETMiEjiZ'
   )
-
-  return gif.data.data[0].embed_url
+  return gif.data.data[0].images.downsized_medium.url
 }
 
-export const getBounds = geohash => {
-  const bounds = Geohash.bounds(geohash)
-  console.log(bounds)
+export const getBounds = async geohash => {
+  const bounds = await Geohash.bounds(geohash)
   return bounds
 }
 
 export const getMapApi = () => {
-  const script = document.createElement('script')
-  script.async = true
-  script.defer = true
-  script.src =
-    'https://maps.googleapis.com/maps/api/js?key=AIzaSyBz7fOQpPA70ewMAtpQPIXjYxDq40fdTro&callback=initMap'
-  document.getElementById('map').appendChild(script)
+  try {
+    const script = document.createElement('script')
+    script.async = true
+    script.defer = true
+    script.src =
+      'https://maps.googleapis.com/maps/api/js?key=AIzaSyBz7fOQpPA70ewMAtpQPIXjYxDq40fdTro'
+    document.getElementById('map').appendChild(script)
+  } catch (error) {}
 }

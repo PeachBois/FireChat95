@@ -89,14 +89,15 @@ div.body p {
   padding: 4px;
 }
 .change{
-  flex-direction: row-reverse;
+ 
     font-size: 13px;
     padding: 2px;
     display: flex;
     align-items: flex-end;
     justify-content: space-between;
-    flex-direction: row-reverse;
-    padding: 18px;
+    flex-direction: row;
+    padding-right: 23px;
+    padding-inline-start: 12px;
 }
 div.change button {
   font-family: 'MS Sans Serif';
@@ -158,6 +159,17 @@ div.login button {
   overflow-x: hidden;
   pointer-events: auto;
 }
+.map{
+  border-color: #808080#FFFFFF #FFFFFF#808080;
+  border-style: solid;
+  margin: 4px;
+  /* padding: 124px; */
+}
+
+.gm-style .gm-style-cc span, .gm-style .gm-style-cc a, .gm-style .gm-style-mtc {
+  font-size:0px;
+    display: none !important;
+  }
 .log{
       /* padding: 13px 12px 12px; */
       background-color: #181818;
@@ -185,6 +197,15 @@ h4.log{
 .userImg {
   height: 30%;
   width: 30%;
+  margin-top: 18px;
+  background-color: #c0c0c0;
+  border-width: 3px;
+  border-color: #808080#FFFFFF #FFFFFF#808080;
+  border-style: solid;
+}
+.gif{
+  height: 60%;
+  width: 60%;
   margin-top: 18px;
   background-color: #c0c0c0;
   border-width: 3px;
@@ -283,6 +304,15 @@ img.bottomBar{
       border-color: #ffffff #808080 #808080 #ffffff;
       padding: 5px;
 }
+.buttonPic{
+  height: 13%;
+  width: 13%;
+  margin: 7px;
+  border-width: 3px;
+  border-style: solid;
+  border-color: #ffffff #808080 #808080 #ffffff;
+  padding: 5px;
+}
 
 .bottomContain {
   border-width: 1px;
@@ -298,20 +328,22 @@ img.bottomBar{
   display: flex;
 
 }
+.gm-style-cc{
+  display:none;
+}
+
 select {
-  -webkit-appearance: button;
-  -moz-appearance: textfield;
-  font-family: 'MS Sans Serif';
-  font-size: 18px;
-  background-image: url(./arrows.png);
-  text-align: center;
-  background: #dbdbdb;
-  padding: 10px;
-  margin: 2px;
-  border-width: 2px;
-  border-color: #808080#FFFFFF #FFFFFF#808080;
-  border-style: solid;
-  width: 48px;
+
+     font-size: 18px;
+     text-align: center;
+     background: #dfdfdf;
+     padding: 10px;
+     margin: 2px;
+     border-width: 2px;
+     border-style: solid;
+     width: 65px;
+     height: 33px;
+     border-color: #808080#FFFFFF #FFFFFF#808080;
 }
 .anon {
   width: 161px;
