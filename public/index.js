@@ -1,6 +1,6 @@
-const webPush = require('web-push');
+// const webPush = require('web-push');
 
-const firebase = require('firebase/app');
+// const firebase = require('firebase/app');
 
 //This file is for the browser notifications (push, allow, etc) referring to the service worker.
 
@@ -31,7 +31,7 @@ if ('serviceWorker' in navigator && 'PushManager' in window) {
   window.addEventListener('load', function() {
     // Registering service worker.
     navigator.serviceWorker
-      .register('/serviceWorker.js')
+      .register('/firebase-messaging-sw.js')
       .then(
         function(registration) {
           console.log('Service worker registration successful!', registration);
@@ -133,23 +133,25 @@ async function updateSubscriptionOnServer(subscription) {
       body: JSON.stringify(subscription)
     }
   );
+  return subscriptionJSON;
 
-  const payload = 'Here this is an awesome payload!!';
-  const options = {
-    vapidDetails: {
-      subject: 'mailto:edwin.k.kim@gmail.com',
-      publicKey: vapidPublicKey,
-      privateKey: vapidPrivateKey
-    }
-  };
+  // const payload = 'Here this is an awesome payload!!';
+  // const options = {
+  //   vapidDetails: {
+  //     subject: 'mailto:edwin.k.kim@gmail.com',
+  //     publicKey: vapidPublicKey,
+  //     privateKey: vapidPrivateKey
+  //   }
+  // };
 
-//   webPush.sendNotification(PushSubscription, payload, options);
-//   // console.log(
-//   //   'after firebase subscribed: subscriptionJSON ==> ',
-//   //   subscriptionJSON
-//   // );
-//   return subscriptionJSON;
-// }
+  //   webPush.sendNotification(PushSubscription, payload, options);
+  //   // console.log(
+  //   //   'after firebase subscribed: subscriptionJSON ==> ',
+  //   //   subscriptionJSON
+  //   // );
+  //   return subscriptionJSON;
+  // }
+}
 
 function unsubscribeUser() {
   swRegistration.pushManager

@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
 import SignIn from './SignIn';
 
-const Login = props => {
-  console.log('In LoginBase props >>>', props);
+const Login = () => {
   return (
     <div className="box">
       <div className="title">

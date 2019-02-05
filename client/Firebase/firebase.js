@@ -165,25 +165,25 @@ class Firebase {
       });
   };
 
-  setLogin = user => {
-    this.saveFCMToken();
-  };
+  // setLogin = user => {
+  //   this.saveFCMToken();
+  // };
 
-  saveFCMToken = () => {
-    const cbGetToken = token => {
-      console.log('setLogin fcmId get: ', token);
-      const userUid = this.auth.currentUser.uid;
-      const fcmIdRef = this.database.ref('FcmId/' + userUid);
-      fcmIdRef.set(token);
-    };
+  // saveFCMToken = () => {
+  //   const cbGetToken = token => {
+  //     console.log('setLogin fcmId get: ', token);
+  //     const userUid = this.auth.currentUser.uid;
+  //     const fcmIdRef = this.database.ref('FcmId/' + userUid);
+  //     fcmIdRef.set(token);
+  //   };
 
-    this.messaging()
-      .getToken()
-      .then(cbGetToken.bind(this))
-      .catch(error => {
-        console.error('Error while verifying fcmId...', error);
-      });
-  };
+  //   this.messaging()
+  //     .getToken()
+  //     .then(cbGetToken.bind(this))
+  //     .catch(error => {
+  //       console.error('Error while verifying fcmId...', error);
+  //     });
+  // };
 }
 
 export default Firebase;
