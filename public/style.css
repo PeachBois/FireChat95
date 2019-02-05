@@ -136,14 +136,14 @@ div.login button {
   
 }
  input {
-  margin-top: 4px;
-  margin-bottom: 5px;
-  margin-left: 7px;
+  margin-top: 8px;
+  /* margin-bottom: 5px; */
+  /* margin-left: 7px; */
   height: 113%;
-  width: calc(100% - 15px);
-  font-size: 16px;
+  width: calc(100% - 19px);
+  font-size: 18px;
   background-color: #ffffff;
-  border-width: 2px;
+  /* border-width: 2px; */
   border-color: #808080#FFFFFF #FFFFFF#808080;
   border-style: solid;
 }
@@ -256,7 +256,28 @@ h4.log{
   display: none;
 }
 /* Above: For PWA: Improving progressive nature of the App (CSS) */
+.userBar{
+  width: 90%;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    margin: 4px;
+    border-width: 1px;
+    border-style: solid;
+    border-width: 2px;
+    border-color: #808080#FFFFFF #FFFFFF#808080;
+    padding: 3px;
 
+}
+.userBarIcon{
+  height: 10%;
+  width: 10%;
+  margin: 1px;
+  border-width: 1px;
+  border-style: solid;
+  border-color: #ffffff #808080 #808080 #ffffff;
+  padding: 3px;
+}
 .message {
   display: flex;
   flex-flow: wrap;
