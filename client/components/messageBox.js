@@ -21,12 +21,13 @@ class messageBox extends Component {
   }
   shutDown = async () => {
     await this.props.firebase.writeNewPost(
-      'Winney',
+      'Winnie',
       './computer.png',
       `${this.props.user.username} has left the room. (╯°□°）╯ `
     )
-    this.props.firebase.leaveRoom(this.state.imgId)
-    this.props.history.push('/setup')
+    if (this.state.imgId) {
+      this.props.firebase.leaveRoom(this.state.imgId)
+      this.props.history.push('/setup')  }
   }
   async componentDidMount () {
     const hash = this.props.hash
@@ -142,21 +143,20 @@ class messageBox extends Component {
           <p className='title'>Welcome!</p>
           <div className='userBar'>
             {this.state.users.map(user => {
-              return <img className='userBarIcon' src={user.img} />
+              return (
+                <img
+                  key={this.hashCode(user.img)}
+                  className='userBarIcon'
+                  src={user.img}
+                />
+              )
             })}
           </div>
           <div className='inner'>
             {this.state.postList.map(entry => {
-              if (entry.body.img) {
-                console.log(entry.body.img)
-              }
-              let style = 'message'
-              if (entry.username === this.state.username) {
-                style = 'self'
-              }
               return (
                 <div
-                  className={style}
+                  className='message'
                   key={this.hashCode(entry.body + Math.random())}
                 >
                   <img src={entry.img} className='chatImg' />

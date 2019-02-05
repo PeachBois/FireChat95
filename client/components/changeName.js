@@ -83,7 +83,6 @@ class ChangeName extends Component {
       })
       this.props.setRadius(this.state.radius)
       this.props.setCap(this.state.roomCap)
-      console.log('done')
     }
     this.props.history.push('/locating')
   }
