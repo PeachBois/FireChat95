@@ -13,9 +13,6 @@ class MapContainer extends Component {
   initMap = bounds => {
     this.map = makeMap(bounds, this.props.position)
   }
-  componentWillUnmount () {
-    this.map = null
-  }
 
   render () {
     return (

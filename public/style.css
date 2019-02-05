@@ -161,9 +161,15 @@ div.login button {
 }
 .map{
   border-color: #808080#FFFFFF #FFFFFF#808080;
-  border-style: solid;  
+  border-style: solid;
   margin: 4px;
+  /* padding: 124px; */
 }
+
+.gm-style .gm-style-cc span, .gm-style .gm-style-cc a, .gm-style .gm-style-mtc {
+  font-size:0px;
+    display: none !important;
+  }
 .log{
       /* padding: 13px 12px 12px; */
       background-color: #181818;
@@ -322,6 +328,10 @@ img.bottomBar{
   display: flex;
 
 }
+.gm-style-cc{
+  display:none;
+}
+
 select {
 
      font-size: 18px;
