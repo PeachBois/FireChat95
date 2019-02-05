@@ -5,6 +5,7 @@ import { withFirebase } from '../Firebase/index'
 import { compose } from 'recompose'
 import { getGif } from './utils'
 import firebase from 'firebase'
+// import { callUserCallback } from '@firebase/database/dist/src/core/util/util';
 const inbound = new Audio('jig0.wav')
 
 class messageBox extends Component {
@@ -103,9 +104,9 @@ class messageBox extends Component {
     evt.preventDefault()
 
     if (this.state.body !== '') {
-      const { username, imgUrl } = this.props.user
+      const { username, imgUrl, color } = this.props.user
       const body = this.state.body
-      this.props.firebase.writeNewPost(username, imgUrl, body)
+      this.props.firebase.writeNewPost(username, imgUrl, body, color)
       this.setState({ body: '' })
     }
   }
@@ -162,7 +163,8 @@ class messageBox extends Component {
                   <img src={entry.img} className='chatImg' />
                   <p
                     style={{
-                      color: this.intToRGB(this.hashCode(entry.username))
+                      color: entry.color,
+                      fontWeight: 'bold'
                     }}
                   >
                     {entry.username}
