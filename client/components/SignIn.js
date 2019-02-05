@@ -1,18 +1,18 @@
-import React, { Component } from 'react'
-import { connect } from 'react-redux'
-import { withRouter, Route, Switch } from 'react-router-dom'
-import { withFirebase } from '../Firebase'
-import { compose } from 'recompose'
-import StyledFirebaseAuth from 'react-firebaseui/StyledFirebaseAuth'
-import * as firebase from 'firebase'
-import { me } from '../store/user'
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { withRouter, Route, Switch } from 'react-router-dom';
+import { withFirebase } from '../Firebase';
+import { compose } from 'recompose';
+import StyledFirebaseAuth from 'react-firebaseui/StyledFirebaseAuth';
+import * as firebase from 'firebase';
+import { me } from '../store/user';
 // Configure Firebase.
 
 class SignInScreenBase extends Component {
   state = {
     isSignedIn: false,
     user: null
-  }
+  };
 
   uiConfig = {
     signInFlow:
@@ -27,48 +27,50 @@ class SignInScreenBase extends Component {
     callbacks: {
       signInSuccessWithAuthResult: async () => {}
     }
-  }
+  };
   AnonLog = () => {
     const newUser = {
       username: 'Anonymous User',
       imgUrl: 'computer-' + Math.floor(Math.random() * (0 - 4)) + '.png',
       email: 'anon@fakeassemail.com'
-    }
+    };
 
-    this.props.me(newUser)
-    this.props.history.push('/setup')
-  }
-  async componentDidMount () {
+    this.props.me(newUser);
+    this.props.history.push('/setup');
+  };
+  async componentDidMount() {
     this.unregisterAuthObserver = await firebase
       .auth()
       .onAuthStateChanged(async user => {
-        this.setState({ isSignedIn: !!user })
+        this.setState({ isSignedIn: !!user });
         if (firebase.auth().currentUser !== null) {
-          const { displayName, photoURL, email } = await firebase.auth()
-            .currentUser
+          const { displayName, photoURL, email, uid } = await firebase.auth()
+            .currentUser;
           const newUser = {
             username: displayName,
             imgUrl: photoURL,
             email
-          }
-          console.log(newUser)
-          this.props.me(newUser)
+          };
+          this.props.firebase.saveFCMToken(uid);
+
+          console.log(newUser);
+          this.props.me(newUser);
           if (this.props.user.username !== undefined) {
-            this.props.history.push('/setup')
+            this.props.history.push('/setup');
           }
         }
-      })
+      });
   }
-  componentWillUnmount () {
-    this.unregisterAuthObserver()
+  componentWillUnmount() {
+    this.unregisterAuthObserver();
   }
-  render () {
+  render() {
     if (!this.state.isSignedIn) {
       return (
-        <div className='logBox'>
+        <div className="logBox">
           {'matchMedia' in window &&
-window.matchMedia('(display-mode: standalone)').matches ? (
-            <button onClick={this.AnonLog} className='anon'>
+          window.matchMedia('(display-mode: standalone)').matches ? (
+            <button onClick={this.AnonLog} className="anon">
               <h3>Anonymous Login</h3>
             </button>
           ) : (
@@ -79,7 +81,7 @@ window.matchMedia('(display-mode: standalone)').matches ? (
             firebaseAuth={firebase.auth()}
           />
         </div>
-      )
+      );
     }
     return (
       <div>
@@ -88,27 +90,22 @@ window.matchMedia('(display-mode: standalone)').matches ? (
           signed-in!
         </p>
       </div>
-    )
+    );
   }
 }
 
 const mapState = state => {
-  return { user: state.user }
-}
+  return { user: state.user };
+};
 const mapDispatch = dispatch => {
   return {
     me: user => dispatch(me(user))
-  }
-}
+  };
+};
 const SignInScreen = compose(
   withRouter,
   withFirebase,
-  connect(
-    mapState,
-    mapDispatch
-  )
-)
+  connect(mapState, mapDispatch)
+);
 
-export default SignInScreen(SignInScreenBase)
-
-
+export default SignInScreen(SignInScreenBase);
