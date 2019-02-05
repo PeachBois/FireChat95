@@ -17,7 +17,7 @@ class ChangeName extends Component {
       radius: 4,
       roomCap: 2,
       showMap: false,
-      mapFailed:false,
+      mapFailed: false
     }
     this.toggleMap = this.toggleMap.bind(this)
   }
@@ -25,13 +25,12 @@ class ChangeName extends Component {
     this.setState({ displayName: this.props.user.username })
     this.props.loadLocation(this.state.radius)
     getMapApi()
-    
-    if(this.props.position){
-      if(this.props.position.bounds === 'failed'){
-      this.setState({mapFailed:true})
+
+    if (this.props.position) {
+      if (this.props.position.bounds === 'failed') {
+        this.setState({ mapFailed: true })
+      }
     }
-    }
-    
   }
 
   handleChange = evt => {
@@ -169,7 +168,7 @@ class ChangeName extends Component {
             </div>
           </div>
         </div>
-        <div className='bottomBar'>
+        <div>
           <div className='change'>
             <button type='submit' onClick={this.toggleMap}>
               {this.state.showMap ? 'Hide Map' : 'Show Map'}
@@ -189,8 +188,11 @@ class ChangeName extends Component {
             </h4>
           </div>
           <div className='help'>
-          {this.state.mapFailed ? <h4>Bust!</h4> : <div id='map' style={style} /> }
-            
+            {this.state.mapFailed ? (
+              <h4>Bust!</h4>
+            ) : (
+              <div id='map' style={style} />
+            )}
           </div>
         </div>
       </div>
@@ -202,7 +204,7 @@ class ChangeName extends Component {
  * CONTAINER
  */
 const mapState = state => {
-  return { user: state.user, location:state.position }
+  return { user: state.user, location: state.position }
 }
 
 const mapDispatch = dispatch => {

@@ -38,6 +38,7 @@ class SignInScreenBase extends Component {
   }
   async componentDidMount () {
     this.setState({ os: this.getOs() })
+   
     this.unregisterAuthObserver = await firebase
       .auth()
       .onAuthStateChanged(async user => {
@@ -50,10 +51,9 @@ class SignInScreenBase extends Component {
             imgUrl: photoURL,
             email
           }
-         
         
           firebase.database().ref().child('/users').update( {uid:firebase.auth().currentUser.providerData[0].uid})
-
+        
           this.props.me(newUser)
           if (this.props.user.username !== undefined) {
             this.props.history.push('/setup')

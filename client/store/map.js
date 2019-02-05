@@ -34,12 +34,17 @@ export const setBounds = bounds => ({ type: SET_BOUNDS, bounds })
 export const loadLocation = (precision = 5) => async dispatch => {
   try {
     const location = await getUserLocation()
-    console.log('WHAT IT DO??', location)
-    const coordinates = {
-      lat: location.coords.latitude,
-      lng: location.coords.longitude
+    let coordinates
+    try {
+      coordinates = {
+        lat: location.coords.latitude,
+        lng: location.coords.longitude
+      }
+    } catch (error) {
+      dispatch(setBounds('failed'))
+      dispatch(setLocation('failed'))
     }
-    console.log('radius is', precision)
+
     const geohash = await getGeoHash(location, precision)
     const bounds = getBounds(geohash)
     dispatch(setBounds(bounds))
@@ -47,7 +52,6 @@ export const loadLocation = (precision = 5) => async dispatch => {
   } catch (err) {
     dispatch(setBounds('failed'))
     dispatch(setLocation('failed'))
-    return console.error(err)
   }
 }
 

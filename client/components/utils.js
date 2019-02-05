@@ -36,8 +36,8 @@ export const getGif = async (string = 'win95') => {
       string +
       '&api_key=hFS7FeDrqNadCFmst13zxWWIETMiEjiZ'
   )
-
-  return gif.data.data[0].embed_url
+  console.log(gif)
+  return gif.data.data[0].images.downsized_medium.url
 }
 
 export const getBounds = geohash => {
