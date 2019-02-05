@@ -31,13 +31,13 @@ class SignInScreenBase extends Component {
       imgUrl: 'computer-' + Math.floor(Math.random() * (4 - 0)) + '.png',
       email: 'anon@fakeassemail.com'
     }
-    console.log(newUser)
 
     this.props.me(newUser)
     this.props.history.push('/setup')
   }
   async componentDidMount () {
     this.setState({ os: this.getOs() })
+   
     this.unregisterAuthObserver = await firebase
       .auth()
       .onAuthStateChanged(async user => {
@@ -50,10 +50,9 @@ class SignInScreenBase extends Component {
             imgUrl: photoURL,
             email
           }
-         
         
           firebase.database().ref().child('/users').update( {uid:firebase.auth().currentUser.providerData[0].uid})
-
+        
           this.props.me(newUser)
           if (this.props.user.username !== undefined) {
             this.props.history.push('/setup')
@@ -78,9 +77,9 @@ class SignInScreenBase extends Component {
 
     return 'unknown'
   }
-  componentWillUnmount () {
-    this.unregisterAuthObserver()
-  }
+  // componentWillUnmount () {
+  //   this.unregisterAuthObserver()
+  // }
   render () {
     if (!this.state.isSignedIn) {
       return (

@@ -119,7 +119,7 @@ class messageBox extends Component {
           <p className='title'>Welcome!</p>
           <div className='inner'>
             {this.state.postList.map(entry => {
-              if(entry.body.img){
+              if (entry.body.img) {
                 console.log(entry.body.img)
               }
               return (
@@ -135,8 +135,8 @@ class messageBox extends Component {
                   >
                     {entry.username}:
                   </p>
-                  { entry.body.img ? (
-                    <img src={entry.body.img} className='userImg' />
+                  {entry.body.img ? (
+                    <img src={entry.body.img} className='gif' />
                   ) : (
                     <p>{entry.body}</p>
                   )}

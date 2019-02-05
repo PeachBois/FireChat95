@@ -54,7 +54,6 @@ class Firebase {
   writeNewPost = async (username, img, body) => {
     // A post entry.
 
-    
     let str = body
 
     if (str.includes(':')) {
@@ -111,6 +110,7 @@ class Firebase {
 
   findOrCreateRoom = async (room, email, cap, it = 0) => {
     this.cap = cap
+    console.log(room)
     let users
     let roomCap
     await this.database
