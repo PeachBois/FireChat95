@@ -50,9 +50,11 @@ export class Loading extends Component {
 
         const room = await this.props.firebase.findOrCreateRoom(
           geohash,
-          this.props.user.email,
           this.props.roomCap,
-          this.props.user.imgUrl
+          this.props.user.imgUrl,
+          this.props.user.username,
+          this.props.user.color
+    
         )
 
         this.setState({ geohash, room, tip: getTip() })
