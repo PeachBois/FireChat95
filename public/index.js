@@ -1,4 +1,4 @@
-//This file is for the browser notifications (push, allow, etc) referring to the service worker.
+// This file is for the browser notifications (push, allow, etc) referring to the service worker.
 
 // Let's check if the browser supports notifications
 if (!('Notification' in window)) {

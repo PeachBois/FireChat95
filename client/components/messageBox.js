@@ -56,7 +56,6 @@ class messageBox extends Component {
             Object.values(userObject).forEach(element => {
               if (element.username === this.props.user.username) {
                 this.setState({ imgId: keys[i] })
-                console.log(this.state.imgId, 'ran')
               }
               users.push({ img: element.img })
               i++

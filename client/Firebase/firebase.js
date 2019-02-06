@@ -31,7 +31,6 @@ class Firebase {
   user = uid => this.database.ref(`users/${uid}`)
   users = () => this.database.ref('users')
   leaveRoom = async id => {
-    console.log(id)
     await this.database
       .ref(`/rooms/${this.room}/users/`)
       .child(id)
@@ -56,7 +55,6 @@ class Firebase {
     if (str.includes(':')) {
       let first = str.indexOf(':') + 1
       let last = str.lastIndexOf(':')
-      console.log(str.slice(first, last))
       const gif = await getGif(str.slice(first, last))
       str = { img: gif }
       body = str
@@ -119,18 +117,14 @@ class Firebase {
               .push({ username, img })
           }
           roomCap = Object.values(snapshot.val().rules)[0]
-          console.log(roomCap)
         }
       })
       .then(async () => {
         if (!users) {
-          // console.log('creating')
           await this.createRoom(room, cap, img, username, it)
           this.room = `${room}-${it}`
         } else {
-          console.log('cap:', cap, 'room cap:', roomCap, 'users:', users.length)
           if (cap < users.length || users.length >= roomCap) {
-            // console.log('restarting')
             await this.findOrCreateRoom(room, cap, img, username, it + 1)
           } else {
             await this.database
