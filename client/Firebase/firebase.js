@@ -1,6 +1,7 @@
 import * as firebase from 'firebase/app';
 import 'firebase/database';
 import { starter } from './firestarters';
+import { getGif } from '../components/utils';
 
 const config = {
   apiKey: 'AIzaSyBD2FYD63jQ5XQm2e79NNy2vz1odEjfgQw',
@@ -29,22 +30,19 @@ class Firebase {
   // User API
   user = uid => this.database.ref(`users/${uid}`);
   users = () => this.database.ref('users');
-
-  leaveRoom = async () => {
+  leaveRoom = async id => {
+    console.log(id);
     await this.database
-      .ref(`/rooms/${this.room}/`)
-      .child(`rules/mia`)
-      .push('remove');
+      .ref(`/rooms/${this.room}/users/`)
+      .child(id)
+      .remove();
     await this.database
       .ref()
-      .child(`/rooms/${this.room}/rules/mia`)
+      .child(`/rooms/${this.room}/users`)
       .once('value', async snapshot => {
         if (snapshot.exists()) {
-          if (Object.keys(snapshot.val()).length >= this.cap - 1) {
-            await this.database
-              .ref()
-              .child(`/rooms/${this.room}`)
-              .remove();
+          if (Object.keys(snapshot.val()).length <= 1) {
+            await this.database.ref(`/rooms/${this.room}`).remove();
           }
         }
       });
@@ -52,50 +50,56 @@ class Firebase {
   };
 
   // Method to write new message in chat box.
-  writeNewPost = (username, img, body) => {
+  writeNewPost = async (username, img, body) => {
     // A post entry.
 
+    let str = body;
+    if (str.includes(':')) {
+      let first = str.indexOf(':') + 1;
+      let last = str.lastIndexOf(':');
+      console.log(str.slice(first, last));
+      const gif = await getGif(str.slice(first, last));
+      str = { img: gif };
+      body = str;
+    }
     let postData = {
       username,
       body,
       img
     };
-    console.log(postData);
-
     let newPostKey = this.database
       .ref()
       .child(`/rooms/${this.room}/posts/`)
       .push().key;
-
-    // Write the new post's data simultaneously in the posts list and the user's post list.
     var updates = {};
     updates[`/rooms/${this.room}/posts/` + newPostKey] = postData;
     return this.database.ref().update(updates);
   };
-
-  createRoom = async (room, email, cap, it) => {
+  createRoom = async (room, cap, img, username, it) => {
     await this.database.ref().child(`/rooms/${room}-${it}`);
     await this.database
-      .ref()
-      .child(`/rooms/${room}-${it}/users`)
-      .push(email);
+      .ref(`/rooms/${room}-${it}/users`)
+      .push({ username, img });
     await this.database
       .ref()
       .child(`/rooms/${room}-${it}/rules`)
       .push(cap);
     await this.database
       .ref()
+      .child(`/rooms/${room}-${it}`)
+      .update({ timestamp: Date.now() });
+    await this.database
+      .ref()
       .child(`/rooms/${room}-${it}/posts`)
       .push({
-        username: 'Winney',
+        username: 'Winnie',
         body: starter(),
         img: `./computer.png`
       });
-
     this.room = `${room}-${it}`;
   };
 
-  findOrCreateRoom = async (room, email, cap, it = 0) => {
+  findOrCreateRoom = async (room, cap, img, username, it = 0) => {
     this.cap = cap;
     let users;
     let roomCap;
@@ -109,19 +113,20 @@ class Firebase {
           } else {
             await this.database.ref(`/rooms/${room}-${it}`).remove();
             setTimeout(() => {}, 1000);
-            await this.findOrCreateRoom(room, email, cap, it);
+            await this.findOrCreateRoom(room, cap, img, username, it);
             await this.database.ref(`/rooms/${room}-${it}/users`).remove();
-            await this.database.ref(`/rooms/${room}-${it}/users`).push(email);
+            await this.database
+              .ref(`/rooms/${room}-${it}/users`)
+              .push({ username, img });
           }
           roomCap = Object.values(snapshot.val().rules)[0];
           console.log(roomCap);
         }
       })
-
       .then(async () => {
         if (!users) {
           // console.log('creating')
-          await this.createRoom(room, email, cap, it);
+          await this.createRoom(room, cap, img, username, it);
           this.room = `${room}-${it}`;
         } else {
           console.log(
@@ -134,13 +139,11 @@ class Firebase {
           );
           if (cap < users.length || users.length >= roomCap) {
             // console.log('restarting')
-            await this.findOrCreateRoom(room, email, cap, it + 1);
+            await this.findOrCreateRoom(room, cap, img, username, it + 1);
           } else {
-            // console.log('adding name')
             await this.database
-              .ref()
-              .child(`/rooms/${room}-${it}/users`)
-              .push(email);
+              .ref(`/rooms/${room}-${it}/users`)
+              .push({ username, img });
             this.room = `${room}-${it}`;
           }
         }

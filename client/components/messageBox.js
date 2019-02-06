@@ -3,6 +3,7 @@ import { connect } from 'react-redux'
 import { withRouter } from 'react-router-dom'
 import { withFirebase } from '../Firebase/index'
 import { compose } from 'recompose'
+import { getGif } from './utils'
 import firebase from 'firebase'
 const inbound = new Audio('jig0.wav')
 
@@ -12,16 +13,19 @@ class messageBox extends Component {
     this.state = {
       body: '',
       postList: [],
-      dbRefObject: false
+      dbRefObject: false,
+      username: '',
+      users: [],
+      imgId: ''
     }
   }
   shutDown = async () => {
     await this.props.firebase.writeNewPost(
-      'Winney',
+      'Winnie',
       './computer.png',
       `${this.props.user.username} has left the room. (╯°□°）╯ `
     )
-    this.props.firebase.leaveRoom()
+    this.props.firebase.leaveRoom(this.state.imgId)
     this.props.history.push('/setup')
   }
   async componentDidMount () {
@@ -29,19 +33,41 @@ class messageBox extends Component {
     if (typeof hash !== 'string') {
       this.props.history.push('/')
     }
-    window.addEventListener('beforeunload', function (e) {
-      this.shutDown()
-      var confirmationMessage = ('GoodBye!'(
-        e || window.event
-      ).returnValue = confirmationMessage) // Gecko + IE
-      return confirmationMessage // Webkit, Safari, Chrome
-    })
+
     let postList = []
 
     const dbRefObject = firebase
       .database()
       .ref()
       .child(`/rooms/${hash}/posts`)
+    const usersDb = firebase
+      .database()
+      .ref()
+      .child(`/rooms/${hash}/users`)
+
+    if (this.props.user.username) {
+      usersDb.on('value', snap => {
+        let users = []
+        if (snap.exists()) {
+          const userObject = snap.val()
+          if (userObject) {
+            let i = 0
+            let keys = Object.keys(userObject)
+            Object.values(userObject).forEach(element => {
+              if (element.username === this.props.user.username) {
+                this.setState({ imgId: keys[i] })
+                console.log(this.state.imgId, 'ran')
+              }
+              users.push({ img: element.img })
+              i++
+            })
+            this.setState({ users })
+          }
+        } else {
+          this.props.history.push('/setup')
+        }
+      })
+    }
 
     dbRefObject.on('value', snap => {
       postList = []
@@ -65,17 +91,13 @@ class messageBox extends Component {
   componentDidUpdate () {
     this.scrollToBottom()
   }
-  componentWillUnmount () {
-    if (this.state.dbRefObject) {
-      this.state.dbRefObject.off()
-    }
-  }
 
   handleChange = evt => {
     this.setState({ [evt.target.name]: evt.target.value })
   }
-  handleSubmit = evt => {
+  handleSubmit = async evt => {
     evt.preventDefault()
+
     if (this.state.body !== '') {
       const { username, imgUrl } = this.props.user
       const body = this.state.body
@@ -100,7 +122,7 @@ class messageBox extends Component {
   }
 
   scrollToBottom = () => {
-    this.messageEnd.scrollIntoView({ behavior: 'smooth' })
+    this.messageEnd.scrollIntoView({ behavior: 'smooth', block: 'end' })
   }
 
   render () {
@@ -114,9 +136,19 @@ class messageBox extends Component {
         </div>
         <div className='body'>
           <p className='title'>Welcome!</p>
+          <div className='userBar'>
+            {this.state.users.map(user => {
+              return (
+                <img
+                  key={this.hashCode(user.img)}
+                  className='userBarIcon'
+                  src={user.img}
+                />
+              )
+            })}
+          </div>
           <div className='inner'>
             {this.state.postList.map(entry => {
-              // console.log(entry)
               return (
                 <div
                   className='message'
@@ -125,12 +157,17 @@ class messageBox extends Component {
                   <img src={entry.img} className='chatImg' />
                   <p
                     style={{
-                      color: this.intToRGB(this.hashCode(entry.username))
+                      color: this.intToRGB(this.hashCode(entry.username)),
+                      fontWeight: 'bold'
                     }}
                   >
-                    {entry.username}:
+                    {entry.username}
                   </p>
-                  <p>{entry.body}</p>
+                  {entry.body.img ? (
+                    <img src={entry.body.img} className='gif' />
+                  ) : (
+                    <p>{entry.body}</p>
+                  )}{' '}
                 </div>
               )
             })}
@@ -146,6 +183,7 @@ class messageBox extends Component {
               type='text'
               value={body}
               name='body'
+              autoComplete='off'
               onChange={this.handleChange}
             />
             <button type='submit'>Submit</button>

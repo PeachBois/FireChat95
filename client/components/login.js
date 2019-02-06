@@ -16,7 +16,7 @@ const Login = () => {
         </div>
         <div className="body">
           <h4 className="log">
-            >: Hello! My Name is Winney! Let me know a little about you!
+            >: Hello! My Name is Winnie! Let me know a little about you!
           </h4>
         </div>
       </div>

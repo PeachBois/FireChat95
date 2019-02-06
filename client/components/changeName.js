@@ -4,7 +4,10 @@ import { withRouter } from 'react-router-dom'
 import { withFirebase } from '../Firebase/index'
 import { compose } from 'recompose'
 import { me, logout } from '../store/user'
+import { loadLocation, setZoom } from '../store/map'
 import { setRadius, setCap } from '../store/posts'
+import Map from '../components/map'
+import { getMapApi } from '../components/utils'
 
 class ChangeName extends Component {
   constructor () {
@@ -12,17 +15,63 @@ class ChangeName extends Component {
     this.state = {
       displayName: '',
       radius: 4,
-      roomCap: 2
+      roomCap: 2,
+      showMap: false,
+      mapFailed: false,
+      located: false
     }
+    this.toggleMap = this.toggleMap.bind(this)
   }
   componentDidMount () {
     this.setState({ displayName: this.props.user.username })
+    this.setState({ located: true })
+    this.props.loadLocation(this.state.radius)
+    getMapApi()
+
+    if (this.props.position) {
+      if (this.props.position.bounds === 'failed') {
+        this.setState({ mapFailed: true })
+      }
+    }
   }
 
   handleChange = evt => {
     this.setState({ [evt.target.name]: evt.target.value })
   }
-
+  handleZoom = evt => {
+    this.setState({ [evt.target.name]: evt.target.value })
+    this.props.loadLocation(evt.target.value)
+    let zoom
+    switch (+evt.target.value) {
+      case 0:
+        zoom = 0
+        break
+      case 1:
+        zoom = 2
+        break
+      case 2:
+        zoom = 5
+        break
+      case 3:
+        zoom = 7
+        break
+      case 4:
+        zoom = 10
+        break
+      case 5:
+        zoom = 12
+        break
+      case 6:
+        zoom = 15
+        break
+      case 7:
+        zoom = 17
+        break
+      default:
+        zoom = 1.5 * evt.target.value + 7
+    }
+    this.props.setZoom(zoom)
+  }
   handleSubmit = evt => {
     if (this.state.displayName !== '') {
       this.props.me({
@@ -30,17 +79,31 @@ class ChangeName extends Component {
         email: this.props.user.email,
         imgUrl: this.props.user.imgUrl
       })
+
       this.props.setRadius(this.state.radius)
       this.props.setCap(this.state.roomCap)
-      console.log('done')
     }
     this.props.history.push('/locating')
+  }
+  // searchArea = evt => {
+  //   //other functions can go here
+  //   console.log(typeof +evt.target.value)
+  //   // this.props.setZoom(+evt.target.value)
+  // }
+
+  toggleMap () {
+    this.setState(prevState => {
+      return {
+        showMap: !prevState.showMap
+      }
+    })
   }
 
   render () {
     if (!this.props.user.imgUrl) {
       this.props.history.push('/')
     }
+    let style = this.state.showMap ? { height: '190px' } : { height: '0px' }
 
     let { displayName } = this.state
     const { imgUrl } = this.props.user
@@ -50,20 +113,23 @@ class ChangeName extends Component {
           <p className='title'>ALOL</p>
           <button
             onClick={async () => {
-              await this.props.logout()
-              await this.props.firebase.auth.signOut()
-              this.props.history.push('/')
+              this.props.logout()
+              await this.props.firebase.auth.signOut().then(() => {
+                this.props.history.push('/')
+              })
             }}
           >
             X
           </button>
         </div>
+        {/* <div id="map"></div> */}
         <div className='body'>
           <div className='userSpace'>
             <img src={imgUrl} className='userImg' />
 
             <div className='changeName'>
               <p className='title'>Set A Display Name</p>
+
               <input
                 type='text'
                 value={displayName}
@@ -77,8 +143,9 @@ class ChangeName extends Component {
                   name='radius'
                   className='input'
                   value={this.state.radius}
-                  onChange={this.handleChange}
+                  onChange={this.handleZoom}
                 >
+                  <option value='0'>0 (entire planet)</option>
                   <option value='1'>1 (largest search area)</option>
                   <option value='2'>2</option>
                   <option value='3'>3</option>
@@ -109,19 +176,32 @@ class ChangeName extends Component {
             </div>
           </div>
         </div>
-        <div className='bottomBar'>
-          <img src='computer.png' className='bottomBar' />
+        <div>
           <div className='change'>
+            <button type='submit' onClick={this.toggleMap}>
+              {this.state.showMap ? 'Hide Map' : 'Show Map'}
+            </button>
+            {this.state.showMap && <Map />}
             <button type='submit' onClick={this.handleSubmit}>
               Login
             </button>
           </div>
+          <div className='map'>
+            {this.state.mapFailed ? (
+              <h4>Bust!</h4>
+            ) : (
+              <div id='map' style={style} />
+            )}
+          </div>
         </div>
         <div className='body'>
-          <h4 className='log'>
-            >:Here you can change your display name, as well as how many people
-            you want in a chat and how exact your search area is!
-          </h4>
+          <div className='help'>
+            <img src='computer.png' className='bottomBar' />
+            <h4 className='log'>
+              >: Here you can change your display name, as well as how many
+              people you want in a chat and how exact your search area is!
+            </h4>
+          </div>
         </div>
       </div>
     )
@@ -132,12 +212,14 @@ class ChangeName extends Component {
  * CONTAINER
  */
 const mapState = state => {
-  return { user: state.user }
+  return { user: state.user, location: state.position }
 }
 
 const mapDispatch = dispatch => {
   return {
     me: name => dispatch(me(name)),
+    loadLocation: radius => dispatch(loadLocation(radius)),
+    setZoom: value => dispatch(setZoom(value)),
     setRadius: radius => dispatch(setRadius(radius)),
     setCap: cap => dispatch(setCap(cap)),
     logout: () => dispatch(logout())

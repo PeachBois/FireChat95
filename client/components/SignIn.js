@@ -11,15 +11,12 @@ import { me } from '../store/user';
 class SignInScreenBase extends Component {
   state = {
     isSignedIn: false,
-    user: null
+    user: null,
+    os: null
   };
 
   uiConfig = {
-    signInFlow:
-      'matchMedia' in window &&
-      window.matchMedia('(display-mode: standalone)').matches
-        ? 'popup'
-        : 'redirect',
+    signInFlow: 'redirect',
     signInOptions: [
       firebase.auth.GoogleAuthProvider.PROVIDER_ID,
       firebase.auth.FacebookAuthProvider.PROVIDER_ID
@@ -30,15 +27,17 @@ class SignInScreenBase extends Component {
   };
   AnonLog = () => {
     const newUser = {
-      username: 'Anonymous User',
-      imgUrl: 'computer-' + Math.floor(Math.random() * (0 - 4)) + '.png',
-      email: 'anon@fakeassemail.com'
+      username: `Anonymous User${Math.floor(Math.random() * 1000 + 1)}`,
+      imgUrl: 'computer-' + Math.floor(Math.random() * (4 - 0)) + '.png',
+      email: `anon@fakeassemail${Math.floor(Math.random() * 1000 + 1)}.com`
     };
 
     this.props.me(newUser);
     this.props.history.push('/setup');
   };
   async componentDidMount() {
+    this.setState({ os: this.getOs() });
+
     this.unregisterAuthObserver = await firebase
       .auth()
       .onAuthStateChanged(async user => {
@@ -52,10 +51,15 @@ class SignInScreenBase extends Component {
             email
           };
 
+          firebase
+            .database()
+            .ref()
+            .child('/users')
+            .update({ uid: firebase.auth().currentUser.providerData[0].uid });
+
           ///To save retreived tokens on firebase database for the signed in user.
           this.props.firebase.saveFCMToken(uid);
 
-          console.log(newUser);
           this.props.me(newUser);
           if (this.props.user.username !== undefined) {
             this.props.history.push('/setup');
@@ -63,36 +67,49 @@ class SignInScreenBase extends Component {
         }
       });
   }
-  componentWillUnmount() {
-    this.unregisterAuthObserver();
-  }
+  getOs = () => {
+    var userAgent = navigator.userAgent || navigator.vendor || window.opera;
+
+    if (/windows phone/i.test(userAgent)) {
+      return 'Windows Phone';
+    }
+
+    if (/android/i.test(userAgent)) {
+      return 'Android';
+    }
+
+    if (/iPad|iPhone|iPod/.test(userAgent) && !window.MSStream) {
+      return 'iOS';
+    }
+
+    return 'unknown';
+  };
+  // componentWillUnmount () {
+  //   this.unregisterAuthObserver()
+  // }
   render() {
     if (!this.state.isSignedIn) {
       return (
         <div className="logBox">
+          <button onClick={this.AnonLog} className="anon">
+            <div>
+              <p>Anonymous Login</p>
+            </div>
+          </button>
           {'matchMedia' in window &&
-          window.matchMedia('(display-mode: standalone)').matches ? (
-            <button onClick={this.AnonLog} className="anon">
-              <h3>Anonymous Login</h3>
-            </button>
+          window.matchMedia('(display-mode: standalone)').matches &&
+          this.state.os === 'iOS' ? (
+            <div>{'  '}</div>
           ) : (
-            ''
+            <StyledFirebaseAuth
+              uiConfig={this.uiConfig}
+              firebaseAuth={firebase.auth()}
+            />
           )}
-          <StyledFirebaseAuth
-            uiConfig={this.uiConfig}
-            firebaseAuth={firebase.auth()}
-          />
         </div>
       );
     }
-    return (
-      <div>
-        <p>
-          Welcome {firebase.auth().currentUser.displayName}! You are now
-          signed-in!
-        </p>
-      </div>
-    );
+    return <div>{'  '}</div>;
   }
 }
 

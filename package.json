@@ -1,5 +1,5 @@
 {
-  "name": "bytheway",
+  "name": "winchat",
   "version": "1.0.0",
   "description": "Some boilerplate code to get you started - get shakin'!",
   "engines": {
@@ -47,6 +47,7 @@
     "express-session": "^1.15.1",
     "firebase": "^5.8.0",
     "firebaseui": "^3.5.2",
+    "google-maps-react": "^2.0.2",
     "history": "^4.6.3",
     "latlon-geohash": "^1.1.0",
     "morgan": "^1.9.1",
