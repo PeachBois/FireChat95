@@ -164,6 +164,8 @@ class Firebase {
   saveFCMToken = uid => {
     if (uid) {
       this.setCloudMessaging(uid)
+    } else {
+      console.log('no uid')
     }
   }
 }
