@@ -1,36 +1,38 @@
-// importScripts('https://www.gstatic.com/firebasejs/4.1.1/firebase-app.js');
-// importScripts('https://www.gstatic.com/firebasejs/4.1.1/firebase-messaging.js');
-// importScripts('https://www.gstatic.com/firebasejs/4.1.1/firebase.js');
+// Give the service worker access to Firebase Messaging.
+// Note that you can only use Firebase Messaging here, other Firebase libraries are not available in the service worker.
+importScripts('https://www.gstatic.com/firebasejs/4.8.1/firebase-app.js');
+importScripts('https://www.gstatic.com/firebasejs/4.8.1/firebase-messaging.js');
 
-// const firebase = require('firebase');
-// import 'firebase/database';
-// import 'firebase/messaging';
-// import firebase from 'firebase/app';
+// require('firebase/firebase-messaging');
+const config = {
+  messagingSenderId: '752787901162'
+};
 
-// const config = {
-//   messagingSenderId: '752787901162'
-// };
+// Initialize the Firebase app in the service worker by passing in the messagingSenderId
+firebase.initializeApp(config);
 
-// firebase.initializeApp(config);
-// const messaging = firebase.messaging();
+// Retrieve an instance of Firebase Messaging so that it can handle background messages.
+const messaging = firebase.messaging();
 
-// messaging.setBackgroundMessageHandler(function(payload) {
-//   console.log(
-//     '[firebase-messaging-sw.js] Received background message ',
-//     payload
-//   );
-//   // Customize notification here
-//   const notificationTitle = 'Background Message Title';
-//   const notificationOptions = {
-//     body: 'Background Message body.',
-//     icon: '/Icon_Bird_512x512.png'
-//   };
+// If you would like to customize notifications that are received in the background (Web app is closed or not in browser focus) then you should implement this optional method.
+messaging.setBackgroundMessageHandler(function(payload) {
+  console.log(
+    '[firebase-messaging-sw.js] Received background message ',
+    payload
+  );
+  // Customize notification here
+  const notificationTitle = 'Background Message Title';
+  const notificationOptions = {
+    body: 'Background Message body.',
+    icon: '/computer.png'
+  };
 
-//   return self.registration.showNotification(
-//     notificationTitle,
-//     notificationOptions
-//   );
-// });
+  return self.registration.showNotification(
+    notificationTitle,
+    notificationOptions
+  );
+});
+
 // Flag for enabling cache in production
 const doCache = true;
 
@@ -92,23 +94,22 @@ self.addEventListener('fetch', event => {
 //push event handled here.
 self.addEventListener('push', function(event) {
   console.log('[Service Worker] Push Received.');
-  console.log(`[Service Worker] Push had this data: "${event.data.text()}"`);
+  console.log(`[Service Worker] Push had this data: ${event.data.json()}`);
 
-  console.log('push event listener for SW >>EVENT>> : ', event);
   // Push listener
-  // let payload = event.data.json();
-  // console.log('payload??? ', payload);
-  let title =
-    (event.data && event.data.text()) || 'Successfully subscribed from SW!';
-  let body = event.data.body || 'Shout outs will be delivered!';
+  let payload = event.data.json();
+  let title = payload.notification.title || 'Successfully subscribed from SW!';
+  let body = payload.notification.body || 'Shout outs will be delivered!';
+  let data = payload.notification.click_action || 'Data here.';
 
-  // const title = 'Successfully subscribed from SW!';
   const options = {
     body,
-    icon: 'apple-touch-icon-144x144.png',
+    icon: 'computer.png',
+    data,
     vibrate: [200, 100, 200, 100, 200, 100, 400]
-    // data: .params
   };
+
+  console.log('options>>>', options);
   event.waitUntil(self.registration.showNotification(title, options));
 });
 
@@ -117,6 +118,5 @@ self.addEventListener('notificationclick', function(event) {
 
   let data = event.notification.data;
   event.notification.close();
-  // event.waitUntil(caches.openWindow(data.url));
   event.waitUntil(clients.openWindow(event.notification.data));
 });

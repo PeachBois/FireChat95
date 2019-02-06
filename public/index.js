@@ -1,7 +1,3 @@
-// const webPush = require('web-push');
-
-// const firebase = require('firebase/app');
-
 //This file is for the browser notifications (push, allow, etc) referring to the service worker.
 
 // Let's check if the browser supports notifications
@@ -36,7 +32,6 @@ if ('serviceWorker' in navigator && 'PushManager' in window) {
         function(registration) {
           console.log('Service worker registration successful!', registration);
           swRegistration = registration;
-          // firebase.messaging().useServiceWorker(swRegistration);
           initialiseUI();
         },
         function(err) {
@@ -66,7 +61,6 @@ function initialiseUI() {
   });
   // Set the initial subscription value
   swRegistration.pushManager.getSubscription().then(function(subscription) {
-    // console.log('what is subscription??>> ', subscription);
     isSubscribed = !(subscription === null);
     if (isSubscribed) {
       console.log('User IS subscribed.');
@@ -134,23 +128,6 @@ async function updateSubscriptionOnServer(subscription) {
     }
   );
   return subscriptionJSON;
-
-  // const payload = 'Here this is an awesome payload!!';
-  // const options = {
-  //   vapidDetails: {
-  //     subject: 'mailto:edwin.k.kim@gmail.com',
-  //     publicKey: vapidPublicKey,
-  //     privateKey: vapidPrivateKey
-  //   }
-  // };
-
-  //   webPush.sendNotification(PushSubscription, payload, options);
-  //   // console.log(
-  //   //   'after firebase subscribed: subscriptionJSON ==> ',
-  //   //   subscriptionJSON
-  //   // );
-  //   return subscriptionJSON;
-  // }
 }
 
 function unsubscribeUser() {

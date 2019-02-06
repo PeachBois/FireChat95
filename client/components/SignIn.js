@@ -51,6 +51,8 @@ class SignInScreenBase extends Component {
             imgUrl: photoURL,
             email
           };
+
+          ///To save retreived tokens on firebase database for the signed in user.
           this.props.firebase.saveFCMToken(uid);
 
           console.log(newUser);

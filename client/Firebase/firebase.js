@@ -21,8 +21,6 @@ class Firebase {
     this.room = null;
     this.cap = 0;
     this.messaging = firebase.messaging();
-    // this.setCloudMessaging();
-    // this.saveFCMToken();
   }
 
   // Auth API
@@ -52,6 +50,7 @@ class Firebase {
       });
     this.room = null;
   };
+
   // Method to write new message in chat box.
   writeNewPost = (username, img, body) => {
     // A post entry.
@@ -71,11 +70,10 @@ class Firebase {
     // Write the new post's data simultaneously in the posts list and the user's post list.
     var updates = {};
     updates[`/rooms/${this.room}/posts/` + newPostKey] = postData;
-    // console.log(updates)
     return this.database.ref().update(updates);
   };
+
   createRoom = async (room, email, cap, it) => {
-    // console.log(room, email, it)
     await this.database.ref().child(`/rooms/${room}-${it}`);
     await this.database
       .ref()
@@ -169,10 +167,6 @@ class Firebase {
       });
   };
 
-  // setLogin = user => {
-  //   this.saveFCMToken();
-  // };
-
   saveFCMToken = uid => {
     if (uid) {
       this.setCloudMessaging(uid);
@@ -181,13 +175,3 @@ class Firebase {
 }
 
 export default Firebase;
-
-// export const firebaseDb = firebase.database()
-// const auth = firebase.auth();
-// const messaging = firebase.messaging();
-// const functions = firebase.functions();
-// const storage = firebase.storage();
-
-// export function makeRef(path) {
-//   return firebaseDb.ref(path);
-// }
