@@ -157,7 +157,7 @@ class messageBox extends Component {
                   <img src={entry.img} className='chatImg' />
                   <p
                     style={{
-                      color: entry.color,
+                      color: this.intToRGB(this.hashCode(entry.username)),
                       fontWeight: 'bold'
                     }}
                   >

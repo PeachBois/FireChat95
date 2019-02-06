@@ -27,9 +27,9 @@ class SignInScreenBase extends Component {
   }
   AnonLog = () => {
     const newUser = {
-      username: 'Anonymous User',
+      username: `Anonymous User${Math.floor((Math.random() * 1000) + 1)}`,
       imgUrl: 'computer-' + Math.floor(Math.random() * (4 - 0)) + '.png',
-      email: 'anon@fakeassemail.com'
+      email: `anon@fakeassemail${Math.floor((Math.random() * 1000) + 1)}.com`
     }
 
     this.props.me(newUser)
