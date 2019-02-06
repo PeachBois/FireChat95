@@ -29,10 +29,6 @@ export class Loading extends Component {
   }
 
   async componentDidMount () {
-    const sat = await this.props.firebase.room
-    if (sat !== null) {
-      await this.props.firebase.leaveRoom()
-    }
     if (typeof this.props.user.username !== 'string') {
       dialUp.pause()
       this.props.history.push('/')
@@ -52,9 +48,7 @@ export class Loading extends Component {
           geohash,
           this.props.roomCap,
           this.props.user.imgUrl,
-          this.props.user.username,
-          this.props.user.color
-    
+          this.props.user.username
         )
 
         this.setState({ geohash, room, tip: getTip() })
@@ -90,7 +84,6 @@ export class Loading extends Component {
     this.setState({
       latitude: 0,
       longitude: 0,
-      geohash: '...',
       inRoom: false,
       room: ''
     })

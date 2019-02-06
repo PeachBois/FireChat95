@@ -6,8 +6,6 @@ import history from '../history'
  */
 const GET_USER = 'GET_USER'
 const REMOVE_USER = 'REMOVE_USER'
-const SET_COLOR = 'SET_COLOR'
-
 /**
  * INITIAL STATE
  */
@@ -18,8 +16,6 @@ const defaultUser = {}
  */
 const getUser = user => ({ type: GET_USER, user })
 const removeUser = () => ({ type: REMOVE_USER })
-export const setColor = color => ({ type: SET_COLOR, color })
-
 /**
  * THUNK CREATORS
  */
@@ -66,8 +62,6 @@ export default function (state = defaultUser, action) {
       return action.user
     case REMOVE_USER:
       return defaultUser
-    case SET_COLOR:
-      return {...state, color: action.color}
     default:
       return state
   }

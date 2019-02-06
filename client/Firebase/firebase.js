@@ -49,7 +49,7 @@ class Firebase {
     this.room = null
   }
   // Method to write new message in chat box.
-  writeNewPost = async (username, img, body, color='#FF0000') => {
+  writeNewPost = async (username, img, body) => {
     // A post entry.
 
     let str = body
@@ -64,8 +64,7 @@ class Firebase {
     let postData = {
       username,
       body,
-      img,
-      color
+      img
     }
     let newPostKey = this.database
       .ref()
@@ -75,11 +74,11 @@ class Firebase {
     updates[`/rooms/${this.room}/posts/` + newPostKey] = postData
     return this.database.ref().update(updates)
   }
-  createRoom = async (room, cap, img, username, color = 'red', it) => {
+  createRoom = async (room, cap, img, username, it) => {
     await this.database.ref().child(`/rooms/${room}-${it}`)
     await this.database
       .ref(`/rooms/${room}-${it}/users`)
-      .push({ username, img, color })
+      .push({ username, img })
     await this.database
       .ref()
       .child(`/rooms/${room}-${it}/rules`)
@@ -92,16 +91,15 @@ class Firebase {
       .ref()
       .child(`/rooms/${room}-${it}/posts`)
       .push({
-        username: 'Winney',
+        username: 'Winnie',
         body: starter(),
         img: `./computer.png`
       })
     this.room = `${room}-${it}`
   }
 
-  findOrCreateRoom = async (room, cap, img, username, color="#FF0000", it = 0) => {
+  findOrCreateRoom = async (room, cap, img, username, it = 0) => {
     this.cap = cap
-    console.log(room)
     let users
     let roomCap
     await this.database
@@ -114,11 +112,11 @@ class Firebase {
           } else {
             await this.database.ref(`/rooms/${room}-${it}`).remove()
             setTimeout(() => {}, 1000)
-            await this.findOrCreateRoom(room, cap, img, username, color, it)
+            await this.findOrCreateRoom(room, cap, img, username, it)
             await this.database.ref(`/rooms/${room}-${it}/users`).remove()
             await this.database
               .ref(`/rooms/${room}-${it}/users`)
-              .push({ username, img, color })
+              .push({ username, img })
           }
           roomCap = Object.values(snapshot.val().rules)[0]
           console.log(roomCap)
@@ -127,17 +125,17 @@ class Firebase {
       .then(async () => {
         if (!users) {
           // console.log('creating')
-          await this.createRoom(room, cap, img, username, color, it)
+          await this.createRoom(room, cap, img, username, it)
           this.room = `${room}-${it}`
         } else {
           console.log('cap:', cap, 'room cap:', roomCap, 'users:', users.length)
           if (cap < users.length || users.length >= roomCap) {
             // console.log('restarting')
-            await this.findOrCreateRoom(room, cap, img, username, color, it + 1)
+            await this.findOrCreateRoom(room, cap, img, username, it + 1)
           } else {
             await this.database
               .ref(`/rooms/${room}-${it}/users`)
-              .push({ username, img, color })
+              .push({ username, img })
             this.room = `${room}-${it}`
           }
         }

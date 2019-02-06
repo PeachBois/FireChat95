@@ -5,7 +5,6 @@ import { withFirebase } from '../Firebase/index'
 import { compose } from 'recompose'
 import { getGif } from './utils'
 import firebase from 'firebase'
-// import { callUserCallback } from '@firebase/database/dist/src/core/util/util';
 const inbound = new Audio('jig0.wav')
 
 class messageBox extends Component {
@@ -22,7 +21,7 @@ class messageBox extends Component {
   }
   shutDown = async () => {
     await this.props.firebase.writeNewPost(
-      'Winney',
+      'Winnie',
       './computer.png',
       `${this.props.user.username} has left the room. (╯°□°）╯ `
     )
@@ -45,6 +44,7 @@ class messageBox extends Component {
       .database()
       .ref()
       .child(`/rooms/${hash}/users`)
+
     if (this.props.user.username) {
       usersDb.on('value', snap => {
         let users = []
@@ -56,9 +56,9 @@ class messageBox extends Component {
             Object.values(userObject).forEach(element => {
               if (element.username === this.props.user.username) {
                 this.setState({ imgId: keys[i] })
-                console.log(this.state.imgId)
+                console.log(this.state.imgId, 'ran')
               }
-              users.push({ key: Object.keys(element), img: element.img })
+              users.push({ img: element.img })
               i++
             })
             this.setState({ users })
@@ -91,11 +91,6 @@ class messageBox extends Component {
   componentDidUpdate () {
     this.scrollToBottom()
   }
-  componentWillUnmount () {
-    if (this.state.dbRefObject) {
-      this.state.dbRefObject.off()
-    }
-  }
 
   handleChange = evt => {
     this.setState({ [evt.target.name]: evt.target.value })
@@ -104,9 +99,9 @@ class messageBox extends Component {
     evt.preventDefault()
 
     if (this.state.body !== '') {
-      const { username, imgUrl, color } = this.props.user
+      const { username, imgUrl } = this.props.user
       const body = this.state.body
-      this.props.firebase.writeNewPost(username, imgUrl, body, color)
+      this.props.firebase.writeNewPost(username, imgUrl, body)
       this.setState({ body: '' })
     }
   }
@@ -143,27 +138,26 @@ class messageBox extends Component {
           <p className='title'>Welcome!</p>
           <div className='userBar'>
             {this.state.users.map(user => {
-              return <img className='userBarIcon' src={user.img} />
+              return (
+                <img
+                  key={this.hashCode(user.img)}
+                  className='userBarIcon'
+                  src={user.img}
+                />
+              )
             })}
           </div>
           <div className='inner'>
             {this.state.postList.map(entry => {
-              if (entry.body.img) {
-                console.log(entry.body.img)
-              }
-              let style = 'message'
-              if (entry.username === this.state.username) {
-                style = 'self'
-              }
               return (
                 <div
-                  className={style}
+                  className='message'
                   key={this.hashCode(entry.body + Math.random())}
                 >
                   <img src={entry.img} className='chatImg' />
                   <p
                     style={{
-                      color: entry.color,
+                      color: this.intToRGB(this.hashCode(entry.username)),
                       fontWeight: 'bold'
                     }}
                   >
