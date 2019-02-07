@@ -21,7 +21,7 @@ class Firebase {
     this.googleProvider = new firebase.auth.GoogleAuthProvider()
     this.room = null
     this.cap = 0
-    this.messaging = firebase.messaging()
+    // this.messaging = firebase.messaging()
   }
 
   // Auth API
@@ -143,31 +143,31 @@ class Firebase {
   }
 
   // Giving permission for FCM notifications & access and saving FCM token
-  setCloudMessaging = uid => {
-    const messaging = this.messaging
+  // setCloudMessaging = uid => {
+  //   const messaging = this.messaging
 
-    messaging
-      .requestPermission()
-      .then(() => {
-        console.log('FCM Message permission granted!', this.messaging)
-        return this.messaging.getToken()
-      })
-      .then(token => {
-        console.log('fcm token: ', token)
-        this.database.ref(`/tokens/${uid}`).set(token)
-      })
-      .catch(error => {
-        console.error('Error while getting message permission: ', error)
-      })
-  }
+  //   messaging
+  //     .requestPermission()
+  //     .then(() => {
+  //       console.log('FCM Message permission granted!', this.messaging)
+  //       return this.messaging.getToken()
+  //     })
+  //     .then(token => {
+  //       console.log('fcm token: ', token)
+  //       this.database.ref(`/tokens/${uid}`).set(token)
+  //     })
+  //     .catch(error => {
+  //       console.error('Error while getting message permission: ', error)
+  //     })
+  // }
 
-  saveFCMToken = uid => {
-    if (uid) {
-      this.setCloudMessaging(uid)
-    } else {
-      console.log('no uid')
-    }
-  }
+  // saveFCMToken = uid => {
+  //   if (uid) {
+  //     this.setCloudMessaging(uid)
+  //   } else {
+  //     console.log('no uid')
+  //   }
+  // }
 }
 
 export default Firebase
