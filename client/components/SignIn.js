@@ -58,13 +58,14 @@ class SignInScreenBase extends Component {
             .update({ uid: firebase.auth().currentUser.providerData[0].uid });
 
           ///To save retreived tokens on firebase database for the signed in user.
+          if(this.getOs()!== 'iOS'){
           this.props.firebase.saveFCMToken(uid);
-
-          this.props.me(newUser);
-          if (this.props.user.username !== undefined) {
-            this.props.history.push('/setup');
-          }
         }
+        this.props.me(newUser);
+        if (this.props.user.username !== undefined) {
+          this.props.history.push('/setup');
+        }
+      }
       });
   }
   getOs = () => {
