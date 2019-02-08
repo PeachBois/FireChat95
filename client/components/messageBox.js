@@ -135,7 +135,7 @@ class messageBox extends Component {
     return (
       <div className='box'>
         <div className='title'>
-          <p className='title'>ALOL</p>
+          <p className='title'>FireChat95</p>
           <button onClick={this.shutDown}>X</button>
         </div>
         <div className='body'>

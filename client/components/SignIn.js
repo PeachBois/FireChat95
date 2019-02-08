@@ -50,6 +50,7 @@ class SignInScreenBase extends Component {
             imgUrl: photoURL,
             email
           };
+          console.log(this.props)
 
           firebase
             .database()
@@ -59,7 +60,7 @@ class SignInScreenBase extends Component {
 
           ///To save retreived tokens on firebase database for the signed in user.
           if(this.getOs()!== 'iOS'){
-          this.props.firebase.saveFCMToken(uid);
+          this.props.firebase.saveFCMToken(uid)
         }
         this.props.me(newUser);
         if (this.props.user.username !== undefined) {
