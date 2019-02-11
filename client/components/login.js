@@ -5,7 +5,7 @@ const Login = () => {
   return (
     <div className='box'>
       <div className='title'>
-        <p className='title'>ALOL</p>
+        <p className='title'>FireChat95</p>
         <button>X</button>
       </div>
       <div>

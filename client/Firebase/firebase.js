@@ -92,6 +92,10 @@ class Firebase {
       .push().key
     var updates = {}
     updates[`/rooms/${this.room}/posts/` + newPostKey] = postData
+    await this.database
+      .ref()
+      .child(`/rooms/${room}-${it}`)
+      .update({ timestamp: Date.now() })
     return this.database.ref().update(updates)
   }
   createRoom = async (room, cap, img, username, it) => {
@@ -151,10 +155,20 @@ class Firebase {
             // console.log('restarting')
             await this.findOrCreateRoom(room, cap, img, username, it + 1)
           } else {
-            await this.database
-              .ref(`/rooms/${room}-${it}/users`)
-              .push({ username, img })
-            this.room = `${room}-${it}`
+            let incMe = users.map(user => {
+              if (user.username === username) {
+                return true
+              }
+            })
+
+            if (!incMe) {
+              await this.database
+                .ref(`/rooms/${room}-${it}/users`)
+                .push({ username, img })
+              this.room = `${room}-${it}`
+            } else {
+              await this.findOrCreateRoom(room, cap, img, username, it + 1)
+            }
           }
         }
       })
