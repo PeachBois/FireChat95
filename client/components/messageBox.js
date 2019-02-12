@@ -36,17 +36,17 @@ class messageBox extends Component {
 
     let postList = []
 
-    const dbRefObject = firebase
+    this.dbRefObject = firebase
       .database()
       .ref()
       .child(`/rooms/${hash}/posts`)
-    const usersDb = firebase
+    this.usersDb = firebase
       .database()
       .ref()
       .child(`/rooms/${hash}/users`)
 
     if (this.props.user.username) {
-      usersDb.on('value', snap => {
+      this.usersDb.on('value', snap => {
         let users = []
         if (snap.exists()) {
           const userObject = snap.val()
@@ -69,7 +69,7 @@ class messageBox extends Component {
       })
     }
 
-    dbRefObject.on('value', snap => {
+    this.dbRefObject.on('value', snap => {
       postList = []
       const postObj = snap.val()
       let key
@@ -84,12 +84,16 @@ class messageBox extends Component {
         this.setState({ postList })
       }
     })
-    this.setState({ dbRefObject })
     this.scrollToBottom()
   }
 
   componentDidUpdate () {
     this.scrollToBottom()
+  }
+
+  componentWillUnmount () {
+    this.usersDb.off()
+    this.dbRefObject.off()
   }
 
   handleChange = evt => {
@@ -131,7 +135,7 @@ class messageBox extends Component {
     return (
       <div className='box'>
         <div className='title'>
-          <p className='title'>ALOL</p>
+          <p className='title'>FireChat95</p>
           <button onClick={this.shutDown}>X</button>
         </div>
         <div className='body'>

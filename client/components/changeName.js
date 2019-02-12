@@ -110,7 +110,7 @@ class ChangeName extends Component {
     return (
       <div className='box'>
         <div className='title'>
-          <p className='title'>ALOL</p>
+          <p className='title'>FireChat95</p>
           <button
             onClick={async () => {
               this.props.logout()
