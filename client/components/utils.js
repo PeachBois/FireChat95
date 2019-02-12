@@ -23,12 +23,10 @@ export const getUserLocation = () => {
 }
 
 export const getGeoHash = async (coordinates, radius) => {
-  console.log('radius', radius)
   if (Number(radius) === 0) {
     return 'Earth'
   } else {
     const { lat, lng } = coordinates
-    console.log(lat, lng, radius)
     const hash = Geohash.encode(lat, lng, radius)
     return hash
   }

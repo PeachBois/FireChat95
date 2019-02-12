@@ -4,7 +4,6 @@ import { withRouter } from 'react-router-dom'
 import { withFirebase } from '../Firebase/index'
 import { compose } from 'recompose'
 import { getGif } from './utils'
-import firebase from 'firebase'
 const inbound = new Audio('jig0.wav')
 
 class messageBox extends Component {
@@ -36,11 +35,11 @@ class messageBox extends Component {
 
     let postList = []
 
-    this.dbRefObject = firebase
+    this.dbRefObject = this.props.firebase
       .database()
       .ref()
       .child(`/rooms/${hash}/posts`)
-    this.usersDb = firebase
+    this.usersDb = this.props.firebase
       .database()
       .ref()
       .child(`/rooms/${hash}/users`)
@@ -56,7 +55,6 @@ class messageBox extends Component {
             Object.values(userObject).forEach(element => {
               if (element.username === this.props.user.username) {
                 this.setState({ imgId: keys[i] })
-                console.log(this.state.imgId, 'ran')
               }
               users.push({ img: element.img })
               i++

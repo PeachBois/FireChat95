@@ -50,7 +50,6 @@ class Firebase {
   user = uid => this.database.ref(`users/${uid}`)
   users = () => this.database.ref('users')
   leaveRoom = async id => {
-    console.log(id)
     await this.database
       .ref(`/rooms/${this.room}/users/`)
       .child(id)
@@ -76,7 +75,6 @@ class Firebase {
     if (str.includes(':')) {
       let first = str.indexOf(':') + 1
       let last = str.lastIndexOf(':')
-      console.log(str.slice(first, last))
       const gif = await getGif(str.slice(first, last))
       str = { img: gif }
       body = str
@@ -147,12 +145,10 @@ class Firebase {
       })
       .then(async () => {
         if (!users) {
-          // console.log('creating')
           await this.createRoom(room, cap, img, username, it)
           this.room = `${room}-${it}`
         } else {
           if (cap <= users.length || users.length === roomCap) {
-            // console.log('restarting')
             await this.findOrCreateRoom(room, cap, img, username, it + 1)
           } else {
             let incMe = users.map(user => {
@@ -183,11 +179,9 @@ class Firebase {
       messaging
         .requestPermission()
         .then(() => {
-          console.log('FCM Message permission granted!', this.messaging)
           return this.messaging.getToken()
         })
         .then(token => {
-          console.log('fcm token: ', token)
           this.database.ref(`/tokens/${uid}`).set(token)
         })
         .catch(error => {
@@ -200,7 +194,6 @@ class Firebase {
     if (uid) {
       this.setCloudMessaging(uid)
     } else {
-      console.log('no uid')
     }
   }
 }

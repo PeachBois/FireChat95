@@ -85,11 +85,6 @@ class ChangeName extends Component {
     }
     this.props.history.push('/locating')
   }
-  // searchArea = evt => {
-  //   //other functions can go here
-  //   console.log(typeof +evt.target.value)
-  //   // this.props.setZoom(+evt.target.value)
-  // }
 
   toggleMap () {
     this.setState(prevState => {

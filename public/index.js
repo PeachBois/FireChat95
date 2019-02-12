@@ -5,13 +5,11 @@ if (!('Notification' in window)) {
   console.error('This browser does not support desktop notification')
 } else if (Notification.permission === 'granted') {
   // Let's check whether notification permissions have already been granted
-  console.log('Permission to receive notifications has been granted')
 } else if (Notification.permission !== 'denied') {
   // Otherwise, we need to ask the user for permission
   Notification.requestPermission(function (permission) {
     // If the user accepts, let's create a notification
     if (permission === 'granted') {
-      console.log('Permission to receive notifications has been granted')
     }
   })
 }
@@ -30,7 +28,6 @@ if ('serviceWorker' in navigator && 'PushManager' in window) {
       .register('/firebase-messaging-sw.js')
       .then(
         function (registration) {
-          console.log('Service worker registration successful!', registration)
           swRegistration = registration
           // initialiseUI()
         },
@@ -43,8 +40,6 @@ if ('serviceWorker' in navigator && 'PushManager' in window) {
       })
   })
 } else {
-  console.log('Service Worker is not supported by browser.')
-  console.log('Push messaging not supported.')
   pushButton.textContent = 'Push not supported'
 }
 
@@ -63,9 +58,6 @@ function initialiseUI () {
   swRegistration.pushManager.getSubscription().then(function (subscription) {
     isSubscribed = !(subscription === null)
     if (isSubscribed) {
-      console.log('User IS subscribed.')
-    } else {
-      console.log('User is NOT subscribed.')
     }
 
     updateBtn()
@@ -97,8 +89,6 @@ function subscribeUser () {
       applicationServerKey: applicationServerKey
     })
     .then(function (subscription) {
-      console.log('User is subscribed:', subscription)
-
       // returns the subscription object saved on server with client's endpoint url and encrypted public key.
       updateSubscriptionOnServer(subscription)
 
@@ -143,7 +133,6 @@ function unsubscribeUser () {
     .then(function () {
       updateSubscriptionOnServer(null)
 
-      console.log('User is unsubscribed.')
       isSubscribed = false
 
       updateBtn()

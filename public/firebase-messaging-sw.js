@@ -16,10 +16,6 @@ const messaging = firebase.messaging()
 
 // If you would like to customize notifications that are received in the background (Web app is closed or not in browser focus) then you should implement this optional method.
 messaging.setBackgroundMessageHandler(function (payload) {
-  console.log(
-    '[firebase-messaging-sw.js] Received background message ',
-    payload
-  )
   // Customize notification here
   const notificationTitle = 'Background Message Title'
   const notificationOptions = {
@@ -93,9 +89,6 @@ self.addEventListener('fetch', event => {
 
 // push event handled here.
 self.addEventListener('push', function (event) {
-  console.log('[Service Worker] Push Received.')
-  console.log(`[Service Worker] Push had this data: ${event.data.json()}`)
-
   // Push listener
   let payload = event.data.json()
   let title = payload.notification.title || 'Successfully subscribed from SW!'
@@ -109,13 +102,10 @@ self.addEventListener('push', function (event) {
     vibrate: [200, 100, 200, 100, 200, 100, 400]
   }
 
-  console.log('options>>>', options)
   event.waitUntil(self.registration.showNotification(title, options))
 })
 
 self.addEventListener('notificationclick', function (event) {
-  console.log('[Service Worker] Notification click Received.')
-
   let data = event.notification.data
   event.notification.close()
   event.waitUntil(clients.openWindow(event.notification.data))

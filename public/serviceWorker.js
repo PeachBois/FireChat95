@@ -58,13 +58,6 @@ self.addEventListener('fetch', event => {
 
 // push event handled here.
 self.addEventListener('push', function (event) {
-  console.log('[Service Worker] Push Received.')
-  console.log(`[Service Worker] Push had this data: "${event.data.text()}"`)
-
-  console.log('push event listener for SW >>EVENT>> : ', event)
-  // Push listener
-  // let payload = event.data.json();
-  // console.log('payload??? ', payload);
   let title =
     (event.data && event.data.text()) || 'Successfully subscribed from SW!'
   let body = event.data.body || 'Shout outs will be delivered!'
@@ -80,8 +73,6 @@ self.addEventListener('push', function (event) {
 })
 
 self.addEventListener('notificationclick', function (event) {
-  console.log('[Service Worker] Notification click Received.')
-
   let data = event.notification.data
   event.notification.close()
   event.waitUntil(caches.openWindow(data.url))
